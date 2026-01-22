@@ -5,6 +5,10 @@ export const levelService = {
     const response = await api.get('/levels');
     return response.data.data;
   },
+  getAllLevelsWithoutPagination: async () => {
+    const response = await api.get('/levels/all');
+    return response.data.data;
+  },
   createLevel: async (data: any) => {
     const response = await api.post('/levels', data);
     return response.data.data;

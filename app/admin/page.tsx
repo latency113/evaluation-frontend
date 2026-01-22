@@ -79,8 +79,8 @@ export default function AdminDashboardPage() {
   return (
     <div className="p-8">
       <PageHeader 
-        title="Dashboard Overview"
-        description="Welcome back, Administrator"
+        title="ภาพรวมแดชบอร์ด"
+        description="ยินดีต้อนรับกลับ, ผู้ดูแลระบบ"
         icon={LayoutDashboard}
       />
 
@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
             </div>
             <div className="mt-4 flex items-center text-sm text-green-600 font-medium">
               <TrendingUp className="h-4 w-4 mr-1" />
-              <span>System Active</span>
+              <span>ระบบปกติ</span>
             </div>
           </div>
         ))}
@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
             </div>
             <button 
               onClick={() => router.push('/admin/evaluations')}
-              className="flex items-center px-4 py-2 text-xs font-black text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all group active:scale-95"
+              className="flex items-center px-4 py-2 text-xs  text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all group active:scale-95"
             >
               ดูทั้งหมด
               <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -128,7 +128,7 @@ export default function AdminDashboardPage() {
                 <div className="bg-slate-50 p-6 rounded-full mb-4">
                   <Star className="h-10 w-10 text-slate-200" />
                 </div>
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">No evaluations yet.</p>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">ยังไม่มีข้อมูลการประเมิน</p>
               </div>
             ) : (
               recentEvaluations.map((evaluation) => (
@@ -155,7 +155,7 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-yellow-100 text-yellow-700 border border-yellow-200 shadow-sm mb-2">
+                      <div className="inline-flex items-center px-3 py-1 rounded-full text-[10px]  bg-yellow-100 text-yellow-700 border border-yellow-200 shadow-sm mb-2">
                         <Star className="h-3 w-3 mr-1 fill-current" />
                         {calculateAverage(evaluation.answers)}
                       </div>
@@ -179,28 +179,28 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-6 tracking-tight border-b pb-4">Quick Actions</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-6 tracking-tight border-b pb-4">เมนูลัด</h2>
           <div className="space-y-3">
             <button 
               onClick={() => router.push('/admin/students')}
               className="w-full flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-700 font-bold transition-all border border-gray-100 active:scale-[0.98]"
             >
               <Users className="h-5 w-5 mr-3 text-blue-500" />
-              Manage Students
+              จัดการนักเรียน
             </button>
             <button 
               onClick={() => router.push('/admin/teachers')}
               className="w-full flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-700 font-bold transition-all border border-gray-100 active:scale-[0.98]"
             >
               <GraduationCap className="h-5 w-5 mr-3 text-purple-500" />
-              Add New Teacher
+              เพิ่มครูใหม่
             </button>
             <button 
               onClick={() => router.push('/admin/assignments')}
               className="w-full flex items-center px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-700 font-bold transition-all border border-gray-100 active:scale-[0.98]"
             >
               <ClipboardList className="h-5 w-5 mr-3 text-orange-500" />
-              Create Assignment
+              สร้างภาระงาน
             </button>
           </div>
         </div>
@@ -216,19 +216,19 @@ export default function AdminDashboardPage() {
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-6">
               <div className="p-6 bg-blue-50/50 rounded-xl border border-blue-100">
-                <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2 text-xs">นักเรียน นักศึกษา</p>
-                <p className="font-black text-slate-900 text-lg leading-tight">{selectedEval.student?.first_name} {selectedEval.student?.last_name}</p>
+                <p className="text-md  text-blue-600 uppercase tracking-widest mb-2 ">นักเรียน / ผู้ประเมิน</p>
+                <p className=" text-slate-900 text-lg leading-tight truncate">{selectedEval.student?.first_name} {selectedEval.student?.last_name}</p>
                 <p className="text-sm font-bold text-slate-400 mt-1">{selectedEval.student?.student_code}</p>
               </div>
               <div className="p-6 bg-purple-50/50 rounded-xl border border-purple-100">
-                <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-2 text-xs">ครูผู้สอน</p>
-                <p className="font-black text-slate-900 text-lg leading-tight">{selectedEval.assignment?.teacher?.first_name} {selectedEval.assignment?.teacher?.last_name}</p>
+                <p className="text-md  text-purple-600 uppercase tracking-widest mb-2 ">ครูผู้สอน</p>
+                <p className=" text-slate-900 text-lg leading-tight truncate">{selectedEval.assignment?.teacher?.first_name} {selectedEval.assignment?.teacher?.last_name}</p>
                 <p className="text-sm font-bold text-slate-400 mt-1 uppercase">{selectedEval.assignment?.subject?.subject_name}</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-black text-slate-900 text-xl flex items-center px-2">
+              <h3 className=" text-slate-900 text-xl flex items-center px-2">
                 <Star className="h-6 w-6 mr-3 text-yellow-500 fill-current" />
                 คะแนนการประเมิน
               </h3>
@@ -236,12 +236,12 @@ export default function AdminDashboardPage() {
                 {selectedEval.answers?.map((answer: any, idx: number) => (
                   <div key={idx} className="flex justify-between items-center p-5 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white transition-all hover:shadow-md group">
                     <div className="flex-1 mr-4">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">หัวข้อที่ {idx + 1}</span>
+                      <span className="text-[10px]  text-slate-400 uppercase tracking-widest block mb-1">หัวข้อที่ {idx + 1}</span>
                       <p className="text-sm font-bold text-slate-700 leading-relaxed">{answer.question?.question_text || `คำถามรหัส #${answer.question_id}`}</p>
                     </div>
                     <div className="flex gap-1.5 shrink-0">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <div key={s} className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-all ${s <= answer.score ? 'bg-yellow-400 text-white shadow-lg shadow-yellow-100 scale-110' : 'bg-slate-200 text-slate-400 opacity-40'}`}>
+                        <div key={s} className={`w-8 h-8 rounded-full flex items-center justify-center text-xs  transition-all ${s <= answer.score ? 'bg-yellow-400 text-white shadow-lg shadow-yellow-100 scale-110' : 'bg-slate-200 text-slate-400 opacity-40'}`}>
                           {s}
                         </div>
                       ))}
@@ -253,7 +253,7 @@ export default function AdminDashboardPage() {
 
             {selectedEval.suggestion && (
               <div className="space-y-3 pb-4">
-                <h3 className="font-black text-slate-900 text-xl flex items-center px-2">
+                <h3 className=" text-slate-900 text-xl flex items-center px-2">
                   <MessageSquare className="h-6 w-6 mr-3 text-blue-500" />
                   ข้อเสนอแนะเพิ่มเติม
                 </h3>

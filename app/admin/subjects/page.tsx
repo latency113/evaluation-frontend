@@ -215,21 +215,21 @@ export default function AdminSubjectsPage() {
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <PageHeader 
-          title="SUBJECTS"
+          title="จัดการรายวิชา"
           description={`จัดการฐานข้อมูลรายวิชา (${totalSubjects} วิชา)`}
           icon={BookOpen}
           actions={
             <>
               <button
                 onClick={() => setIsScanModalOpen(true)}
-                className="flex items-center px-6 py-3 bg-white text-purple-600 border border-purple-200 rounded-lg hover:bg-purple-50 transition-all font-bold shadow-sm"
+                className="flex items-center px-6 py-3 bg-white text-purple-600 border border-purple-200 rounded-lg hover:bg-purple-50 transition-all font-semibold shadow-sm"
               >
                 <Scan className="mr-2 h-5 w-5" />
                 AI Scan Subjects
               </button>
               <button
                 onClick={() => handleOpenModal()}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-100"
+                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg shadow-blue-100"
               >
                 <Plus className="mr-2 h-5 w-5" />
                 เพิ่มรายวิชา
@@ -258,8 +258,8 @@ export default function AdminSubjectsPage() {
         >
           {filteredSubjects.map((subject) => (
             <tr key={subject.id} className="hover:bg-blue-50/50 transition-colors group">
-              <td className="px-8 py-5 font-mono font-bold text-blue-600 text-sm">{subject.subject_code}</td>
-              <td className="px-8 py-5 font-black text-gray-900">{subject.subject_name}</td>
+              <td className="px-8 py-5 font-mono font-semibold text-blue-600 text-sm">{subject.subject_code}</td>
+              <td className="px-8 py-5 text-gray-900">{subject.subject_name}</td>
               <td className="px-8 py-5 text-right space-x-2">
                 <button onClick={() => handleOpenModal(subject)} className="p-2 text-gray-400 hover:text-blue-600 active:scale-90 transition-transform"><Edit2 className="h-4 w-4" /></button>
                 <button onClick={() => handleDelete(subject.id)} className="p-2 text-gray-400 hover:text-red-600 active:scale-90 transition-transform"><Trash2 className="h-4 w-4" /></button>
@@ -290,27 +290,27 @@ export default function AdminSubjectsPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">รหัสวิชา</label>
-              <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none" value={formData.subject_code} onChange={(e) => setFormData({ ...formData, subject_code: e.target.value })} />
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">รหัสวิชา</label>
+              <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none" value={formData.subject_code} onChange={(e) => setFormData({ ...formData, subject_code: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">ชื่อวิชา</label>
-              <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none" value={formData.subject_name} onChange={(e) => setFormData({ ...formData, subject_name: e.target.value })} />
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">ชื่อวิชา</label>
+              <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none" value={formData.subject_name} onChange={(e) => setFormData({ ...formData, subject_name: e.target.value })} />
             </div>
           </div>
 
           <div className="border-t border-gray-100 pt-6">
-            <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4 leading-none">ข้อมูลการจัดการสอน (เลือกหรือไม่ก็ได้)</p>
+            <p className="text-[10px] text-blue-500 uppercase tracking-widest mb-4 leading-none">ข้อมูลการจัดการสอน (เลือกหรือไม่ก็ได้)</p>
             
             <div className="space-y-4">
               <div className="relative space-y-2">
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">ครูผู้สอน</label>
+                <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">ครูผู้สอน</label>
                 <div className="relative group">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                   <input
                     type="text"
                     placeholder="พิมพ์ชื่อครูเพื่อค้นหา..."
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold text-gray-900 outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900 outline-none transition-all"
                     value={teacherSearch}
                     onChange={(e) => {
                       setTeacherSearch(e.target.value);
@@ -335,7 +335,7 @@ export default function AdminSubjectsPage() {
                             setIsTeacherDropdownOpen(false);
                           }}
                         >
-                          <span className="font-bold text-gray-700">
+                          <span className="font-semibold text-gray-700">
                             {t.first_name} {t.last_name}
                           </span>
                           {formData.teacher_id === t.id.toString() && (
@@ -354,11 +354,11 @@ export default function AdminSubjectsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">ห้องเรียน</label>
+                  <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">ห้องเรียน</label>
                   <div className="relative group">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
                     <select
-                      className="w-full pl-11 pr-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none cursor-pointer appearance-none"
+                      className="w-full pl-11 pr-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none cursor-pointer appearance-none"
                       value={formData.classroom_id}
                       onChange={(e) => setFormData({ ...formData, classroom_id: e.target.value })}
                     >
@@ -372,11 +372,11 @@ export default function AdminSubjectsPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">ภาคเรียน</label>
+                  <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">ภาคเรียน</label>
                   <input 
                     type="text" 
                     placeholder="เช่น 1/2567"
-                    className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none transition-all" 
+                    className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none transition-all" 
                     value={formData.term} 
                     onChange={(e) => setFormData({ ...formData, term: e.target.value })} 
                   />
@@ -386,11 +386,11 @@ export default function AdminSubjectsPage() {
           </div>
 
           <div className="flex gap-3 pt-4 border-t border-gray-100">
-            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-xl font-black text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-[0.98] flex justify-center items-center group">
+            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-[0.98] flex justify-center items-center group">
               <Check className="mr-2 h-6 w-6 transition-transform group-hover:scale-125" />
               {editingSubject ? "อัปเดตรายวิชา" : "บันทึกรายวิชา"}
             </button>
-            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl font-black hover:bg-gray-200 transition-all active:scale-[0.98]">ยกเลิก</button>
+            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200 transition-all active:scale-[0.98]">ยกเลิก</button>
           </div>
         </form>
       </Modal>

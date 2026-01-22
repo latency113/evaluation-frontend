@@ -3,8 +3,8 @@ import "./globals.css";
 import QueryProvider from "@/src/components/QueryProvider";
 
 export const metadata: Metadata = {
-  title: "Teacher Evaluation System",
-  description: "System for evaluating teachers by students",
+  title: "ระบบประเมินครูผู้สอน",
+  description: "ระบบสำหรับการประเมินครูผู้สอนโดยนักเรียน",
 };
 
 export default function RootLayout({

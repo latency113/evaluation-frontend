@@ -10,6 +10,8 @@ import {
   School,
   Check,
   Hash,
+  Trash,
+  Pencil,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
@@ -169,7 +171,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
             actions={
               <button 
                 onClick={() => handleOpenModal()}
-                className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-black shadow-xl shadow-blue-200 active:scale-95 group"
+                className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all  shadow-xl shadow-blue-200 active:scale-95 group"
               >
                 <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
                 เพิ่มนักเรียนในห้อง
@@ -179,14 +181,14 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-8 rounded-xl shadow-xl shadow-slate-200/50 border border-white flex items-center gap-5 transition-transform hover:translate-y-[-4px]">
+          <div className="bg-white p-3 rounded-xl shadow-xl shadow-slate-200/50 border border-white flex items-center gap-5 transition-transform hover:translate-y-[-4px]">
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-4 rounded-lg shadow-lg shadow-blue-200">
-              <User className="h-8 w-8 text-white" />
+              <User className="h-4 w-4 text-white" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">จำนวนนักเรียน</p>
+              <p className="text-[10px]  text-slate-400 uppercase tracking-widest">จำนวนนักเรียน</p>
               <div className="flex items-baseline gap-1">
-                <p className="text-4xl font-black text-slate-900 leading-none">{totalStudents}</p>
+                <p className="text-3xl  text-slate-900 leading-none">{totalStudents}</p>
                 <p className="text-slate-400 font-bold text-xs">คน</p>
               </div>
             </div>
@@ -216,12 +218,12 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
           {students.map((student) => (
             <tr key={student.id} className="hover:bg-blue-50/30 transition-all group">
               <td className="px-10 py-6">
-                <span className="font-mono font-black text-slate-500 bg-slate-100 px-3 py-1 rounded-md text-sm group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
+                <span className="font-mono  text-slate-500 bg-slate-100 px-3 py-1 rounded-md text-sm group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
                   {student.student_code}
                 </span>
               </td>
               <td className="px-10 py-6">
-                <div className="font-black text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors">
+                <div className=" text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors">
                   {student.first_name} {student.last_name}
                 </div>
               </td>
@@ -231,13 +233,13 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
                     onClick={() => handleOpenModal(student)}
                     className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
                   >
-                    <Plus className="h-5 w-5" />
+                    <Pencil className="h-5 w-5" />
                   </button>
                   <button 
                     onClick={() => handleDelete(student.id)} 
                     className="p-3 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
                   >
-                    <Plus className="h-5 w-5" />
+                    <Trash className="h-5 w-5" />
                   </button>
                 </div>
               </td>
@@ -264,7 +266,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
       >
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
-            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">รหัสประจำตัวนักเรียน</label>
+            <label className="text-[11px]  text-slate-400 uppercase tracking-widest ml-1">รหัสประจำตัวนักเรียน</label>
             <div className="relative group">
               <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
                 <Hash className="h-5 w-5" />
@@ -282,7 +284,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">ชื่อ</label>
+              <label className="text-[11px]  text-slate-400 uppercase tracking-widest ml-1">ชื่อ</label>
               <input 
                 required 
                 type="text" 
@@ -293,7 +295,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">นามสกุล</label>
+              <label className="text-[11px]  text-slate-400 uppercase tracking-widest ml-1">นามสกุล</label>
               <input 
                 required 
                 type="text" 
@@ -308,7 +310,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
           <div className="flex gap-4 pt-6">
             <button 
               type="submit" 
-              className="flex-[2] bg-blue-600 text-white py-5 rounded-lg font-black text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] flex justify-center items-center group"
+              className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] flex justify-center items-center group"
             >
               <Check className="mr-2 h-6 w-6 transition-transform group-hover:scale-125" />
               {editingStudent ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
@@ -316,7 +318,7 @@ export default function ClassroomStudentsPage({ params }: { params: Promise<{ id
             <button 
               type="button" 
               onClick={() => setIsModalOpen(false)} 
-              className="flex-1 bg-slate-100 text-slate-500 py-5 rounded-lg font-black hover:bg-slate-200 transition-all active:scale-[0.98]"
+              className="flex-1 bg-slate-100 text-slate-500 py-5 rounded-lg  hover:bg-slate-200 transition-all active:scale-[0.98]"
             >
               ยกเลิก
             </button>

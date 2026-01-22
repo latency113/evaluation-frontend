@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { classroomService } from '@/src/services/classroomService';
 import { levelService } from '@/src/services/levelService';
+import { departmentService } from '@/src/services/departmentService';
 import { 
   Plus, 
   Trash2, 
@@ -23,8 +24,10 @@ export default function AdminClassroomsPage() {
   const router = useRouter();
   const [classrooms, setClassrooms] = useState<any[]>([]);
   const [levels, setLevels] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterDept, setFilterDept] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClassroom, setEditingClassroom] = useState<any>(null);
   const [formData, setFormData] = useState({ room_name: '', level_id: '' });
@@ -37,19 +40,29 @@ export default function AdminClassroomsPage() {
 
   useEffect(() => {
     fetchClassrooms();
-  }, [page, limit]);
+  }, [page, limit, filterDept]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setPage(1);
+      fetchClassrooms();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
 
   const fetchClassrooms = async () => {
     setLoading(true);
     try {
-      const [roomRes, levelRes] = await Promise.all([
-        classroomService.getAllClassrooms(page, limit),
-        levelService.getAllLevels()
+      const [roomRes, levelRes, deptRes] = await Promise.all([
+        classroomService.getAllClassrooms(page, limit, searchTerm, filterDept),
+        levelService.getAllLevelsWithoutPagination(),
+        departmentService.getAllDepartmentsWithoutPagination()
       ]);
       setClassrooms(roomRes.data || []);
       setTotalPages(roomRes.meta.totalPages);
       setTotalItems(roomRes.meta.total);
       setLevels(levelRes || []);
+      setDepartments(deptRes || []);
     } catch (err) {
       console.error('Error fetching classrooms:', err);
       setClassrooms([]);
@@ -126,23 +139,17 @@ export default function AdminClassroomsPage() {
     }
   };
 
-  const filteredClassrooms = (classrooms || []).filter(c => 
-    c.room_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.level?.level_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.level?.department?.dept_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <PageHeader 
-          title="CLASSROOMS"
+          title="จัดการห้องเรียน"
           description="จัดการห้องเรียนและกลุ่มเรียนทั้งหมดในระบบ"
           icon={School}
           actions={
             <button 
               onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
             >
               <Plus className="mr-2 h-5 w-5" />
               เพิ่มห้องเรียน
@@ -158,6 +165,25 @@ export default function AdminClassroomsPage() {
           onRefresh={fetchClassrooms}
           loading={loading}
           placeholder="ค้นหาห้อง, แผนก หรือระดับชั้น..."
+          extraFilters={
+            <div className="relative group min-w-[200px]">
+              <select
+                className="w-full px-4 py-4 bg-slate-50 border-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
+                value={filterDept}
+                onChange={(e) => {
+                  setFilterDept(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">ทุกแผนกวิชา</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>
+                    {dept.dept_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          }
         />
 
         <DataTable
@@ -170,30 +196,27 @@ export default function AdminClassroomsPage() {
           ]}
           loading={loading}
         >
-          {filteredClassrooms.map((classroom) => (
+          {classrooms.map((classroom) => (
             <tr key={classroom.id} className="hover:bg-blue-50/30 transition-colors group">
               <td className="px-8 py-5">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mr-4 font-black uppercase">
-                    {classroom.room_name.substring(0, 3)}
-                  </div>
-                  <span className="font-extrabold text-gray-900 text-lg">ห้อง {classroom.room_name}</span>
+                  <span className="font-semibold text-gray-900 text-lg">ห้อง {classroom.room_name}</span>
                 </div>
               </td>
               <td className="px-8 py-5">
-                <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-bold bg-blue-50 text-blue-700 border border-blue-100">
+                <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-50 text-blue-700 border border-blue-100">
                   {classroom.level?.department?.dept_name || 'ไม่ระบุแผนก'}
                 </span>
               </td>
               <td className="px-8 py-5">
-                <span className="text-gray-600 font-bold text-sm">
+                <span className="text-gray-600 font-semibold text-sm">
                   {classroom.level?.level_name || 'ทั่วไป'}
                 </span>
               </td>
               <td className="px-8 py-5 text-center">
                 <button 
                   onClick={() => router.push(`/admin/classrooms/${classroom.id}/students`)}
-                  className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all font-bold text-xs shadow-md"
+                  className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold text-xs shadow-md"
                 >
                   <Users className="h-3.5 w-3.5 mr-2" />
                   ดูรายชื่อ
@@ -226,14 +249,14 @@ export default function AdminClassroomsPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">ชื่อห้องเรียน (เช่น 1/1)</label>
-            <input required type="text" placeholder="ระบุชื่อห้องเรียน..." className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-bold" value={formData.room_name} onChange={(e) => setFormData({ ...formData, room_name: e.target.value })} />
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">ชื่อห้องเรียน (เช่น 1/1)</label>
+            <input required type="text" placeholder="ระบุชื่อห้องเรียน..." className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold" value={formData.room_name} onChange={(e) => setFormData({ ...formData, room_name: e.target.value })} />
           </div>
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">ระดับชั้น / แผนกวิชา</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">ระดับชั้น / แผนกวิชา</label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-bold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold"
               value={formData.level_id}
               onChange={(e) => setFormData({ ...formData, level_id: e.target.value })}
             >
@@ -246,8 +269,8 @@ export default function AdminClassroomsPage() {
             </select>
           </div>
           <div className="flex gap-3 pt-4">
-            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-lg font-black text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"><Check className="mr-2" />{editingClassroom ? 'อัปเดต' : 'บันทึก'}</button>
-            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg font-black hover:bg-gray-200">ยกเลิก</button>
+            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-lg text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"><Check className="mr-2" />{editingClassroom ? 'อัปเดต' : 'บันทึก'}</button>
+            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg hover:bg-gray-200">ยกเลิก</button>
           </div>
         </form>
       </Modal>

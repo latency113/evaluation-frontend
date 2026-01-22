@@ -28,7 +28,7 @@ export function DataTable({
               {columns.map((column, idx) => (
                 <th
                   key={idx}
-                  className={`px-8 py-5 text-xs font-bold uppercase tracking-widest ${
+                  className={`px-8 py-5 text-md font-semibold uppercase tracking-widest ${
                     column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''
                   } ${column.className || ''}`}
                 >
@@ -42,7 +42,7 @@ export function DataTable({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-8 py-20 text-center text-gray-400 font-bold italic"
+                  className="px-8 py-20 text-center text-gray-400 font-bold"
                 >
                   กำลังโหลดข้อมูล...
                 </td>

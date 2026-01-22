@@ -58,12 +58,12 @@ export default function AdminLoginPage() {
       <div className="relative w-full max-w-[440px] px-4">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[2rem] bg-gradient-to-br from-slate-700 to-slate-900 text-red-500 shadow-xl shadow-black/50 border border-slate-700">
-            <ShieldAlert className="h-10 w-10" />
+            <User className="h-10 w-10" />
           </div>
-          <h1 className="bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-3xl font-black tracking-tight text-transparent">
+          <h1 className="bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-3xl tracking-tight text-transparent">
             ระบบจัดการผู้ดูแลระบบ
           </h1>
-          <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-500">
             Admin Control Panel
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
               <div className="mt-0.5 bg-red-500 p-1">
                 <XIcon className="h-3 w-3 text-white" />
               </div>
-              <p className="text-sm font-bold leading-tight text-red-400">
+              <p className="text-sm leading-tight text-red-400">
                 {error}
               </p>
             </div>
@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <label className="ml-1 text-[11px] font-black uppercase tracking-widest text-slate-500">
+              <label className="ml-1 text-[11px] uppercase tracking-widest text-slate-500">
                 ชื่อผู้ใช้งาน
               </label>
               <div className="group relative">
@@ -92,19 +92,19 @@ export default function AdminLoginPage() {
                 <input
                   {...register("username")}
                   type="text"
-                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 font-bold text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
+                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="ชื่อผู้ใช้งาน..."
                 />
               </div>
               {errors.username && (
-                <p className="ml-1 text-[11px] font-bold text-red-400">
+                <p className="ml-1 text-[11px] text-red-400">
                   {errors.username.message}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="ml-1 text-[11px] font-black uppercase tracking-widest text-slate-500">
+              <label className="ml-1 text-[11px] uppercase tracking-widest text-slate-500">
                 รหัสผ่าน
               </label>
               <div className="group relative">
@@ -114,12 +114,12 @@ export default function AdminLoginPage() {
                 <input
                   {...register("password")}
                   type="password"
-                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 font-bold text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
+                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="••••••••"
                 />
               </div>
               {errors.password && (
-                <p className="ml-1 text-[11px] font-bold text-red-400">
+                <p className="ml-1 text-[11px] text-red-400">
                   {errors.password.message}
                 </p>
               )}
@@ -128,7 +128,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full overflow-hidden rounded-sm bg-slate-100 py-5 font-black text-lg text-slate-900 shadow-xl transition-all hover:bg-white active:scale-[0.98] disabled:bg-slate-700 disabled:text-slate-500"
+              className="group relative w-full overflow-hidden rounded-sm bg-slate-100 py-5 text-lg text-slate-900 shadow-xl transition-all hover:bg-white active:scale-[0.98] disabled:bg-slate-700 disabled:text-slate-500"
             >
               <div className="relative z-10 flex items-center justify-center">
                 {isLoading ? (
@@ -146,7 +146,7 @@ export default function AdminLoginPage() {
           <div className="mt-10 border-t border-slate-800 pt-8 text-center">
             <button
               onClick={() => router.push("/login")}
-              className="flex items-center justify-center gap-2 mx-auto text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-200 transition-colors"
+              className="flex items-center justify-center gap-2 mx-auto text-md uppercase tracking-widest text-slate-300 hover:text-slate-100 hover:cursor-pointer transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               กลับหน้าล็อกอินนักเรียน
@@ -154,7 +154,7 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-[10px] font-bold uppercase tracking-widest text-slate-600">
+        <p className="mt-8 text-center text-[10px] uppercase tracking-widest text-slate-600">
           &copy; 2026 Admin Control System
         </p>
       </div>

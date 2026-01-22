@@ -112,13 +112,13 @@ export default function AdminTeachersPage() {
     <div className="p-8 font-sans bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <PageHeader 
-          title="TEACHERS"
+          title="จัดการข้อมูลครู"
           description={`จัดการข้อมูลบุคลากรครูทั้งหมด (${totalTeachers} คน)`}
           icon={GraduationCap}
           actions={
             <button 
               onClick={() => handleOpenModal()}
-              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-black shadow-xl shadow-blue-200 active:scale-95 group"
+              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all  shadow-xl shadow-blue-200 active:scale-95 group"
             >
               <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
               เพิ่มครูใหม่
@@ -147,10 +147,10 @@ export default function AdminTeachersPage() {
           {filteredTeachers.map((teacher) => (
             <tr key={teacher.id} className="hover:bg-blue-50/30 transition-all group">
               <td className="px-10 py-6">
-                <span className="font-black text-slate-400 group-hover:text-blue-600 transition-colors text-xs">{teacher.id}</span>
+                <span className=" text-slate-400 group-hover:text-blue-600 transition-colors ">{teacher.id}</span>
               </td>
               <td className="px-10 py-6">
-                <div className="font-black text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors text-xs">{teacher.first_name} {teacher.last_name}</div>
+                <div className=" text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors ">{teacher.first_name} {teacher.last_name}</div>
               </td>
               <td className="px-10 py-6 text-right">
                 <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -179,19 +179,19 @@ export default function AdminTeachersPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 leading-none">ชื่อจริง</label>
+            <label className="block text-[10px]  text-slate-400 uppercase tracking-widest ml-1 leading-none">ชื่อจริง</label>
             <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold outline-none transition-all text-slate-900" value={formData.first_name} onChange={(e) => setFormData({ ...formData, first_name: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 leading-none">นามสกุล</label>
+            <label className="block text-[10px]  text-slate-400 uppercase tracking-widest ml-1 leading-none">นามสกุล</label>
             <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold outline-none transition-all text-slate-900" value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} />
           </div>
           <div className="flex gap-4 pt-6 border-t border-slate-50">
-            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-lg font-black text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] flex justify-center items-center group">
+            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] flex justify-center items-center group">
               <Check className="mr-2 h-6 w-6 transition-transform group-hover:scale-125" />
               {editingTeacher ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล'}
             </button>
-            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-slate-100 text-slate-500 py-5 rounded-lg font-black hover:bg-slate-200 transition-all active:scale-[0.98]">ยกเลิก</button>
+            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-slate-100 text-slate-500 py-5 rounded-lg  hover:bg-slate-200 transition-all active:scale-[0.98]">ยกเลิก</button>
           </div>
         </form>
       </Modal>

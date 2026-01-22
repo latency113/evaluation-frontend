@@ -1,9 +1,9 @@
 import api from '../lib/api';
 
 export const classroomService = {
-  getAllClassrooms: async (page: number = 1, limit: number = 10) => {
-    const response = await api.get(`/classrooms?page=${page}&limit=${limit}`);
-    return response.data; // คืนค่าทั้งหมดที่มี data และ meta
+  getAllClassrooms: async (page: number = 1, limit: number = 10, searchTerm: string = '', deptId: string = '') => {
+    const response = await api.get(`/classrooms?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}&deptId=${deptId}`);
+    return response.data;
   },
   getClassroomById: async (id: number) => {
     const response = await api.get(`/classrooms/${id}`);

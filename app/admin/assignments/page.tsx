@@ -144,7 +144,7 @@ export default function AdminAssignmentsPage() {
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: 'ยืนยันการลบ?',
-      text: 'Are you sure you want to delete this assignment?',
+      text: 'คุณแน่ใจหรือไม่ว่าต้องการลบการจัดการสอนนี้?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -179,13 +179,13 @@ export default function AdminAssignmentsPage() {
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <PageHeader 
-          title="ASSIGNMENTS"
+          title="การจัดการการสอน"
           description={`จัดการการสอนรายวิชา (${totalAssignments} รายการ)`}
           icon={ClipboardList}
           actions={
             <button
               onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
             >
               <Plus className="mr-2 h-5 w-5" />
               สร้างการจัดการสอนรายวิชา
@@ -219,27 +219,27 @@ export default function AdminAssignmentsPage() {
               className="hover:bg-blue-50/50 transition-colors group"
             >
               <td className="px-8 py-5">
-                <div className="font-bold text-blue-600 text-xs mb-1">
+                <div className="font-semibold text-blue-600 text-xs mb-1">
                   {a.subject?.subject_code}
                 </div>
-                <div className="font-extrabold text-gray-900">
+                <div className="font-semibold text-gray-900">
                   {a.subject?.subject_name}
                 </div>
               </td>
-              <td className="px-8 py-5 text-gray-700 font-bold">
+              <td className="px-8 py-5 text-gray-700 font-semibold">
                 {a.teacher?.first_name} {a.teacher?.last_name}
               </td>
               <td className="px-8 py-5">
                 <div className="flex flex-col gap-1">
-                  <span className="text-md font-black text-blue-500 uppercase tracking-wider ml-1">
+                  <span className="text-md text-blue-500 uppercase tracking-wider ml-1">
                     {a.classroom?.level?.level_name || ""}
                   </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200 w-fit">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200 w-fit">
                     {a.classroom?.room_name || "N/A"}{" "}
                   </span>
                 </div>
               </td>
-              <td className="px-8 py-5 text-gray-600 text-sm font-bold">
+              <td className="px-8 py-5 text-gray-600 text-sm font-semibold">
                 {a.term}
               </td>
               <td className="px-8 py-5 text-right space-x-2">
@@ -275,12 +275,12 @@ export default function AdminAssignmentsPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               วิชา
             </label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
               value={formData.subject_id}
               onChange={(e) =>
                 setFormData({ ...formData, subject_id: e.target.value })
@@ -296,7 +296,7 @@ export default function AdminAssignmentsPage() {
           </div>
 
           <div className="relative">
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               ครูผู้สอน
             </label>
             <div className="relative">
@@ -304,7 +304,7 @@ export default function AdminAssignmentsPage() {
               <input
                 type="text"
                 placeholder="พิมพ์ชื่อครูเพื่อค้นหา..."
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold text-gray-900"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900"
                 value={teacherSearch}
                 onChange={(e) => {
                   setTeacherSearch(e.target.value);
@@ -329,7 +329,7 @@ export default function AdminAssignmentsPage() {
                         setIsTeacherDropdownOpen(false);
                       }}
                     >
-                      <span className="font-bold text-gray-700">
+                      <span className="font-semibold text-gray-700">
                         {t.first_name} {t.last_name}
                       </span>
                       {formData.teacher_id === t.id.toString() && (
@@ -348,12 +348,12 @@ export default function AdminAssignmentsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               ห้องเรียน
             </label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
               value={formData.classroom_id}
               onChange={(e) =>
                 setFormData({ ...formData, classroom_id: e.target.value })
@@ -370,13 +370,13 @@ export default function AdminAssignmentsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               ภาคเรียน (เช่น 1/2567)
             </label>
             <input
               required
               type="text"
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
               value={formData.term}
               onChange={(e) =>
                 setFormData({ ...formData, term: e.target.value })
@@ -386,7 +386,7 @@ export default function AdminAssignmentsPage() {
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl font-black text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
+              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
             >
               <Check className="mr-2" />
               {editingAssignment ? "อัปเดต" : "บันทึก"}
@@ -394,7 +394,7 @@ export default function AdminAssignmentsPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl font-black hover:bg-gray-200"
+              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
             >
               ยกเลิก
             </button>

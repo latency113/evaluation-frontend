@@ -42,8 +42,24 @@ export const evaluationService = {
     return response.data.data.filter((e: any) => e.student_id === studentId);
   },
 
-  getAllEvaluations: async (page: number = 1, limit: number = 10) => {
-    const response = await api.get(`/evaluations?page=${page}&limit=${limit}`);
-    return response.data;
-  }
-};
+    getAllEvaluations: async (page: number = 1, limit: number = 10) => {
+
+      const response = await api.get(`/evaluations?page=${page}&limit=${limit}`);
+
+      return response.data;
+
+    },
+
+  
+
+    getAllEvaluationsWithoutPagination: async () => {
+
+      const response = await api.get('/evaluations/all');
+
+      return response.data.data;
+
+    }
+
+  };
+
+  

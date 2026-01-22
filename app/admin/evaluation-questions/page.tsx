@@ -123,7 +123,7 @@ export default function AdminEvaluationQuestionsPage() {
           actions={
             <button 
               onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-100"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg shadow-blue-100"
             >
               <Plus className="mr-2 h-5 w-5" />
               เพิ่มหัวข้อการประเมิน
@@ -151,11 +151,11 @@ export default function AdminEvaluationQuestionsPage() {
         >
           {filteredQuestions.map((q, index) => (
             <tr key={q.id} className="hover:bg-blue-50/30 transition-colors group">
-              <td className="px-8 py-5 font-black text-gray-400 text-lg">
+              <td className="px-8 py-5 text-gray-400 text-lg">
                 {((page - 1) * limit) + index + 1}
               </td>
               <td className="px-8 py-5">
-                <span className="font-extrabold text-gray-900 text-lg leading-relaxed">{q.question_text}</span>
+                <span className=" text-gray-900 text-lg leading-relaxed">{q.question_text}</span>
               </td>
               <td className="px-8 py-5 text-right">
                 <div className="flex justify-end gap-2">
@@ -193,12 +193,12 @@ export default function AdminEvaluationQuestionsPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">ข้อความหัวข้อการประเมิน</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">ข้อความหัวข้อการประเมิน</label>
             <textarea 
               required 
               rows={4}
               placeholder="ระบุข้อความสำหรับเกณฑ์การประเมิน เช่น 'อาจารย์เข้าสอนตรงเวลา'..." 
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-bold text-gray-900 transition-all" 
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900 transition-all" 
               value={formData.question_text} 
               onChange={(e) => setFormData({ ...formData, question_text: e.target.value })} 
             />
@@ -206,7 +206,7 @@ export default function AdminEvaluationQuestionsPage() {
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-[2] bg-blue-600 text-white py-5 rounded-lg font-black text-lg hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95 flex justify-center items-center"
+              className="flex-[2] bg-blue-600 text-white py-2 rounded-lg text-lg hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95 flex justify-center items-center"
             >
               <Check className="inline-block mr-2 h-6 w-6" />
               {editingQuestion ? 'อัปเดตหัวข้อ' : 'บันทึกข้อมูล'}
@@ -214,7 +214,7 @@ export default function AdminEvaluationQuestionsPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg font-black hover:bg-gray-200 transition-all"
+              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg hover:bg-gray-200 transition-all"
             >
               ยกเลิก
             </button>

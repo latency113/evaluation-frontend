@@ -19,7 +19,7 @@ export function Modal({
   subtitle,
   icon: Icon,
   children,
-  maxWidth = "max-w-2xl",
+  maxWidth = "max-w-xl",
 }: ModalProps) {
   if (!isOpen) return null;
 
@@ -34,11 +34,11 @@ export function Modal({
               </div>
             )}
             <div>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-none">
+              <h2 className="text-2xl text-gray-900 tracking-tight leading-none">
                 {title}
               </h2>
               {subtitle && (
-                <p className="text-xs font-bold text-gray-400 mt-2 uppercase tracking-widest">
+                <p className="text-md text-gray-400 mt-2 uppercase tracking-widest">
                   {subtitle}
                 </p>
               )}
