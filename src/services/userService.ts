@@ -9,16 +9,29 @@ export const userService = {
     const users = response.data.data;
     const user = users.find((u: any) => u.username === data.username);
     
-    // In a real app, the backend would verify the password and return a JWT
-    // For this prototype, we'll assume the password check is done or simplified
-    if (user && user.role === 'admin') {
+    if (user && (user.role === 'admin' || user.role === 'teacher')) {
       return user;
     }
     throw new Error('Invalid credentials');
   },
 
-  getAllUsers: async () => {
-    const response = await api.get('/users');
+  getAllUsers: async (page: number = 1, limit: number = 10, search: string = '') => {
+    const response = await api.get(`/users?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
+    return response.data;
+  },
+
+  createUser: async (data: any) => {
+    const response = await api.post('/users', data);
+    return response.data.data;
+  },
+
+  updateUser: async (id: number, data: any) => {
+    const response = await api.put(`/users/${id}`, data);
+    return response.data.data;
+  },
+
+  deleteUser: async (id: number) => {
+    const response = await api.delete(`/users/${id}`);
     return response.data.data;
   }
 };

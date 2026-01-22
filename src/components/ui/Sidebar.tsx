@@ -30,6 +30,7 @@ export function Sidebar({ user, logout }: SidebarProps) {
     { name: 'ฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
     { name: 'ห้องเรียน/กลุ่มเรียน', icon: School, href: '/admin/classrooms' },
     { name: 'การจัดการสอน', icon: ClipboardList, href: '/admin/assignments' },
+    ...(user.role === 'admin' ? [{ name: 'จัดการผู้ใช้งาน', icon: UserIcon, href: '/admin/users' }] : []),
     { name: 'เกณฑ์การประเมิน', icon: Settings, href: '/admin/evaluation-questions' },
     { name: 'ผลการประเมิน', icon: ShieldCheck, href: '/admin/evaluations' },
   ];
@@ -42,7 +43,9 @@ export function Sidebar({ user, logout }: SidebarProps) {
             <ShieldCheck className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tight text-white leading-none">ADMIN</h1>
+            <h1 className="text-xl font-black tracking-tight text-white leading-none uppercase">
+              {user.role === 'admin' ? 'ADMIN' : 'TEACHER'}
+            </h1>
             <p className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mt-1">Control Panel</p>
           </div>
         </div>
@@ -78,8 +81,10 @@ export function Sidebar({ user, logout }: SidebarProps) {
               <UserIcon className="h-5 w-5 text-slate-300" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-black text-white truncate">{user.username || 'Administrator'}</p>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Super Admin</p>
+              <p className="text-sm font-black text-white truncate">{user.username || 'User'}</p>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                {user.role === 'admin' ? 'Super Admin' : 'Staff Teacher'}
+              </p>
             </div>
           </div>
           
