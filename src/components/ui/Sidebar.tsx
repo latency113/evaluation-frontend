@@ -10,7 +10,8 @@ import {
   School,
   ClipboardList,
   ShieldCheck,
-  User as UserIcon
+  User as UserIcon,
+  Building2
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -28,6 +29,7 @@ export function Sidebar({ user, logout }: SidebarProps) {
     { name: 'ทะเบียนนักเรียน', icon: Users, href: '/admin/students' },
     { name: 'จัดการครูผู้สอน', icon: GraduationCap, href: '/admin/teachers' },
     { name: 'ฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
+    { name: 'แผนกวิชา', icon: Building2, href: '/admin/departments' },
     { name: 'ห้องเรียน/กลุ่มเรียน', icon: School, href: '/admin/classrooms' },
     { name: 'การจัดการสอน', icon: ClipboardList, href: '/admin/assignments' },
     ...(user.role === 'admin' ? [{ name: 'จัดการผู้ใช้งาน', icon: UserIcon, href: '/admin/users' }] : []),

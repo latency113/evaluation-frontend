@@ -1,9 +1,9 @@
 import api from '../lib/api';
 
 export const departmentService = {
-  getAllDepartments: async () => {
-    const response = await api.get('/departments');
-    return response.data.data;
+  getAllDepartments: async (page: number = 1, limit: number = 10) => {
+    const response = await api.get(`/departments?page=${page}&limit=${limit}`);
+    return response.data;
   },
   getAllDepartmentsWithoutPagination: async () => {
     const response = await api.get('/departments/all');
@@ -11,6 +11,14 @@ export const departmentService = {
   },
   createDepartment: async (data: any) => {
     const response = await api.post('/departments', data);
+    return response.data.data;
+  },
+  updateDepartment: async (id: number, data: any) => {
+    const response = await api.put(`/departments/${id}`, data);
+    return response.data.data;
+  },
+  deleteDepartment: async (id: number) => {
+    const response = await api.delete(`/departments/${id}`);
     return response.data.data;
   },
   findByName: async (name: string) => {

@@ -251,12 +251,12 @@ export default function AdminEvaluationsPage() {
                   <TrendingUp className="mr-2 h-4 w-4" /> สรุปรายครู
                 </button>
               </div>
-              <button
+              {/* <button
                 onClick={exportToPDF}
                 className="flex items-center px-6 py-3.5 bg-white text-red-600 border border-red-100 rounded-xl hover:bg-red-50 transition-all  text-xs shadow-sm active:scale-95"
               >
                 <Download className="mr-2 h-4 w-4" /> EXPORT PDF
-              </button>
+              </button> */}
             </div>
           }
         />
