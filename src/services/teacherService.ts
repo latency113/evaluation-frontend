@@ -1,8 +1,8 @@
 import api from '../lib/api';
 
 export const teacherService = {
-  getAllTeachers: async (page: number = 1, limit: number = 10) => {
-    const response = await api.get(`/teachers?page=${page}&limit=${limit}`);
+  getAllTeachers: async (page: number = 1, limit: number = 10, searchTerm: string = '') => {
+    const response = await api.get(`/teachers?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`);
     return response.data;
   },
   

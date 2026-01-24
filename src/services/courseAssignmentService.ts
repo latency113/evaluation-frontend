@@ -6,9 +6,10 @@ export const courseAssignmentService = {
     return response.data;
   },
 
-  importAssignments: async (file: File) => {
+  importAssignments: async (file: File, term?: string) => {
     const formData = new FormData();
     formData.append('file', file);
+    if (term) formData.append('term', term);
     const response = await api.post('/course-assignments/import', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });

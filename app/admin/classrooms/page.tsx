@@ -219,7 +219,7 @@ export default function AdminClassroomsPage() {
                   className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold text-xs shadow-md"
                 >
                   <Users className="h-3.5 w-3.5 mr-2" />
-                  ดูรายชื่อ
+                  ดูรายชื่อ {classroom._count?.students !== undefined ? `(${classroom._count.students} คน)` : ''}
                 </button>
               </td>
               <td className="px-8 py-5 text-right">

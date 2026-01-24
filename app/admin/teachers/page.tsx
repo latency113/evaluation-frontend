@@ -45,7 +45,7 @@ export default function AdminTeachersPage() {
   const fetchTeachers = async () => {
     setLoading(true);
     try {
-      const response = await teacherService.getAllTeachers(page, limit);
+      const response = await teacherService.getAllTeachers(page, limit, searchTerm);
       setTeachers(response.data);
       setTotalPages(response.meta.totalPages);
       setTotalTeachers(response.meta.total);
@@ -112,10 +112,6 @@ export default function AdminTeachersPage() {
     }
   };
 
-  const filteredTeachers = teachers.filter(t => 
-    `${t.first_name} ${t.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="p-8 font-sans bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -146,17 +142,13 @@ export default function AdminTeachersPage() {
 
         <DataTable
           columns={[
-            { header: 'ID', className: 'w-24' },
             { header: 'ชื่อ-นามสกุล' },
             { header: 'การจัดการ', align: 'right' }
           ]}
           loading={loading}
         >
-          {filteredTeachers.map((teacher) => (
+          {teachers.map((teacher) => (
             <tr key={teacher.id} className="hover:bg-blue-50/30 transition-all group">
-              <td className="px-10 py-6">
-                <span className=" text-slate-400 group-hover:text-blue-600 transition-colors ">{teacher.id}</span>
-              </td>
               <td className="px-10 py-6">
                 <div className=" text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors ">{teacher.first_name} {teacher.last_name}</div>
               </td>

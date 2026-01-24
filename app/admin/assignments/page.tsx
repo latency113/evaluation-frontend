@@ -34,6 +34,7 @@ export default function AdminAssignmentsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [termForImport, setTermForImport] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<any>(null);
 
@@ -98,13 +99,18 @@ export default function AdminAssignmentsPage() {
 
   const handleImportSubmit = async () => {
     if (!selectedFile) return;
+    if (!termForImport) {
+        Swal.fire('คำเตือน', 'กรุณาระบุภาคเรียนก่อนนำเข้าข้อมูล', 'warning');
+        return;
+    }
     
     setIsProcessing(true);
     try {
-      const response = await courseAssignmentService.importAssignments(selectedFile);
+      const response = await courseAssignmentService.importAssignments(selectedFile, termForImport);
       Swal.fire('สำเร็จ', response.message, 'success');
       setIsImportModalOpen(false);
       setSelectedFile(null);
+      setTermForImport("");
       setPage(1);
       fetchInitialData();
     } catch (err: any) {
@@ -204,17 +210,6 @@ export default function AdminAssignmentsPage() {
     }
   };
 
-  const filteredAssignments = (assignments || []).filter((a) => {
-    const sName = a.subject?.subject_name?.toLowerCase() || "";
-    const tName = a.teacher?.first_name?.toLowerCase() || "";
-    const cName = a.classroom?.room_name?.toLowerCase() || "";
-    const search = searchTerm.toLowerCase();
-
-    return (
-      sName.includes(search) || tName.includes(search) || cName.includes(search)
-    );
-  });
-
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -256,6 +251,7 @@ export default function AdminAssignmentsPage() {
           columns={[
             { header: 'วิชาที่สอน' },
             { header: 'ครูผู้สอน' },
+            { header: 'แผนกวิชา' },
             { header: 'ห้องเรียน' },
             { header: 'ภาคเรียน' },
             { header: 'การจัดการ', align: 'right' }
@@ -277,6 +273,11 @@ export default function AdminAssignmentsPage() {
               </td>
               <td className="px-8 py-5 text-gray-700 font-semibold">
                 {a.teacher?.first_name} {a.teacher?.last_name}
+              </td>
+              <td className="px-8 py-5">
+                <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                  {a.classroom?.department?.dept_name || a.classroom?.level?.department?.dept_name || 'ไม่ระบุแผนก'}
+                </span>
               </td>
               <td className="px-8 py-5">
                 <div className="flex flex-col gap-1">
@@ -420,7 +421,7 @@ export default function AdminAssignmentsPage() {
           </div>
           <div>
             <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
-              ภาคเรียน (เช่น 1/2567)
+              ภาคเรียน (เช่น 2/2568)
             </label>
             <input
               required
@@ -456,11 +457,26 @@ export default function AdminAssignmentsPage() {
                   onClose={() => {
                     setIsImportModalOpen(false);
                     setSelectedFile(null);
+                    setTermForImport("");
                   }}
                   title="นำเข้าข้อมูลการสอน"
                   subtitle="ไฟล์ Excel หัวตาราง: รหัสวิชา, ชื่อวิชา, ชื่อครู, ห้องเรียน, ภาคเรียน"
                   icon={FileSpreadsheet}
                 >
+                  <div className="mb-6">
+                    <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                      ภาคเรียน (เช่น 2/2568)
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="ระบุภาคเรียนที่จะนำเข้า..."
+                      className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+                      value={termForImport}
+                      onChange={(e) => setTermForImport(e.target.value)}
+                    />
+                  </div>
+
                   <div className="border-4 border-dashed border-gray-100 rounded-2xl p-12 text-center bg-gray-50/50 mb-8 relative hover:border-blue-200 transition-colors">
                     <input
                       type="file"

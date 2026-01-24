@@ -245,7 +245,7 @@ export default function AdminSubjectsPage() {
           onSearchChange={setSearchTerm}
           limit={limit}
           onLimitChange={(l) => { setLimit(l); setPage(1); }}
-          onRefresh={fetchInitialData}
+          onRefresh={fetchSubjects}
           loading={loading}
           placeholder="ค้นหารหัสหรือชื่อวิชา..."
         />
