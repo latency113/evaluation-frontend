@@ -1,8 +1,17 @@
 import api from '../lib/api';
 
 export const courseAssignmentService = {
-  getAllAssignments: async (page: number = 1, limit: number = 10) => {
-    const response = await api.get(`/course-assignments?page=${page}&limit=${limit}`);
+  getAllAssignments: async (page: number = 1, limit: number = 10, searchTerm: string = '') => {
+    const response = await api.get(`/course-assignments?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`);
+    return response.data;
+  },
+
+  importAssignments: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/course-assignments/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data;
   },
   createAssignment: async (data: any) => {

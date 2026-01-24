@@ -6,6 +6,15 @@ export const teacherService = {
     return response.data;
   },
   
+  importTeachers: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/teachers/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+  },
+  
   getTeacherById: async (id: number) => {
     const response = await api.get(`/teachers/${id}`);
     return response.data.data;

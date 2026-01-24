@@ -143,7 +143,7 @@ export default function AdminEvaluationsPage() {
       if (!teacherMap.has(teacherId)) {
         teacherMap.set(teacherId, {
           teacher: e.assignment.teacher,
-          assignments: new Set(),
+          assignments: new Map(),
           classrooms: new Set(),
           students: new Set(),
           evalCount: 0,
@@ -157,7 +157,20 @@ export default function AdminEvaluationsPage() {
       item.evalCount += 1;
       item.totalScore += avg;
       item.evals.push(e);
-      item.assignments.add(e.assignment_id);
+      item.assignments.add?.(e.assignment_id); // Fallback for old set logic if needed
+      
+      const assignmentId = e.assignment_id;
+      if (!item.assignments.has(assignmentId)) {
+        item.assignments.set(assignmentId, {
+          assignment: e.assignment,
+          count: 0,
+          totalScore: 0
+        });
+      }
+      const assignItem = item.assignments.get(assignmentId);
+      assignItem.count += 1;
+      assignItem.totalScore += avg;
+
       if (e.student_id) {
         item.students.add(e.student_id);
       }
@@ -172,6 +185,10 @@ export default function AdminEvaluationsPage() {
       assignmentCount: item.assignments.size,
       classroomCount: item.classrooms.size,
       studentCount: item.students.size,
+      assignmentsList: Array.from(item.assignments.values()).map((a: any) => ({
+        ...a,
+        avg: (a.totalScore / a.count).toFixed(2)
+      }))
     }));
   };
 
@@ -231,7 +248,7 @@ export default function AdminEvaluationsPage() {
           description="ระบบบันทึกและสรุปผลการประเมินครูผู้สอน"
           actions={
             <div className="flex items-center gap-3">
-              <div className="bg-white p-1.5 rounded-xl border border-slate-200 flex shadow-sm">
+              <div className="bg-white p-1.5 rounded-md border border-slate-200 flex shadow-sm">
                 <button
                   onClick={() => setViewMode("individual")}
                   className={`flex items-center px-5 py-2.5 rounded-lg text-xs  transition-all active:scale-95 ${viewMode === "individual" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
@@ -253,7 +270,7 @@ export default function AdminEvaluationsPage() {
               </div>
               {/* <button
                 onClick={exportToPDF}
-                className="flex items-center px-6 py-3.5 bg-white text-red-600 border border-red-100 rounded-xl hover:bg-red-50 transition-all  text-xs shadow-sm active:scale-95"
+                className="flex items-center px-6 py-3.5 bg-white text-red-600 border border-red-100 rounded-md hover:bg-red-50 transition-all  text-xs shadow-sm active:scale-95"
               >
                 <Download className="mr-2 h-4 w-4" /> EXPORT PDF
               </button> */}
@@ -276,7 +293,7 @@ export default function AdminEvaluationsPage() {
             <div className="relative group min-w-[240px]">
               <School className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
               <select
-                className="w-full pl-11 pr-4 py-4 bg-slate-50 border-none rounded-xl text-md font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
+                className="w-full pl-11 pr-4 py-4 bg-slate-50 border-none rounded-md text-md font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
                 value={filterClassroom}
                 onChange={(e) => {
                   setFilterClassroom(e.target.value);
@@ -345,7 +362,7 @@ export default function AdminEvaluationsPage() {
                 <td className="px-10 py-6 text-right">
                   <button
                     onClick={() => setSelectedEval(e)}
-                    className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all active:scale-90 shadow-sm border border-transparent hover:border-slate-100"
+                    className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md transition-all active:scale-90 shadow-sm border border-transparent hover:border-slate-100"
                   >
                     <Eye className="h-5 w-5" />
                   </button>
@@ -409,7 +426,7 @@ export default function AdminEvaluationsPage() {
                   </td>
                   <td className="px-10 py-7 text-center">
                     <div
-                      className={`inline-flex items-center px-5 py-2.5 rounded-xl  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                      className={`inline-flex items-center px-5 py-2.5 rounded-md  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                     >
                       <Star className="h-3 w-3 mr-2 fill-current" />{" "}
                       <p className="text-sm">{item.finalAvg}</p>
@@ -418,7 +435,7 @@ export default function AdminEvaluationsPage() {
                   <td className="px-10 py-7 text-right">
                     <button
                       onClick={() => setSelectedSummary(item)}
-                      className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
+                      className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
                     >
                       <ArrowRight className="h-5 w-5" />
                     </button>
@@ -472,7 +489,7 @@ export default function AdminEvaluationsPage() {
                 </td>
                 <td className="px-10 py-7 text-center">
                   <div
-                    className={`inline-flex items-center px-5 py-2.5 rounded-xl  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                    className={`inline-flex items-center px-5 py-2.5 rounded-md  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                   >
                     <Star className="h-3 w-3 mr-2 fill-current" />{" "}
                     <p className="text-sm">{item.finalAvg}</p>
@@ -481,7 +498,7 @@ export default function AdminEvaluationsPage() {
                 <td className="px-10 py-7 text-right">
                   <button
                     onClick={() => setSelectedSummary(item)}
-                    className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
+                    className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
                   >
                     <ArrowRight className="h-5 w-5" />
                   </button>
@@ -511,30 +528,32 @@ export default function AdminEvaluationsPage() {
           {selectedEval && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-blue-50/50 rounded-xl border border-blue-100">
+                <div className="p-6 bg-blue-50/50 rounded-md border border-blue-100">
                   <p className="text-md  text-blue-600 uppercase tracking-widest mb-3 leading-none">
                     นักเรียน / ผู้ประเมิน
                   </p>
-                  <p className=" text-slate-900 text-xl leading-tight">
+                  <p className=" text-slate-900 text-lg leading-tight">
                     {selectedEval.student?.first_name}{" "}
                     {selectedEval.student?.last_name}
                   </p>
-                  <p className="text-md font-semibold text-slate-400 mt-3 uppercase tracking-widest">
-                    {selectedEval.student?.student_code} ห้อง{" "}
+                  <p className="text-sm font-semibold text-slate-400 mt-3 uppercase tracking-widest">
+                    ห้อง{" "}
                     {selectedEval.assignment?.classroom?.room_name ||
                       selectedEval.student?.classroom?.room_name ||
                       "N/A"}
+                    {selectedEval.assignment?.classroom?.level?.department?.dept_name && 
+                      ` (${selectedEval.assignment.classroom.level.department.dept_name})`}
                   </p>
                 </div>
-                <div className="p-6 bg-purple-50/50 rounded-xl border border-purple-100">
+                <div className="p-6 bg-purple-50/50 rounded-md border border-purple-100">
                   <p className="text-md  text-purple-600 uppercase tracking-widest mb-3 leading-none">
                     รายวิชา / ครูผู้สอน
                   </p>
                   <p className=" text-slate-900 text-xl leading-tight uppercase tracking-tight">
                     {selectedEval.assignment?.subject?.subject_name}
                   </p>
-                  <p className="text-xs font-semibold text-slate-500 mt-3">
-                    อ. {selectedEval.assignment?.teacher?.first_name}{" "}
+                  <p className="text-sm font-semibold text-slate-500 mt-3">
+                    {selectedEval.assignment?.teacher?.first_name}{" "}
                     {selectedEval.assignment?.teacher?.last_name}
                   </p>
                 </div>
@@ -548,7 +567,7 @@ export default function AdminEvaluationsPage() {
                   {selectedEval.answers?.map((answer: any, idx: number) => (
                     <div
                       key={idx}
-                      className="flex justify-between items-center p-6 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white transition-all hover:shadow-md group"
+                      className="flex justify-between items-center p-6 bg-slate-50 rounded-md border border-slate-100 hover:bg-white transition-all hover:shadow-md group"
                     >
                       <div className="flex-1 mr-6">
                         <span className="text-[9px]  text-slate-400 uppercase tracking-widest block mb-2">
@@ -598,7 +617,7 @@ export default function AdminEvaluationsPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {selectedSummary.assignment ? (
-                  <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="bg-blue-600 p-2 rounded-lg text-white">
                         <School className="h-5 w-5" />
@@ -636,7 +655,7 @@ export default function AdminEvaluationsPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="bg-indigo-600 p-2 rounded-lg text-white">
                         <Users className="h-5 w-5" />
@@ -664,7 +683,7 @@ export default function AdminEvaluationsPage() {
                   </div>
                 )}
 
-                <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
+                <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="bg-blue-500 p-2 rounded-lg text-white">
                       {selectedSummary.assignment ? (
@@ -684,8 +703,8 @@ export default function AdminEvaluationsPage() {
                       <p className=" text-xl leading-tight uppercase tracking-tight">
                         {selectedSummary.assignment?.subject?.subject_name}
                       </p>
-                      <p className="text-xs font-semibold text-slate-400 mt-3">
-                        อ. {selectedSummary.assignment?.teacher?.first_name}{" "}
+                      <p className="text-sm font-semibold text-slate-400 mt-3">
+                        {selectedSummary.assignment?.teacher?.first_name}{" "}
                         {selectedSummary.assignment?.teacher?.last_name}
                       </p>
                     </>
@@ -711,6 +730,50 @@ export default function AdminEvaluationsPage() {
                 </div>
               </div>
 
+              {/* Added Subjects List Section for Teacher Summary */}
+              {!selectedSummary.assignment && selectedSummary.assignmentsList && (
+                <div className="space-y-5">
+                  <h3 className=" text-slate-900 text-xl flex items-center px-2 uppercase tracking-tight">
+                    <BookOpen className="h-6 w-6 mr-3 text-purple-600" /> รายวิชาที่รับผิดชอบ
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    {selectedSummary.assignmentsList.map((item: any, idx: number) => (
+                      <div key={idx} className="p-5 bg-white border border-slate-100 rounded-md shadow-sm flex items-center justify-between group hover:border-purple-200 transition-all">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600  text-xs">
+                            {idx + 1}
+                          </div>
+                          <div>
+                            <p className=" text-slate-900">{item.assignment?.subject?.subject_name}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px]  text-slate-400 uppercase tracking-widest">
+                                {item.assignment?.subject?.subject_code}
+                              </span>
+                              <span className="text-[10px]  text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
+                                ห้อง {item.assignment?.classroom?.room_name}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <div className="text-right">
+                            <p className="text-[10px]  text-slate-400 uppercase leading-none mb-1">ประเมิน</p>
+                            <p className=" text-slate-700 text-sm">{item.count} คน</p>
+                          </div>
+                          <div className="bg-yellow-50 px-4 py-2 rounded-lg border border-yellow-100 text-center min-w-[80px]">
+                            <p className="text-[10px]  text-yellow-600 uppercase leading-none mb-1">เฉลี่ย</p>
+                            <div className="flex items-center justify-center text-yellow-700">
+                              <Star className="h-3 w-3 mr-1 fill-current" />
+                              {item.avg}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-6">
                 <h3 className=" text-slate-900 text-xl flex items-center px-2 uppercase tracking-tight">
                   <TrendingUp className="h-6 w-6 mr-3 text-blue-600" /> คะแนนเฉลี่ยรายหัวข้อ
@@ -720,7 +783,7 @@ export default function AdminEvaluationsPage() {
                     (criteria, idx) => (
                       <div
                         key={idx}
-                        className="p-6 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all group"
+                        className="p-6 bg-white border border-slate-100 rounded-md shadow-sm hover:shadow-md transition-all group"
                       >
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex-1 mr-4">

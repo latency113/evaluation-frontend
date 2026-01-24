@@ -56,11 +56,19 @@ export default function AdminSubjectsPage() {
     fetchSubjects();
   }, [page, limit]);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setPage(1);
+      fetchSubjects();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
   const fetchSubjects = async () => {
     setLoading(true);
     try {
       const [subjectRes, teacherRes, classroomRes] = await Promise.all([
-        subjectService.getAllSubjects(page, limit),
+        subjectService.getAllSubjects(page, limit, searchTerm),
         teacherService.getAllTeachers(1, 1000),
         classroomService.getAllClassrooms(1, 1000)
       ]);
@@ -205,12 +213,6 @@ export default function AdminSubjectsPage() {
     }
   };
 
-  const filteredSubjects = subjects.filter(
-    (s) =>
-      s.subject_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.subject_name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -243,7 +245,7 @@ export default function AdminSubjectsPage() {
           onSearchChange={setSearchTerm}
           limit={limit}
           onLimitChange={(l) => { setLimit(l); setPage(1); }}
-          onRefresh={fetchSubjects}
+          onRefresh={fetchInitialData}
           loading={loading}
           placeholder="ค้นหารหัสหรือชื่อวิชา..."
         />
@@ -256,7 +258,7 @@ export default function AdminSubjectsPage() {
           ]}
           loading={loading}
         >
-          {filteredSubjects.map((subject) => (
+          {subjects.map((subject) => (
             <tr key={subject.id} className="hover:bg-blue-50/50 transition-colors group">
               <td className="px-8 py-5 font-mono font-semibold text-blue-600 text-sm">{subject.subject_code}</td>
               <td className="px-8 py-5 text-gray-900">{subject.subject_name}</td>
@@ -290,11 +292,11 @@ export default function AdminSubjectsPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">รหัสวิชา</label>
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 ml-1">รหัสวิชา</label>
               <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none" value={formData.subject_code} onChange={(e) => setFormData({ ...formData, subject_code: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">ชื่อวิชา</label>
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 ml-1">ชื่อวิชา</label>
               <input required type="text" className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none" value={formData.subject_name} onChange={(e) => setFormData({ ...formData, subject_name: e.target.value })} />
             </div>
           </div>
@@ -376,7 +378,7 @@ export default function AdminSubjectsPage() {
                   <input 
                     type="text" 
                     placeholder="เช่น 1/2567"
-                    className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold outline-none transition-all" 
+                    className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900 outline-none transition-all" 
                     value={formData.term} 
                     onChange={(e) => setFormData({ ...formData, term: e.target.value })} 
                   />
@@ -386,11 +388,11 @@ export default function AdminSubjectsPage() {
           </div>
 
           <div className="flex gap-3 pt-4 border-t border-gray-100">
-            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-[0.98] flex justify-center items-center group">
+            <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-xl  text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-[0.98] flex justify-center items-center group">
               <Check className="mr-2 h-6 w-6 transition-transform group-hover:scale-125" />
               {editingSubject ? "อัปเดตรายวิชา" : "บันทึกรายวิชา"}
             </button>
-            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200 transition-all active:scale-[0.98]">ยกเลิก</button>
+            <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl  hover:bg-gray-200 transition-all active:scale-[0.98]">ยกเลิก</button>
           </div>
         </form>
       </Modal>

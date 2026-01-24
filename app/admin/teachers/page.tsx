@@ -34,6 +34,14 @@ export default function AdminTeachersPage() {
     fetchTeachers();
   }, [page, limit]);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setPage(1);
+      fetchTeachers();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
   const fetchTeachers = async () => {
     setLoading(true);
     try {

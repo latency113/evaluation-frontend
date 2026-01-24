@@ -12,6 +12,10 @@ import {
   Search,
   Check,
   ClipboardList,
+  FileUp,
+  FileSpreadsheet,
+  Download,
+  RefreshCw
 } from "lucide-react";
 import Swal from 'sweetalert2';
 import { PageHeader } from "@/src/components/ui/PageHeader";
@@ -28,6 +32,9 @@ export default function AdminAssignmentsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<any>(null);
 
   // Searchable Teacher States
@@ -51,12 +58,20 @@ export default function AdminAssignmentsPage() {
     fetchInitialData();
   }, [page, limit]);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setPage(1);
+      fetchInitialData();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
   const fetchInitialData = async () => {
     setLoading(true);
     try {
       const [assignData, teacherData, subjectData, roomData] =
         await Promise.all([
-          courseAssignmentService.getAllAssignments(page, limit),
+          courseAssignmentService.getAllAssignments(page, limit, searchTerm),
           teacherService.getAllTeachers(1, 1000),
           subjectService.getAllSubjects(1, 1000),
           classroomService.getAllClassrooms(1, 1000),
@@ -72,6 +87,31 @@ export default function AdminAssignmentsPage() {
       console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleImportSubmit = async () => {
+    if (!selectedFile) return;
+    
+    setIsProcessing(true);
+    try {
+      const response = await courseAssignmentService.importAssignments(selectedFile);
+      Swal.fire('สำเร็จ', response.message, 'success');
+      setIsImportModalOpen(false);
+      setSelectedFile(null);
+      setPage(1);
+      fetchInitialData();
+    } catch (err: any) {
+      console.error(err);
+      Swal.fire('เกิดข้อผิดพลาด', err.response?.data?.message || 'เกิดข้อผิดพลาดในการนำเข้าข้อมูล', 'error');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -183,13 +223,22 @@ export default function AdminAssignmentsPage() {
           description={`จัดการการสอนรายวิชา (${totalAssignments} รายการ)`}
           icon={ClipboardList}
           actions={
-            <button
-              onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              สร้างการจัดการสอนรายวิชา
-            </button>
+            <>
+              <button
+                onClick={() => setIsImportModalOpen(true)}
+                className="flex items-center px-6 py-3 bg-white text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-all font-semibold shadow-sm"
+              >
+                <FileUp className="mr-2 h-5 w-5" />
+                นำเข้าไฟล์ Excel
+              </button>
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                สร้างการจัดการสอนรายวิชา
+              </button>
+            </>
           }
         />
 
@@ -213,7 +262,7 @@ export default function AdminAssignmentsPage() {
           ]}
           loading={loading}
         >
-          {filteredAssignments.map((a) => (
+          {assignments.map((a) => (
             <tr
               key={a.id}
               className="hover:bg-blue-50/50 transition-colors group"
@@ -383,24 +432,84 @@ export default function AdminAssignmentsPage() {
               }
             />
           </div>
-          <div className="flex gap-3 pt-4">
-            <button
-              type="submit"
-              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
-            >
-              <Check className="mr-2" />
-              {editingAssignment ? "อัปเดต" : "บันทึก"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
-            >
-              ยกเลิก
-            </button>
-          </div>
-        </form>
-      </Modal>
-    </div>
-  );
-}
+                    <div className="flex gap-3 pt-4">
+                      <button
+                        type="submit"
+                        className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
+                      >
+                        <Check className="mr-2" />
+                        {editingAssignment ? "อัปเดต" : "บันทึก"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsModalOpen(false)}
+                        className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
+                      >
+                        ยกเลิก
+                      </button>
+                    </div>
+                  </form>
+                </Modal>
+          
+                <Modal
+                  isOpen={isImportModalOpen}
+                  onClose={() => {
+                    setIsImportModalOpen(false);
+                    setSelectedFile(null);
+                  }}
+                  title="นำเข้าข้อมูลการสอน"
+                  subtitle="ไฟล์ Excel หัวตาราง: รหัสวิชา, ชื่อวิชา, ชื่อครู, ห้องเรียน, ภาคเรียน"
+                  icon={FileSpreadsheet}
+                >
+                  <div className="border-4 border-dashed border-gray-100 rounded-2xl p-12 text-center bg-gray-50/50 mb-8 relative hover:border-blue-200 transition-colors">
+                    <input
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      accept=".xlsx"
+                      onChange={handleFileChange}
+                    />
+                    {selectedFile ? (
+                      <div className="flex flex-col items-center">
+                        <div className="bg-green-100 p-4 rounded-full mb-4 text-green-600 shadow-lg shadow-green-100">
+                          <Check className="h-10 w-10" />
+                        </div>
+                        <span className="text-lg  text-gray-800">{selectedFile.name}</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <Download className="h-12 w-12 text-blue-400 mb-4" />
+                        <span className="text-xl  text-gray-700 tracking-tight uppercase">
+                          เลือกไฟล์ Excel (.xlsx)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+          
+                  <div className="flex gap-4">
+                    <button
+                      disabled={!selectedFile || isProcessing}
+                      onClick={handleImportSubmit}
+                      className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 disabled:bg-blue-200 shadow-xl transition-all flex justify-center items-center active:scale-95"
+                    >
+                      {isProcessing ? (
+                        <RefreshCw className="h-6 w-6 animate-spin mr-3" />
+                      ) : (
+                        <FileUp className="mr-3 h-6 w-6" />
+                      )}
+                      เริ่มนำเข้าข้อมูล
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsImportModalOpen(false);
+                        setSelectedFile(null);
+                      }}
+                      className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg hover:bg-gray-200 transition-all active:scale-95"
+                    >
+                      ยกเลิก
+                    </button>
+                  </div>
+                </Modal>
+              </div>
+            );
+          }
+          
