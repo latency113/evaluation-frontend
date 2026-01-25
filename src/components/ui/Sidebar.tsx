@@ -26,15 +26,15 @@ export function Sidebar({ user, logout }: SidebarProps) {
 
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
-    { name: 'ทะเบียนนักเรียน', icon: Users, href: '/admin/students' },
+    { name: 'จัดการรายชื่อนักเรียน', icon: Users, href: '/admin/students' },
     { name: 'จัดการครูผู้สอน', icon: GraduationCap, href: '/admin/teachers' },
-    { name: 'ฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
-    { name: 'แผนกวิชา', icon: Building2, href: '/admin/departments' },
-    { name: 'ห้องเรียน/กลุ่มเรียน', icon: School, href: '/admin/classrooms' },
-    { name: 'การจัดการสอน', icon: ClipboardList, href: '/admin/assignments' },
+    { name: 'จัดการฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
+    { name: 'จัดการแผนกวิชา', icon: Building2, href: '/admin/departments' },
+    { name: 'จัดการห้องเรียน', icon: School, href: '/admin/classrooms' },
+    { name: 'จัดการการสอน', icon: ClipboardList, href: '/admin/assignments' },
     ...(user.role === 'admin' ? [{ name: 'จัดการผู้ใช้งาน', icon: UserIcon, href: '/admin/users' }] : []),
-    { name: 'เกณฑ์การประเมิน', icon: Settings, href: '/admin/evaluation-questions' },
-    { name: 'ผลการประเมิน', icon: ShieldCheck, href: '/admin/evaluations' },
+    { name: 'จัดการหัวข้อการประเมิน', icon: Settings, href: '/admin/evaluation-questions' },
+    { name: 'จัดการผลการประเมิน', icon: ShieldCheck, href: '/admin/evaluations' },
   ];
 
   return (

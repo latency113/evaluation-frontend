@@ -117,7 +117,7 @@ export default function AdminEvaluationQuestionsPage() {
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <PageHeader 
-          title="EVALUATION QUESTIONS"
+          title="จัดการหัวข้อการประเมิน"
           description={`จัดการเกณฑ์และหัวข้อสำหรับการประเมินครูผู้สอน (${totalItems} ข้อ)`}
           icon={HelpCircle}
           actions={

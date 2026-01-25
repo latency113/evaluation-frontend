@@ -15,6 +15,7 @@ import {
   ArrowRight,
   TrendingUp,
   MessageSquare,
+  Form,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -238,7 +239,8 @@ export default function AdminEvaluationsPage() {
     <div className="p-8 font-sans bg-[#f8fafc] min-h-screen text-slate-900">
       <div className="max-w-7xl mx-auto">
         <PageHeader
-          title="EVALUATIONS"
+          icon={Form}
+          title="ผลการประเมิน"
           description="ระบบบันทึกและสรุปผลการประเมินครูผู้สอน"
           actions={
             <div className="flex items-center gap-3">
