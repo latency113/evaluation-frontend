@@ -166,31 +166,34 @@ export default function ClassroomStudentsPage({
   return (
     <div className="p-8 font-sans bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-5 mb-10">
-          <button
-            onClick={() => router.push("/admin/classrooms")}
-            className="group p-3 bg-white border border-slate-200 rounded-lg hover:bg-blue-600 hover:border-blue-600 transition-all shadow-sm active:scale-95"
-          >
-            <ChevronLeft className="h-6 w-6 text-slate-600 group-hover:text-white" />
-          </button>
-          <PageHeader
-            title={`ห้องเรียน ${classroom?.room_name || "..."}`}
-            description={`ระดับชั้น: ${classroom?.level?.level_name || "ทั่วไป"} (${classroom?.level?.department?.dept_name || "ไม่ระบุแผนก"})`}
-            icon={School}
-            actions={
-              <button
-                onClick={() => handleOpenModal()}
-                className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all  shadow-xl shadow-blue-200 active:scale-95 group"
-              >
-                <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
-                เพิ่มนักเรียนในห้อง
-              </button>
-            }
-          />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-8">
+          <div className="flex items-center gap-5 flex-1">
+            <button
+              onClick={() => router.push("/admin/classrooms")}
+              className="group flex items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:bg-blue-600 hover:border-blue-600 transition-all shadow-sm active:scale-95 w-fit shrink-0"
+            >
+              <ChevronLeft className="h-6 w-6 text-slate-600 group-hover:text-white" />
+            </button>
+            <PageHeader
+              title={`ห้องเรียน ${classroom?.room_name || "..."}`}
+              description={`ระดับชั้น: ${classroom?.level?.level_name || "ทั่วไป"} (${classroom?.level?.department?.dept_name || "ไม่ระบุแผนก"})`}
+              icon={School}
+            />
+          </div>
+          
+          <div className="flex shrink-0">
+            <button
+              onClick={() => handleOpenModal()}
+              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-xl shadow-blue-200 active:scale-95 group w-full md:w-auto justify-center"
+            >
+              <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
+              เพิ่มนักเรียนในห้อง
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-white flex justify-center items-center gap-5 transition-transform">
+        <div className="grid gap-6 mb-8">
+          <div className="bg-white rounded-md p-4 shadow-xl shadow-slate-200/50 border border-white flex justify-center items-center gap-5 transition-transform">
             <p className="text-sm  text-slate-400 uppercase">จำนวนนักเรียน</p>
             <div className="flex items-baseline">
               <p className="text-2xl  text-slate-900 leading-none">

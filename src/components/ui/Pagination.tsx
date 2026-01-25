@@ -22,7 +22,7 @@ export function Pagination({
   if (totalPages <= 1 && !totalItems) return null;
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-lg shadow-lg border border-gray-100">
       <div className="text-sm font-bold text-gray-400 uppercase tracking-widest">
         {totalItems && limit ? (
           <>แสดง {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} จากทั้งหมด {totalItems}</>

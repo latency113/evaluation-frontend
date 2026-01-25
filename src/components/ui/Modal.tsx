@@ -25,7 +25,7 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-      <div className={`bg-white rounded-2xl ${maxWidth} w-full p-10 shadow-2xl relative border border-white/20 overflow-hidden flex flex-col max-h-[95vh]`}>
+      <div className={`bg-white rounded-lg ${maxWidth} w-full p-10 shadow-2xl relative border border-white/20 overflow-hidden flex flex-col max-h-[95vh]`}>
         <div className="flex justify-between items-center mb-8 border-b pb-6">
           <div className="flex items-center gap-4">
             {Icon && (

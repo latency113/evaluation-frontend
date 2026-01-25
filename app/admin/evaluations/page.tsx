@@ -14,7 +14,7 @@ import {
   BookOpen,
   ArrowRight,
   TrendingUp,
-  X,
+  MessageSquare,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -157,26 +157,22 @@ export default function AdminEvaluationsPage() {
       item.evalCount += 1;
       item.totalScore += avg;
       item.evals.push(e);
-      item.assignments.add?.(e.assignment_id); // Fallback for old set logic if needed
-      
+
       const assignmentId = e.assignment_id;
       if (!item.assignments.has(assignmentId)) {
         item.assignments.set(assignmentId, {
           assignment: e.assignment,
           count: 0,
-          totalScore: 0
+          totalScore: 0,
         });
       }
       const assignItem = item.assignments.get(assignmentId);
       assignItem.count += 1;
       assignItem.totalScore += avg;
 
-      if (e.student_id) {
-        item.students.add(e.student_id);
-      }
-      if (e.assignment?.classroom_id) {
+      if (e.student_id) item.students.add(e.student_id);
+      if (e.assignment?.classroom_id)
         item.classrooms.add(e.assignment.classroom_id);
-      }
     });
 
     return Array.from(teacherMap.values()).map((item) => ({
@@ -187,8 +183,8 @@ export default function AdminEvaluationsPage() {
       studentCount: item.students.size,
       assignmentsList: Array.from(item.assignments.values()).map((a: any) => ({
         ...a,
-        avg: (a.totalScore / a.count).toFixed(2)
-      }))
+        avg: (a.totalScore / a.count).toFixed(2),
+      })),
     }));
   };
 
@@ -197,7 +193,6 @@ export default function AdminEvaluationsPage() {
 
   const getCriteriaAverages = (evals: any[]) => {
     const criteriaMap = new Map();
-
     evals.forEach((evaluation) => {
       evaluation.answers?.forEach((ans: any) => {
         const qId = ans.question_id;
@@ -213,7 +208,6 @@ export default function AdminEvaluationsPage() {
         item.count += 1;
       });
     });
-
     return Array.from(criteriaMap.values()).map((item) => ({
       text: item.text,
       avg: (item.totalScore / item.count).toFixed(2),
@@ -251,29 +245,23 @@ export default function AdminEvaluationsPage() {
               <div className="bg-white p-1.5 rounded-md border border-slate-200 flex shadow-sm">
                 <button
                   onClick={() => setViewMode("individual")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs  transition-all active:scale-95 ${viewMode === "individual" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "individual" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
                   <LayoutList className="mr-2 h-4 w-4" /> รายบุคคล
                 </button>
                 <button
                   onClick={() => setViewMode("summary")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs  transition-all active:scale-95 ${viewMode === "summary" ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "summary" ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" /> สรุปรายห้อง
                 </button>
                 <button
                   onClick={() => setViewMode("teacher")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs  transition-all active:scale-95 ${viewMode === "teacher" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "teacher" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
                   <TrendingUp className="mr-2 h-4 w-4" /> สรุปรายครู
                 </button>
               </div>
-              {/* <button
-                onClick={exportToPDF}
-                className="flex items-center px-6 py-3.5 bg-white text-red-600 border border-red-100 rounded-md hover:bg-red-50 transition-all  text-xs shadow-sm active:scale-95"
-              >
-                <Download className="mr-2 h-4 w-4" /> EXPORT PDF
-              </button> */}
             </div>
           }
         />
@@ -291,7 +279,7 @@ export default function AdminEvaluationsPage() {
           placeholder="ค้นหาชื่อ student, ครู, หรือรายวิชา..."
           extraFilters={
             <div className="relative group min-w-[240px]">
-              <School className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
+              <School className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               <select
                 className="w-full pl-11 pr-4 py-4 bg-slate-50 border-none rounded-md text-md font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
                 value={filterClassroom}
@@ -303,8 +291,7 @@ export default function AdminEvaluationsPage() {
                 <option value="">ทุกห้องเรียน / กลุ่มเรียน</option>
                 {classrooms.map((c) => (
                   <option key={c.id} value={c.id}>
-                    ห้อง {c.room_name} - {c.level?.level_name} (
-                    {c.level?.department?.dept_name})
+                    ห้อง {c.room_name} - {c.level?.level_name}
                   </option>
                 ))}
               </select>
@@ -315,11 +302,11 @@ export default function AdminEvaluationsPage() {
         {viewMode === "individual" ? (
           <DataTable
             columns={[
-              { header: "วันที่ประเมิน" },
-              { header: "นักเรียน" },
-              { header: "วิชา / ครูผู้สอน" },
-              { header: "คะแนนเฉลี่ย", align: "center" },
-              { header: "จัดการ", align: "right" },
+              { header: "วันที่ประเมิน", className: "w-40" },
+              { header: "นักเรียน", className: "w-1/4" },
+              { header: "วิชา / ครูผู้สอน", className: "w-1/3" },
+              { header: "คะแนนเฉลี่ย", align: "center", className: "w-32" },
+              { header: "จัดการ", align: "right", className: "w-20" },
             ]}
             loading={loading}
           >
@@ -329,32 +316,37 @@ export default function AdminEvaluationsPage() {
                 className="hover:bg-blue-50/30 transition-all group"
               >
                 <td className="px-10 py-6 font-semibold text-slate-400 text-xs uppercase">
-                  {new Date(e.eval_date).toLocaleDateString("th-TH")}
+                  {new Date(e.eval_date).toLocaleDateString("th-TH", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </td>
                 <td className="px-10 py-6">
-                  <div className=" text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors truncate">
+                  <div className="text-slate-900 text-lg leading-tight font-semibold truncate">
                     {e.student?.first_name} {e.student?.last_name}
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-md  bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase truncate">
-                      ห้อง{" "}
-                      {e.assignment?.classroom?.room_name ||
-                        e.student?.classroom?.room_name ||
-                        "N/A"}
+                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase">
+                      ห้อง {e.assignment?.classroom?.room_name || "N/A"}{" "}
+                      {e.assignment?.classroom?.level?.level_name || "N/A"}{" "}
+                      {e.assignment?.classroom?.level?.department?.dept_name &&
+                        `(${e.assignment.classroom.level.department.dept_name})`}
                     </span>
                   </div>
                 </td>
                 <td className="px-10 py-6">
-                  <div className=" text-slate-700 text-md">
+                  <div className="text-slate-700 text-md font-medium">
                     {e.assignment?.subject?.subject_name}
                   </div>
-                  <div className="text-md font-semibold text-slate-400 uppercase mt-1">
+                  <div className="text-sm font-semibold text-slate-400 uppercase mt-1">
+                    {" "}
                     {e.assignment?.teacher?.first_name}{" "}
                     {e.assignment?.teacher?.last_name}
                   </div>
                 </td>
                 <td className="px-10 py-6 text-center">
-                  <div className="inline-flex items-center px-4 py-1.5 rounded-full text-md  bg-yellow-100 text-yellow-700 border border-yellow-200">
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full text-md bg-yellow-100 text-yellow-700 border border-yellow-200 font-semibold">
                     <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
                     {calculateAverage(e.answers)}
                   </div>
@@ -362,7 +354,7 @@ export default function AdminEvaluationsPage() {
                 <td className="px-10 py-6 text-right">
                   <button
                     onClick={() => setSelectedEval(e)}
-                    className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md transition-all active:scale-90 shadow-sm border border-transparent hover:border-slate-100"
+                    className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all shadow-sm border border-transparent hover:border-slate-100"
                   >
                     <Eye className="h-5 w-5" />
                   </button>
@@ -373,45 +365,38 @@ export default function AdminEvaluationsPage() {
         ) : viewMode === "summary" ? (
           <DataTable
             columns={[
-              { header: "ห้องเรียน / กลุ่ม" },
-              { header: "รายวิชา" },
-              { header: "ครูผู้สอน" },
-              { header: "คนประเมิน", align: "center" },
-              { header: "คะแนนเฉลี่ยรวม", align: "center" },
-              { header: "Action", align: "right" },
+              { header: "ห้องเรียน / กลุ่ม", className: "w-1/5" },
+              { header: "รายวิชา", className: "w-1/4" },
+              { header: "ครูผู้สอน", className: "w-1/5" },
+              { header: "คนประเมิน", align: "center", className: "w-40" },
+              { header: "คะแนนเฉลี่ยรวม", align: "center", className: "w-40" },
+              { header: "จัดการ", align: "right", className: "w-20" },
             ]}
             loading={loading}
           >
             {summaryData.map((item, idx) => {
               const classroom =
                 item.assignment?.classroom || item.evals[0]?.student?.classroom;
-              const roomName = classroom?.room_name || "N/A";
-              const levelName = classroom?.level?.level_name || "";
-              const deptName = classroom?.level?.department?.dept_name || "";
               return (
                 <tr
                   key={idx}
                   className="hover:bg-blue-50/30 transition-all group"
                 >
                   <td className="px-10 py-7">
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <div className=" text-slate-900 text-md leading-none">
-                          ห้อง {roomName}
-                        </div>
-                        {(levelName || deptName) && (
-                          <div className="text-sm font-semibold text-slate-400 uppercase mt-2 tracking-widest truncate">
-                            {levelName} {deptName ? `(${deptName})` : ""}
-                          </div>
-                        )}
-                      </div>
+                    <div className="text-slate-900 text-md font-semibold leading-none">
+                      ห้อง {classroom?.room_name || "N/A"}
+                    </div>
+                    <div className="text-xs font-semibold text-slate-400 uppercase mt-2 tracking-widest">
+                      {classroom?.level?.level_name}{" "}
+                      {classroom?.level?.department?.dept_name &&
+                        `(${classroom.level.department.dept_name})`}
                     </div>
                   </td>
                   <td className="px-10 py-7">
-                    <div className=" text-slate-700 text-md truncate">
+                    <div className="text-slate-700 text-md font-medium truncate">
                       {item.assignment?.subject?.subject_name}
                     </div>
-                    <div className="text-md font-semibold text-blue-500 font-mono mt-1 uppercase tracking-tighter">
+                    <div className="text-xs font-semibold text-blue-500 mt-1">
                       {item.assignment?.subject?.subject_code}
                     </div>
                   </td>
@@ -420,22 +405,22 @@ export default function AdminEvaluationsPage() {
                     {item.assignment?.teacher?.last_name}
                   </td>
                   <td className="px-10 py-7 text-center">
-                    <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full  text-slate-600 text-md shadow-inner truncate">
+                    <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full text-slate-600 text-md shadow-inner whitespace-nowrap">
                       <Users className="h-3 w-3 mr-2" /> {item.count} คน
                     </div>
                   </td>
                   <td className="px-10 py-7 text-center">
                     <div
-                      className={`inline-flex items-center px-5 py-2.5 rounded-md  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-md font-semibold ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                     >
-                      <Star className="h-3 w-3 mr-2 fill-current" />{" "}
-                      <p className="text-sm">{item.finalAvg}</p>
+                      <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
+                      {item.finalAvg}
                     </div>
                   </td>
                   <td className="px-10 py-7 text-right">
                     <button
                       onClick={() => setSelectedSummary(item)}
-                      className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
+                      className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl active:scale-90 transition-all"
                     >
                       <ArrowRight className="h-5 w-5" />
                     </button>
@@ -447,12 +432,16 @@ export default function AdminEvaluationsPage() {
         ) : (
           <DataTable
             columns={[
-              { header: "ครูผู้สอน" },
-              { header: "วิชาที่สอน", align: "center" },
-              { header: "ห้องที่สอน", align: "center" },
-              { header: "คนประเมินรวม", align: "center" },
-              { header: "คะแนนเฉลี่ยรวมทุกห้อง", align: "center" },
-              { header: "Action", align: "right" },
+              { header: "ครูผู้สอน", className: "w-1/4" },
+              { header: "วิชาที่สอน", align: "center", className: "w-40" },
+              { header: "ห้องที่สอน", align: "center", className: "w-40" },
+              { header: "คนประเมินรวม", align: "center", className: "w-40" },
+              {
+                header: "คะแนนเฉลี่ยรวมทุกห้อง",
+                align: "center",
+                className: "w-48",
+              },
+              { header: "จัดการ", align: "right", className: "w-20" },
             ]}
             loading={loading}
           >
@@ -464,41 +453,41 @@ export default function AdminEvaluationsPage() {
                 <td className="px-10 py-7">
                   <div className="flex items-center gap-4">
                     <div>
-                      <div className=" text-slate-900 text-lg leading-none truncate">
+                      <div className=" text-slate-900 text-lg font-semibold leading-none truncate">
                         {item.teacher?.first_name} {item.teacher?.last_name}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-10 py-7 text-center">
-                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full  text-slate-600 text-md shadow-inner">
+                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full text-slate-600 text-md font-medium whitespace-nowrap">
                     <BookOpen className="h-3 w-3 mr-2" /> {item.assignmentCount}{" "}
                     วิชา
                   </div>
                 </td>
                 <td className="px-10 py-7 text-center">
-                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full  text-slate-600 text-md shadow-inner">
+                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full text-slate-600 text-md font-medium whitespace-nowrap">
                     <School className="h-3 w-3 mr-2" /> {item.classroomCount}{" "}
                     ห้อง
                   </div>
                 </td>
                 <td className="px-10 py-7 text-center">
-                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full  text-slate-600 text-md shadow-inner">
+                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 rounded-full text-slate-600 text-md font-medium whitespace-nowrap">
                     <Users className="h-3 w-3 mr-2" /> {item.studentCount} คน
                   </div>
                 </td>
                 <td className="px-10 py-7 text-center">
                   <div
-                    className={`inline-flex items-center px-5 py-2.5 rounded-md  text-xl shadow-md border ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                    className={`inline-flex items-center px-4 py-1.5 rounded-full text-md font-semibold ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                   >
-                    <Star className="h-3 w-3 mr-2 fill-current" />{" "}
-                    <p className="text-sm">{item.finalAvg}</p>
+                    <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
+                    {item.finalAvg}
                   </div>
                 </td>
                 <td className="px-10 py-7 text-right">
                   <button
                     onClick={() => setSelectedSummary(item)}
-                    className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-md shadow-sm border border-transparent hover:border-slate-100 transition-all active:scale-90"
+                    className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl active:scale-90 transition-all"
                   >
                     <ArrowRight className="h-5 w-5" />
                   </button>
@@ -517,72 +506,72 @@ export default function AdminEvaluationsPage() {
         />
       </div>
 
-      {/* Individual Detail Modal */}
       <Modal
         isOpen={!!selectedEval}
         onClose={() => setSelectedEval(null)}
         title="รายละเอียดการประเมิน"
         subtitle="รายละเอียดผลการประเมินรายบุคคล"
+        maxWidth="max-w-5xl"
       >
-        <div className="space-y-10 font-sans">
+        <div className="space-y-10 font-sans p-2">
           {selectedEval && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-blue-50/50 rounded-md border border-blue-100">
-                  <p className="text-md  text-blue-600 uppercase tracking-widest mb-3 leading-none">
+                <div className="p-8 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
+                  <p className="text-xs text-blue-600 uppercase tracking-widest mb-3 font-semibold">
                     นักเรียน / ผู้ประเมิน
                   </p>
-                  <p className=" text-slate-900 text-lg leading-tight">
+                  <p className="text-slate-900 text-2xl ">
                     {selectedEval.student?.first_name}{" "}
                     {selectedEval.student?.last_name}
                   </p>
-                  <p className="text-sm font-semibold text-slate-400 mt-3 uppercase tracking-widest">
-                    ห้อง{" "}
-                    {selectedEval.assignment?.classroom?.room_name ||
-                      selectedEval.student?.classroom?.room_name ||
-                      "N/A"}
-                    {selectedEval.assignment?.classroom?.level?.department?.dept_name && 
-                      ` (${selectedEval.assignment.classroom.level.department.dept_name})`}
+                  <p className="text-md font-semibold text-slate-400 mt-3">
+                    {selectedEval.student?.student_code} | ห้อง{" "}
+                    {selectedEval.assignment?.classroom?.room_name || "N/A"}{" "}
+                    {selectedEval.assignment?.classroom?.level?.department
+                      ?.dept_name &&
+                      `(${selectedEval.assignment.classroom.level.department.dept_name})`}
                   </p>
                 </div>
-                <div className="p-6 bg-purple-50/50 rounded-md border border-purple-100">
-                  <p className="text-md  text-purple-600 uppercase tracking-widest mb-3 leading-none">
+                <div className="p-8 bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm">
+                  <p className="text-xs text-purple-600 uppercase tracking-widest mb-3 font-semibold">
                     รายวิชา / ครูผู้สอน
                   </p>
-                  <p className=" text-slate-900 text-xl leading-tight uppercase tracking-tight">
+                  <p className="text-slate-900 text-2xl  truncate">
                     {selectedEval.assignment?.subject?.subject_name}
                   </p>
-                  <p className="text-sm font-semibold text-slate-500 mt-3">
+                  <p className="text-md font-semibold text-slate-500 mt-3 ">
+                    {" "}
                     {selectedEval.assignment?.teacher?.first_name}{" "}
                     {selectedEval.assignment?.teacher?.last_name}
                   </p>
                 </div>
               </div>
-              <div className="space-y-5">
-                <h3 className=" text-slate-900 text-xl flex items-center px-2 uppercase tracking-tight">
-                  <Star className="h-6 w-6 mr-3 text-yellow-500 fill-current" />{" "}
+              <div className="space-y-6">
+                <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
+                  <Star className="h-7 w-7 mr-3 text-yellow-500 fill-current" />{" "}
                   คะแนนรายข้อ
                 </h3>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-4">
                   {selectedEval.answers?.map((answer: any, idx: number) => (
                     <div
                       key={idx}
-                      className="flex justify-between items-center p-6 bg-slate-50 rounded-md border border-slate-100 hover:bg-white transition-all hover:shadow-md group"
+                      className="flex justify-between items-center p-6 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
                     >
-                      <div className="flex-1 mr-6">
-                        <span className="text-[9px]  text-slate-400 uppercase tracking-widest block mb-2">
-                          ข้อที่ {idx + 1}
+                      <div className="flex-1 mr-8">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-2 font-semibold">
+                          หัวข้อที่ {idx + 1}
                         </span>
-                        <p className="text-md font-semibold text-slate-700 leading-relaxed">
+                        <p className="text-lg font-semibold text-slate-700 leading-relaxed">
                           {answer.question?.question_text ||
                             `หัวข้อที่ ${answer.question_id}`}
                         </p>
                       </div>
-                      <div className="flex gap-2 shrink-0">
+                      <div className="flex gap-2.5 shrink-0">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <div
                             key={s}
-                            className={`w-9 h-9 rounded-full flex items-center justify-center text-xs  transition-all ${s <= answer.score ? "bg-yellow-400 text-white shadow-lg shadow-yellow-100 scale-110" : "bg-slate-200 text-slate-400 opacity-30"}`}
+                            className={`w-11 h-11 rounded-full flex items-center justify-center text-sm  transition-all ${s <= answer.score ? "bg-yellow-400 text-white shadow-lg scale-110" : "bg-slate-100 text-slate-300"}`}
                           >
                             {s}
                           </div>
@@ -592,6 +581,17 @@ export default function AdminEvaluationsPage() {
                   ))}
                 </div>
               </div>
+              {selectedEval.suggestion && (
+                <div className="p-8 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                  <h4 className="flex items-center text-slate-900 font-semibold mb-4 text-xl">
+                    <MessageSquare className="mr-2 text-blue-500" />{" "}
+                    ข้อเสนอแนะเพิ่มเติม
+                  </h4>
+                  <p className="text-slate-600  text-lg leading-relaxed font-medium">
+                    "{selectedEval.suggestion}"
+                  </p>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -610,200 +610,161 @@ export default function AdminEvaluationsPage() {
             ? "รายละเอียดผลการประเมินรวมทุกวิชาและห้องเรียน"
             : "รายละเอียดผลการประเมินรายกลุ่มห้องเรียน"
         }
-        maxWidth="max-w-3xl"
+        maxWidth="max-w-5xl"
       >
-        <div className="space-y-10 font-sans">
+        <div className="space-y-10 font-sans p-2">
           {selectedSummary && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {selectedSummary.assignment ? (
-                  <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-blue-600 p-2 rounded-lg text-white">
-                        <School className="h-5 w-5" />
-                      </div>
-                      <p className="text-md  text-blue-600 uppercase tracking-widest leading-none">
-                        ห้องเรียน / แผนก
-                      </p>
-                    </div>
-                    <p className=" text-slate-900 text-2xl leading-none">
-                      ห้อง{" "}
-                      {selectedSummary.assignment?.classroom?.room_name ||
-                        selectedSummary.evals[0]?.student?.classroom
-                          ?.room_name ||
-                        "N/A"}
-                    </p>
-                    <p className="text-xs font-semibold text-slate-400 mt-3 uppercase tracking-widest">
-                      {selectedSummary.assignment?.classroom?.level
-                        ?.level_name ||
-                        selectedSummary.evals[0]?.student?.classroom?.level
-                          ?.level_name}{" "}
-                      (
-                      {selectedSummary.assignment?.classroom?.level?.department
-                        ?.dept_name ||
-                        selectedSummary.evals[0]?.student?.classroom?.level
-                          ?.department?.dept_name}
-                      )
-                    </p>
-                    <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-                      <span className="text-md  text-slate-400 uppercase tracking-widest">
-                        ประเมินแล้ว
-                      </span>
-                      <span className=" text-blue-600">
-                        {selectedSummary.count} คน
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-indigo-600 p-2 rounded-lg text-white">
-                        <Users className="h-5 w-5" />
-                      </div>
-                      <p className="text-md text-indigo-600 uppercase tracking-widest leading-none">
-                        ครูผู้สอน / ข้อมูลรวม
-                      </p>
-                    </div>
-                    <p className=" text-slate-900 text-xl leading-none">
-                      {selectedSummary.teacher?.first_name}{" "}
-                      {selectedSummary.teacher?.last_name}
-                    </p>
-                    <p className="text-sm font-semibold text-slate-400 mt-3 uppercase tracking-widest">
-                      {selectedSummary.assignmentCount} วิชา |{" "}
-                      {selectedSummary.classroomCount} ห้องเรียน
-                    </p>
-                    <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-                      <span className="text-md  text-slate-400 uppercase tracking-widest">
-                        จำนวนคนประเมินทั้งหมด
-                      </span>
-                      <span className=" text-indigo-600">
-                        {selectedSummary.studentCount} คน
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-6 bg-slate-50 rounded-md border border-slate-200 shadow-sm">
+                <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-blue-500 p-2 rounded-lg text-white">
-                      {selectedSummary.assignment ? (
-                        <BookOpen className="h-5 w-5" />
-                      ) : (
-                        <TrendingUp className="h-5 w-5" />
-                      )}
+                    <div className="bg-indigo-600 p-2 rounded-lg text-white">
+                      <Users className="h-6 w-6" />
                     </div>
-                    <p className="text-md  text-blue-400 uppercase tracking-widest leading-none">
-                      {selectedSummary.assignment
-                        ? "รายวิชา / ครูผู้สอน"
-                        : "คะแนนเฉลี่ยรวม"}
+                    <p className="text-xs text-indigo-600 uppercase tracking-widest font-semibold">
+                      ข้อมูลครู / ห้องเรียน
                     </p>
                   </div>
                   {selectedSummary.assignment ? (
                     <>
-                      <p className=" text-xl leading-tight uppercase tracking-tight">
-                        {selectedSummary.assignment?.subject?.subject_name}
+                      <p className="text-slate-900 text-3xl ">
+                        ห้อง{" "}
+                        {selectedSummary.assignment?.classroom?.room_name ||
+                          "N/A"}
                       </p>
-                      <p className="text-sm font-semibold text-slate-400 mt-3">
-                        {selectedSummary.assignment?.teacher?.first_name}{" "}
-                        {selectedSummary.assignment?.teacher?.last_name}
+                      <p className="text-md font-semibold text-slate-400 mt-3 uppercase">
+                        {
+                          selectedSummary.assignment?.classroom?.level
+                            ?.level_name
+                        }{" "}
+                        (
+                        {
+                          selectedSummary.assignment?.classroom?.level
+                            ?.department?.dept_name
+                        }
+                        )
                       </p>
                     </>
                   ) : (
                     <>
-                      <p className="text-xl leading-tight uppercase tracking-tight">
-                        คะแนนเฉลี่ยรวม
+                      <p className="text-slate-900 text-xl ">
+                        {" "}
+                        {selectedSummary.teacher?.first_name}{" "}
+                        {selectedSummary.teacher?.last_name}
                       </p>
-                      <p className="text-sm font-semibold text-slate-400 mt-3">
-                        คะแนนเฉลี่ยจากทุกวิชาและทุกห้องเรียน
+                      <p className="text-md font-semibold text-slate-400 mt-3 uppercase">
+                        {selectedSummary.assignmentCount} วิชา |{" "}
+                        {selectedSummary.classroomCount} ห้องเรียน
                       </p>
                     </>
                   )}
-                  <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-                    <span className="text-md  text-slate-500 uppercase tracking-widest">
-                      คะแนนเฉลี่ย
-                    </span>
-                    <div className="flex items-center text-yellow-400  text-xl">
-                      <Star className="h-5 w-5 mr-1.5 fill-current" />{" "}
+                </div>
+                <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-blue-500 p-2 rounded-lg text-white">
+                        <TrendingUp className="h-6 w-6" />
+                      </div>
+                      <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold">
+                        ผลการประเมินรวม
+                      </p>
+                    </div>
+                    <div className="text-slate-400 text-sm font-semibold">
+                      ผู้ประเมิน{" "}
+                      {selectedSummary.studentCount || selectedSummary.count} คน
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-slate-500 font-semibold text-xl uppercase">
+                      Average Score
+                    </p>
+                    <div className="flex items-center text-yellow-400 text-xl ">
+                      <Star className="h-5 w-5 mr-2 fill-current" />{" "}
                       {selectedSummary.finalAvg}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Added Subjects List Section for Teacher Summary */}
-              {!selectedSummary.assignment && selectedSummary.assignmentsList && (
-                <div className="space-y-5">
-                  <h3 className=" text-slate-900 text-xl flex items-center px-2 uppercase tracking-tight">
-                    <BookOpen className="h-6 w-6 mr-3 text-purple-600" /> รายวิชาที่รับผิดชอบ
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {selectedSummary.assignmentsList.map((item: any, idx: number) => (
-                      <div key={idx} className="p-5 bg-white border border-slate-100 rounded-md shadow-sm flex items-center justify-between group hover:border-purple-200 transition-all">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600  text-xs">
-                            {idx + 1}
-                          </div>
-                          <div>
-                            <p className=" text-slate-900">{item.assignment?.subject?.subject_name}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-[10px]  text-slate-400 uppercase tracking-widest">
-                                {item.assignment?.subject?.subject_code}
-                              </span>
-                              <span className="text-[10px]  text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
-                                ห้อง {item.assignment?.classroom?.room_name}
-                              </span>
+              {!selectedSummary.assignment &&
+                selectedSummary.assignmentsList && (
+                  <div className="space-y-6">
+                    <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
+                      <BookOpen className="h-7 w-7 mr-3 text-purple-600" />{" "}
+                      รายวิชาที่รับผิดชอบ
+                    </h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      {selectedSummary.assignmentsList.map(
+                        (item: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="p-6 bg-white border border-slate-100 rounded-xl shadow-sm flex items-center justify-between hover:border-purple-200 transition-all"
+                          >
+                            <div className="flex items-center gap-5">
+                              <div className="h-12 w-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600 text-lg ">
+                                {idx + 1}
+                              </div>
+                              <div>
+                                <p className="text-xl font-semibold text-slate-900">
+                                  {item.assignment?.subject?.subject_name}
+                                </p>
+                                <div className="flex items-center gap-3 mt-1.5 text-sm font-semibold text-slate-400">
+                                  <span className="bg-slate-100 px-2 py-0.5 rounded text-blue-600">
+                                    {item.assignment?.subject?.subject_code}
+                                  </span>
+                                  <span>
+                                    ห้อง {item.assignment?.classroom?.room_name}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="bg-yellow-50 px-6 py-3 rounded-xl border border-yellow-100 text-center min-w-[120px]">
+                              <p className="text-[10px] text-yellow-600 uppercase  mb-1">
+                                เฉลี่ย
+                              </p>
+                              <div className="flex items-center justify-center text-yellow-700 text-2xl ">
+                                <Star className="h-5 w-5 mr-1 fill-current" />{" "}
+                                {item.avg}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-right">
-                            <p className="text-[10px]  text-slate-400 uppercase leading-none mb-1">ประเมิน</p>
-                            <p className=" text-slate-700 text-sm">{item.count} คน</p>
-                          </div>
-                          <div className="bg-yellow-50 px-4 py-2 rounded-lg border border-yellow-100 text-center min-w-[80px]">
-                            <p className="text-[10px]  text-yellow-600 uppercase leading-none mb-1">เฉลี่ย</p>
-                            <div className="flex items-center justify-center text-yellow-700">
-                              <Star className="h-3 w-3 mr-1 fill-current" />
-                              {item.avg}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        ),
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               <div className="space-y-6">
-                <h3 className=" text-slate-900 text-xl flex items-center px-2 uppercase tracking-tight">
-                  <TrendingUp className="h-6 w-6 mr-3 text-blue-600" /> คะแนนเฉลี่ยรายหัวข้อ
+                <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
+                  <TrendingUp className="h-7 w-7 mr-3 text-blue-600" />{" "}
+                  คะแนนเฉลี่ยรายหัวข้อ
                 </h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-5">
                   {getCriteriaAverages(selectedSummary.evals).map(
                     (criteria, idx) => (
                       <div
                         key={idx}
-                        className="p-6 bg-white border border-slate-100 rounded-md shadow-sm hover:shadow-md transition-all group"
+                        className="p-8 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all"
                       >
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex-1 mr-4">
-                            <span className="text-sm  text-slate-400 uppercase tracking-widest block mb-2">
-                              ข้อที่ {idx + 1}
+                        <div className="flex justify-between items-start mb-5">
+                          <div className="flex-1 mr-8">
+                            <span className="text-xs text-slate-400 uppercase tracking-widest block mb-2 font-semibold">
+                              หัวข้อที่ {idx + 1}
                             </span>
-                            <p className="text-lg font-semibold text-slate-700 leading-relaxed">
+                            <p className="text-xl font-semibold text-slate-700 leading-relaxed">
                               {criteria.text}
                             </p>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl  text-slate-900 leading-none">
+                            <div className="text-3xl  text-slate-900">
                               {criteria.avg}
                             </div>
-                            <p className="text-sm  text-slate-400 uppercase tracking-widest mt-1">
+                            <p className="text-[10px] text-slate-400 uppercase font-semibold mt-1">
                               คะแนนเฉลี่ย
                             </p>
                           </div>
                         </div>
-                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
                           <div
                             className={`h-full rounded-full transition-all duration-1000 ${parseFloat(criteria.avg) >= 4.5 ? "bg-green-500" : parseFloat(criteria.avg) >= 3.5 ? "bg-blue-500" : "bg-orange-500"}`}
                             style={{

@@ -20,11 +20,11 @@ export function DataTable({
   emptyMessage = "ไม่พบข้อมูล",
 }: DataTableProps) {
   return (
-    <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden mb-6">
+    <div className="bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden mb-6">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-900 text-white">
+            <tr className="bg-blue-500 text-white truncate">
               {columns.map((column, idx) => (
                 <th
                   key={idx}

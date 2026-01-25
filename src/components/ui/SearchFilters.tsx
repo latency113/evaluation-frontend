@@ -24,7 +24,7 @@ export function SearchFilters({
   extraFilters,
 }: SearchFiltersProps) {
   return (
-    <div className="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4">
+    <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4">
       <div className="relative flex-1 w-full group">
         <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors ${loading && searchTerm ? 'text-blue-500 animate-pulse' : 'text-gray-400'}`} />
         <input
