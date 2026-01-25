@@ -713,7 +713,14 @@ export default function AdminEvaluationsPage() {
                                     {item.assignment?.subject?.subject_code}
                                   </span>
                                   <span>
-                                    ห้อง {item.assignment?.classroom?.room_name}
+                                    ห้อง {item.assignment?.classroom?.room_name}{" "}
+                                    {
+                                      item.assignment?.classroom?.level
+                                        ?.level_name
+                                    }{" "}
+                                    {item.assignment?.classroom?.level
+                                      ?.department?.dept_name &&
+                                      `(${item.assignment.classroom.level.department.dept_name})`}
                                   </span>
                                 </div>
                               </div>
