@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { evaluationService } from "@/src/services/evaluationService";
 import { classroomService } from "@/src/services/classroomService";
 import {
@@ -24,8 +24,10 @@ import { SearchFilters } from "@/src/components/ui/SearchFilters";
 import { DataTable } from "@/src/components/ui/DataTable";
 import { Pagination } from "@/src/components/ui/Pagination";
 import { Modal } from "@/src/components/ui/Modal";
+import { useRouter } from "next/navigation";
 
 export default function AdminEvaluationsPage() {
+  const router = useRouter();
   const [evaluations, setEvaluations] = useState<any[]>([]);
   const [allEvaluations, setAllEvaluations] = useState<any[]>([]);
   const [classrooms, setClassrooms] = useState<any[]>([]);
@@ -488,7 +490,7 @@ export default function AdminEvaluationsPage() {
                 </td>
                 <td className="px-10 py-7 text-right">
                   <button
-                    onClick={() => setSelectedSummary(item)}
+                    onClick={() => router.push(`/admin/evaluations/teacher/${item.teacher?.id}`)}
                     className="p-3 bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl active:scale-90 transition-all"
                   >
                     <ArrowRight className="h-5 w-5" />
