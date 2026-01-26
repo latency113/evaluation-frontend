@@ -1,8 +1,11 @@
 import api from '../lib/api';
 
 export const courseAssignmentService = {
-  getAllAssignments: async (page: number = 1, limit: number = 10, searchTerm: string = '') => {
-    const response = await api.get(`/course-assignments?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`);
+  getAllAssignments: async (page: number = 1, limit: number = 10, searchTerm: string = '', deptId?: number, classroomId?: number) => {
+    let url = `/course-assignments?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`;
+    if (deptId) url += `&deptId=${deptId}`;
+    if (classroomId) url += `&classroomId=${classroomId}`;
+    const response = await api.get(url);
     return response.data;
   },
 

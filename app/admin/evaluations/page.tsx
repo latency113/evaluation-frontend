@@ -295,7 +295,7 @@ export default function AdminEvaluationsPage() {
                 <option value="">ทุกห้องเรียน / กลุ่มเรียน</option>
                 {classrooms.map((c) => (
                   <option key={c.id} value={c.id}>
-                    ห้อง {c.room_name} - {c.level?.level_name}
+                    ห้อง {c.room_name} - {c.level?.department?.dept_name || 'ไม่ระบุแผนก'} ({c.level?.level_name || 'ทั่วไป'})
                   </option>
                 ))}
               </select>

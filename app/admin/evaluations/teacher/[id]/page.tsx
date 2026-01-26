@@ -154,7 +154,10 @@ export default function TeacherEvaluationDetailPage({
                         </h2>
                         <div className="flex items-center gap-3 text-slate-400 text-sm font-semibold uppercase tracking-wider">
                           <span className="bg-white/10 px-2 py-0.5 rounded text-blue-300">{item.assignment?.subject?.subject_code}</span>
-                          <span className="flex items-center gap-1.5"><School className="h-4 w-4" /> ห้อง {item.assignment?.classroom?.room_name}</span>
+                          <span className="flex items-center gap-1.5">
+                            <School className="h-4 w-4" /> 
+                            ห้อง {item.assignment?.classroom?.room_name} - {item.assignment?.classroom?.level?.department?.dept_name || 'ไม่ระบุแผนก'} ({item.assignment?.classroom?.level?.level_name || 'ทั่วไป'})
+                          </span>
                         </div>
                       </div>
                     </div>

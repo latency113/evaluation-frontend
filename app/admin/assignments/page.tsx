@@ -5,6 +5,7 @@ import { courseAssignmentService } from "@/src/services/courseAssignmentService"
 import { teacherService } from "@/src/services/teacherService";
 import { subjectService } from "@/src/services/subjectService";
 import { classroomService } from "@/src/services/classroomService";
+import { departmentService } from "@/src/services/departmentService";
 import {
   Plus,
   Trash2,
@@ -15,9 +16,9 @@ import {
   FileUp,
   FileSpreadsheet,
   Download,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { PageHeader } from "@/src/components/ui/PageHeader";
 import { SearchFilters } from "@/src/components/ui/SearchFilters";
 import { DataTable } from "@/src/components/ui/DataTable";
@@ -29,8 +30,11 @@ export default function AdminAssignmentsPage() {
   const [teachers, setTeachers] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
   const [classrooms, setClassrooms] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDept, setSelectedDept] = useState<string>("");
+  const [selectedClassroom, setSelectedClassroom] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -57,7 +61,7 @@ export default function AdminAssignmentsPage() {
 
   useEffect(() => {
     fetchInitialData();
-  }, [page, limit]);
+  }, [page, limit, selectedDept, selectedClassroom]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -70,12 +74,19 @@ export default function AdminAssignmentsPage() {
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      const [assignData, teacherData, subjectData, roomData] =
+      const [assignData, teacherData, subjectData, roomData, deptData] =
         await Promise.all([
-          courseAssignmentService.getAllAssignments(page, limit, searchTerm),
+          courseAssignmentService.getAllAssignments(
+            page,
+            limit,
+            searchTerm,
+            selectedDept ? parseInt(selectedDept) : undefined,
+            selectedClassroom ? parseInt(selectedClassroom) : undefined
+          ),
           teacherService.getAllTeachers(1, 1000),
           subjectService.getAllSubjects(1, 1000),
           classroomService.getAllClassrooms(1, 1000),
+          departmentService.getAllDepartmentsWithoutPagination(),
         ]);
       setAssignments(assignData.data);
       setTotalPages(assignData.meta.totalPages);
@@ -84,6 +95,7 @@ export default function AdminAssignmentsPage() {
       setTeachers(teacherData.data);
       setSubjects(subjectData.data);
       setClassrooms(roomData.data);
+      setDepartments(deptData);
     } catch (err) {
       console.error("Error fetching data:", err);
     } finally {
@@ -100,14 +112,17 @@ export default function AdminAssignmentsPage() {
   const handleImportSubmit = async () => {
     if (!selectedFile) return;
     if (!termForImport) {
-        Swal.fire('คำเตือน', 'กรุณาระบุภาคเรียนก่อนนำเข้าข้อมูล', 'warning');
-        return;
+      Swal.fire("คำเตือน", "กรุณาระบุภาคเรียนก่อนนำเข้าข้อมูล", "warning");
+      return;
     }
-    
+
     setIsProcessing(true);
     try {
-      const response = await courseAssignmentService.importAssignments(selectedFile, termForImport);
-      Swal.fire('สำเร็จ', response.message, 'success');
+      const response = await courseAssignmentService.importAssignments(
+        selectedFile,
+        termForImport,
+      );
+      Swal.fire("สำเร็จ", response.message, "success");
       setIsImportModalOpen(false);
       setSelectedFile(null);
       setTermForImport("");
@@ -115,7 +130,11 @@ export default function AdminAssignmentsPage() {
       fetchInitialData();
     } catch (err: any) {
       console.error(err);
-      Swal.fire('เกิดข้อผิดพลาด', err.response?.data?.message || 'เกิดข้อผิดพลาดในการนำเข้าข้อมูล', 'error');
+      Swal.fire(
+        "เกิดข้อผิดพลาด",
+        err.response?.data?.message || "เกิดข้อผิดพลาดในการนำเข้าข้อมูล",
+        "error",
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -176,36 +195,36 @@ export default function AdminAssignmentsPage() {
       setIsModalOpen(false);
       fetchInitialData();
       Swal.fire({
-        title: 'สำเร็จ',
-        text: 'บันทึกข้อมูลการจัดการสอนเรียบร้อยแล้ว',
-        icon: 'success',
+        title: "สำเร็จ",
+        text: "บันทึกข้อมูลการจัดการสอนเรียบร้อยแล้ว",
+        icon: "success",
         timer: 1500,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
     } catch (err) {
-      Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
     }
   };
 
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
-      title: 'ยืนยันการลบ?',
-      text: 'คุณแน่ใจหรือไม่ว่าต้องการลบการจัดการสอนนี้?',
-      icon: 'warning',
+      title: "ยืนยันการลบ?",
+      text: "คุณแน่ใจหรือไม่ว่าต้องการลบการจัดการสอนนี้?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'ใช่, ลบเลย!',
-      cancelButtonText: 'ยกเลิก'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ลบเลย!",
+      cancelButtonText: "ยกเลิก",
     });
 
     if (result.isConfirmed) {
       try {
         await courseAssignmentService.deleteAssignment(id);
         fetchInitialData();
-        Swal.fire('ลบสำเร็จ!', 'ข้อมูลการจัดการสอนถูกลบแล้ว', 'success');
+        Swal.fire("ลบสำเร็จ!", "ข้อมูลการจัดการสอนถูกลบแล้ว", "success");
       } catch (err) {
-        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error');
+        Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
       }
     }
   };
@@ -213,7 +232,7 @@ export default function AdminAssignmentsPage() {
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <PageHeader 
+        <PageHeader
           title="การจัดการการสอน"
           description={`จัดการการสอนรายวิชา (${totalAssignments} รายการ)`}
           icon={ClipboardList}
@@ -237,24 +256,68 @@ export default function AdminAssignmentsPage() {
           }
         />
 
-        <SearchFilters 
+        <SearchFilters
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           limit={limit}
-          onLimitChange={(l) => { setLimit(l); setPage(1); }}
+          onLimitChange={(l) => {
+            setLimit(l);
+            setPage(1);
+          }}
           onRefresh={fetchInitialData}
           loading={loading}
           placeholder="ค้นหาตามรายวิชา ครู หรือห้องเรียน..."
+          extraFilters={
+            <>
+              <select
+                className="bg-gray-50 border-none rounded-lg px-4 py-3 font-semibold text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                value={selectedDept}
+                onChange={(e) => {
+                  setSelectedDept(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">ทุกแผนกวิชา</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.dept_name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="bg-gray-50 border-none rounded-lg px-4 py-3 font-semibold text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                value={selectedClassroom}
+                onChange={(e) => {
+                  setSelectedClassroom(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">ทุกห้องเรียน</option>
+                {classrooms
+                  .filter((c) => 
+                    !selectedDept || 
+                    c.dept_id === parseInt(selectedDept) || 
+                    c.level?.dept_id === parseInt(selectedDept)
+                  )
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.room_name} ({c.level?.level_name})
+                    </option>
+                  ))}
+              </select>
+            </>
+          }
         />
 
         <DataTable
           columns={[
-            { header: 'วิชาที่สอน' },
-            { header: 'ครูผู้สอน' },
-            { header: 'แผนกวิชา' },
-            { header: 'ห้องเรียน' },
-            { header: 'ภาคเรียน' },
-            { header: 'การจัดการ', align: 'right' }
+            { header: "วิชาที่สอน" },
+            { header: "ครูผู้สอน" },
+            { header: "แผนกวิชา" },
+            { header: "ห้องเรียน" },
+            { header: "ภาคเรียน" },
+            { header: "การจัดการ", align: "right" },
           ]}
           loading={loading}
         >
@@ -276,7 +339,9 @@ export default function AdminAssignmentsPage() {
               </td>
               <td className="px-8 py-5">
                 <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
-                  {a.classroom?.department?.dept_name || a.classroom?.level?.department?.dept_name || 'ไม่ระบุแผนก'}
+                  {a.classroom?.department?.dept_name ||
+                    a.classroom?.level?.department?.dept_name ||
+                    "ไม่ระบุแผนก"}
                 </span>
               </td>
               <td className="px-8 py-5">
@@ -310,7 +375,7 @@ export default function AdminAssignmentsPage() {
           ))}
         </DataTable>
 
-        <Pagination 
+        <Pagination
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}
@@ -433,99 +498,100 @@ export default function AdminAssignmentsPage() {
               }
             />
           </div>
-                    <div className="flex gap-3 pt-4">
-                      <button
-                        type="submit"
-                        className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
-                      >
-                        <Check className="mr-2" />
-                        {editingAssignment ? "อัปเดต" : "บันทึก"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsModalOpen(false)}
-                        className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
-                      >
-                        ยกเลิก
-                      </button>
-                    </div>
-                  </form>
-                </Modal>
-          
-                <Modal
-                  isOpen={isImportModalOpen}
-                  onClose={() => {
-                    setIsImportModalOpen(false);
-                    setSelectedFile(null);
-                    setTermForImport("");
-                  }}
-                  title="นำเข้าข้อมูลการสอน"
-                  subtitle="ไฟล์ Excel หัวตาราง: รหัสวิชา, ชื่อวิชา, ชื่อครู, ห้องเรียน, ภาคเรียน"
-                  icon={FileSpreadsheet}
-                >
-                  <div className="mb-6">
-                    <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
-                      ภาคเรียน (เช่น 2/2568)
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="ระบุภาคเรียนที่จะนำเข้า..."
-                      className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
-                      value={termForImport}
-                      onChange={(e) => setTermForImport(e.target.value)}
-                    />
-                  </div>
+          <div className="flex gap-3 pt-4">
+            <button
+              type="submit"
+              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
+            >
+              <Check className="mr-2" />
+              {editingAssignment ? "อัปเดต" : "บันทึก"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
+            >
+              ยกเลิก
+            </button>
+          </div>
+        </form>
+      </Modal>
 
-                  <div className="border-4 border-dashed border-gray-100 rounded-2xl p-12 text-center bg-gray-50/50 mb-8 relative hover:border-blue-200 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      accept=".xlsx"
-                      onChange={handleFileChange}
-                    />
-                    {selectedFile ? (
-                      <div className="flex flex-col items-center">
-                        <div className="bg-green-100 p-4 rounded-full mb-4 text-green-600 shadow-lg shadow-green-100">
-                          <Check className="h-10 w-10" />
-                        </div>
-                        <span className="text-lg  text-gray-800">{selectedFile.name}</span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <Download className="h-12 w-12 text-blue-400 mb-4" />
-                        <span className="text-xl  text-gray-700 tracking-tight uppercase">
-                          เลือกไฟล์ Excel (.xlsx)
-                        </span>
-                      </div>
-                    )}
-                  </div>
-          
-                  <div className="flex gap-4">
-                    <button
-                      disabled={!selectedFile || isProcessing}
-                      onClick={handleImportSubmit}
-                      className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 disabled:bg-blue-200 shadow-xl transition-all flex justify-center items-center active:scale-95"
-                    >
-                      {isProcessing ? (
-                        <RefreshCw className="h-6 w-6 animate-spin mr-3" />
-                      ) : (
-                        <FileUp className="mr-3 h-6 w-6" />
-                      )}
-                      เริ่มนำเข้าข้อมูล
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsImportModalOpen(false);
-                        setSelectedFile(null);
-                      }}
-                      className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg hover:bg-gray-200 transition-all active:scale-95"
-                    >
-                      ยกเลิก
-                    </button>
-                  </div>
-                </Modal>
+      <Modal
+        isOpen={isImportModalOpen}
+        onClose={() => {
+          setIsImportModalOpen(false);
+          setSelectedFile(null);
+          setTermForImport("");
+        }}
+        title="นำเข้าข้อมูลการสอน"
+        subtitle="ไฟล์ Excel หัวตาราง: รหัสวิชา, ชื่อวิชา, ชื่อครู, ห้องเรียน, ภาคเรียน"
+        icon={FileSpreadsheet}
+      >
+        <div className="mb-6">
+          <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            ภาคเรียน (เช่น 2/2568)
+          </label>
+          <input
+            required
+            type="text"
+            placeholder="ระบุภาคเรียนที่จะนำเข้า..."
+            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+            value={termForImport}
+            onChange={(e) => setTermForImport(e.target.value)}
+          />
+        </div>
+
+        <div className="border-4 border-dashed border-gray-100 rounded-2xl p-12 text-center bg-gray-50/50 mb-8 relative hover:border-blue-200 transition-colors">
+          <input
+            type="file"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            accept=".xlsx"
+            onChange={handleFileChange}
+          />
+          {selectedFile ? (
+            <div className="flex flex-col items-center">
+              <div className="bg-green-100 p-4 rounded-full mb-4 text-green-600 shadow-lg shadow-green-100">
+                <Check className="h-10 w-10" />
               </div>
-            );
-          }
-          
+              <span className="text-lg  text-gray-800">
+                {selectedFile.name}
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <Download className="h-12 w-12 text-blue-400 mb-4" />
+              <span className="text-xl  text-gray-700 tracking-tight uppercase">
+                เลือกไฟล์ Excel (.xlsx)
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-4">
+          <button
+            disabled={!selectedFile || isProcessing}
+            onClick={handleImportSubmit}
+            className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 disabled:bg-blue-200 shadow-xl transition-all flex justify-center items-center active:scale-95"
+          >
+            {isProcessing ? (
+              <RefreshCw className="h-6 w-6 animate-spin mr-3" />
+            ) : (
+              <FileUp className="mr-3 h-6 w-6" />
+            )}
+            เริ่มนำเข้าข้อมูล
+          </button>
+          <button
+            onClick={() => {
+              setIsImportModalOpen(false);
+              setSelectedFile(null);
+            }}
+            className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-lg hover:bg-gray-200 transition-all active:scale-95"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
