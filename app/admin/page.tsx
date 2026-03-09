@@ -1,159 +1,319 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { studentService } from "@/src/services/studentService";
+import { teacherService } from "@/src/services/teacherService";
+import { courseAssignmentService } from "@/src/services/courseAssignmentService";
+import { evaluationService } from "@/src/services/evaluationService";
+import {
+  Users,
+  GraduationCap,
+  ClipboardList,
+  Star,
+  Clock,
+  ChevronRight,
+  MessageSquare,
+  LayoutDashboard,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { userService } from "@/src/services/userService";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { RefreshCw, ArrowLeft, ShieldCheck, User, Lock } from "lucide-react";
+import { PageHeader } from "@/src/components/ui/PageHeader";
+import { Modal } from "@/src/components/ui/Modal";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "กรุณาระบุชื่อผู้ใช้งาน"),
-  password: z.string().min(1, "กรุณาระบุรหัสผ่าน"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-
-export default function AdminLoginPage() {
+export default function AdminDashboardPage() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const [stats, setStats] = useState({
+    students: 0,
+    teachers: 0,
+    assignments: 0,
+    evaluations: 0,
   });
+  const [recentEvaluations, setRecentEvaluations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEval, setSelectedEval] = useState<any>(null);
 
-  const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const admin = await userService.login(data);
-      localStorage.setItem("admin", JSON.stringify(admin));
-      router.push("/admin");
-    } catch {
-      setError("ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง");
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    // Check authentication
+    const token = localStorage.getItem("token");
+    const admin = localStorage.getItem("admin");
+    if (!token || !admin) {
+      router.push("/admin/login");
+      return;
     }
+
+    const fetchStats = async () => {
+      try {
+        const [studentsRes, teachersRes, assignmentsRes, evaluationsRes] =
+          await Promise.all([
+            studentService.getAllStudents(1, 1),
+            teacherService.getAllTeachers(1, 1),
+            courseAssignmentService.getAllAssignments(1, 1),
+            evaluationService.getAllEvaluations(1, 10),
+          ]);
+
+        setStats({
+          students: studentsRes.meta.total,
+          teachers: teachersRes.meta.total,
+          assignments: assignmentsRes.meta.total,
+          evaluations: evaluationsRes.meta.total,
+        });
+
+        setRecentEvaluations(evaluationsRes.data || []);
+      } catch (err) {
+        console.error("Error fetching dashboard stats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [router]);
+
+  const calculateAverage = (answers: any[]) => {
+    if (!answers || answers.length === 0) return "0.00";
+    const sum = answers.reduce((acc, curr) => acc + curr.score, 0);
+    return (sum / answers.length).toFixed(2);
   };
 
-  return (
-    <div
-      className="min-h-screen flex justify-center items-center"
-      style={{ background: "linear-gradient(135deg, #3b5bdb 0%, #4c6ef5 50%, #748ffc 100%)" }}
-    >
-      <div className="flex justify-center items-center">
+  const statCards = [
+    {
+      name: "นักเรียนทั้งหมด",
+      value: stats.students,
+      icon: Users,
+    },
+    {
+      name: "ครูผู้สอน",
+      value: stats.teachers,
+      icon: GraduationCap,
+    },
+    {
+      name: "รายวิชา",
+      value: stats.assignments,
+      icon: ClipboardList,
+    },
+    {
+      name: "การประเมินรวม",
+      value: stats.evaluations,
+      icon: Star,
+    },
+  ];
 
-        {/* Left panel */}
-        <div className="hidden lg:flex flex-col justify-center px-20 flex-1 text-white">
-          <div className="max-w-md">
-            <div className="mb-8">
-              <img src="https://nc.ac.th/img/logo.png" className="h-20 w-20" />
+  if (loading)
+    return (
+      <div className="p-8 flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-blue-600"></div>
+      </div>
+    );
+
+  return (
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+      <PageHeader
+        title="Dashboard Overview"
+        description="Teacher Evaluation Management System Dashboard"
+        icon={LayoutDashboard}
+      />
+
+      <div className="grid gap-6 mb-10 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card) => (
+          <div
+            key={card.name}
+            className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm transition-all hover:shadow-md"
+          >
+            <div className="flex items-center gap-4">
+              <div className="bg-slate-50 p-3 rounded-md border border-slate-100">
+                <card.icon className="h-5 w-5 text-slate-400" />
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                  {card.name}
+                </p>
+                <p className="text-2xl font-bold text-slate-900 leading-tight mt-1">
+                  {card.value}
+                </p>
+              </div>
             </div>
-            <h1 className="text-5xl font-black leading-tight mb-5 tracking-tight">
-              ระบบประเมิน<br />ครูผู้สอน
-            </h1>
-            <p className="text-blue-100 text-base leading-relaxed max-w-sm opacity-90">
-              แผงควบคุมสำหรับผู้ดูแลระบบ จัดการข้อมูลนักเรียน
-              ครูผู้สอน และผลการประเมินทั้งหมดในระบบ
-            </p>
-            <div className="mt-16 flex gap-2">
-              {[...Array(5)].map((_, i) => (
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Clock className="h-4 w-4 text-slate-400" />
+              Recent Evaluations
+            </h2>
+            <button
+              onClick={() => router.push("/admin/evaluations")}
+              className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1"
+            >
+              View All
+              <ChevronRight className="h-3 w-3" />
+            </button>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {recentEvaluations.length === 0 ? (
+              <div className="p-16 text-center text-slate-400 text-xs font-medium">
+                No evaluation records found
+              </div>
+            ) : (
+              recentEvaluations.map((evaluation) => (
                 <div
-                  key={i}
-                  className={`h-2 rounded-full bg-white transition-all ${i === 0 ? "w-8 opacity-90" : "w-2 opacity-30"}`}
-                />
+                  key={evaluation.id}
+                  onClick={() => setSelectedEval(evaluation)}
+                  className="p-5 hover:bg-slate-50 transition-colors cursor-pointer group"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded border border-slate-100 bg-slate-50 flex items-center justify-center text-slate-400 transition-colors">
+                        <Users className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-800">
+                          {evaluation.student?.first_name}{" "}
+                          {evaluation.student?.last_name}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {evaluation.assignment?.subject?.subject_name}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="inline-flex items-center px-2 py-1 rounded border border-slate-200 bg-white text-xs font-bold text-slate-700">
+                        <Star className="h-3 w-3 mr-1.5 text-amber-500 fill-amber-500" />
+                        {calculateAverage(evaluation.answers)}
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1.5 font-medium">
+                        {new Date(evaluation.eval_date).toLocaleDateString(
+                          "th-TH",
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
+            <h2 className="text-xs font-bold text-slate-900 mb-5 uppercase tracking-wider border-b border-slate-100 pb-4">
+              Quick Navigation
+            </h2>
+            <div className="space-y-1">
+              {[
+                { label: "Manage Students", path: "/admin/students", icon: Users },
+                { label: "Manage Teachers", path: "/admin/teachers", icon: GraduationCap },
+                { label: "Manage Assignments", path: "/admin/assignments", icon: ClipboardList },
+              ].map((item) => (
+                <button
+                  key={item.path}
+                  onClick={() => router.push(item.path)}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-md text-slate-600 font-medium text-sm hover:bg-slate-50 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className="h-4 w-4 text-slate-400" />
+                    {item.label}
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Right panel */}
-        <div className="flex items-center justify-center w-full lg:w-auto lg:min-w-[520px] px-6 py-12">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-blue-900/20 p-8">
-            {/* Header */}
-            <div className="text-center mb-7">
-              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 mb-3">
-                <ShieldCheck className="h-5 w-5 text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-black text-gray-900">ผู้ดูแลระบบ</h2>
-              <p className="text-sm text-gray-400 mt-1">กรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
-            </div>
-
-            {/* Error */}
-            {error && (
-              <div className="mb-5 rounded-xl bg-red-50 border border-red-100 px-4 py-3">
-                <p className="text-xs font-semibold text-red-600">{error}</p>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Username */}
-              <div className="space-y-1.5">
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
-                  <User className="h-3.5 w-3.5" />
-                  ชื่อผู้ใช้งาน
-                </label>
-                <input
-                  {...register("username")}
-                  type="text"
-                  placeholder="username"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
-                />
-                {errors.username && (
-                  <p className="text-xs font-semibold text-red-500">{errors.username.message}</p>
-                )}
-              </div>
-
-              {/* Password */}
-              <div className="space-y-1.5">
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
-                  <Lock className="h-3.5 w-3.5" />
-                  รหัสผ่าน
-                </label>
-                <input
-                  {...register("password")}
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
-                />
-                {errors.password && (
-                  <p className="text-xs font-semibold text-red-500">{errors.password.message}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-700 active:scale-[0.99] transition-all duration-150 disabled:bg-blue-300 flex items-center justify-center gap-2 mt-2"
-              >
-                {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "เข้าสู่ระบบ"}
-              </button>
-            </form>
-
-            {/* Back link */}
-            <div className="mt-6 pt-5 border-t border-gray-100 text-center">
-              <button
-                onClick={() => router.push("/login")}
-                className="flex items-center justify-center gap-1.5 mx-auto text-xs font-bold text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                กลับหน้าล็อกอินนักเรียน
-              </button>
-            </div>
-
-            <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-widest text-gray-300">
-              &copy; 2026 Teacher Evaluation System
+          <div className="bg-slate-900 rounded-lg p-6 shadow-md">
+            <h3 className="font-bold text-xs uppercase tracking-wider text-white mb-2">
+              Technical Support
+            </h3>
+            <p className="text-slate-400 text-xs leading-relaxed mb-5 font-medium">
+              Please contact the IT department for any technical issues or
+              system inquiries.
             </p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-md text-xs font-bold transition-colors uppercase tracking-wider">
+              Open Support Ticket
+            </button>
           </div>
         </div>
       </div>
-    </div>
 
+      <Modal
+        isOpen={!!selectedEval}
+        onClose={() => setSelectedEval(null)}
+        title="Evaluation Details"
+        subtitle="Review individual metrics and student feedback"
+        icon={Star}
+      >
+        {selectedEval && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="p-5 bg-slate-50 rounded-lg border border-slate-100">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+                  Student Record
+                </p>
+                <p className="text-slate-900 font-bold text-sm">
+                  {selectedEval.student?.first_name}{" "}
+                  {selectedEval.student?.last_name}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  ID: {selectedEval.student?.student_code}
+                </p>
+              </div>
+              <div className="p-5 bg-slate-50 rounded-lg border border-slate-100">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+                  Instructor Info
+                </p>
+                <p className="text-slate-900 font-bold text-sm">
+                  {selectedEval.assignment?.teacher?.first_name}{" "}
+                  {selectedEval.assignment?.teacher?.last_name}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  {selectedEval.assignment?.subject?.subject_name}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-[11px] font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
+                Assessment Metrics
+              </h3>
+              <div className="space-y-2">
+                {selectedEval.answers?.map((answer: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between items-center p-4 bg-white rounded-lg border border-slate-100"
+                  >
+                    <p className="text-xs font-bold text-slate-700 flex-1 pr-6">
+                      {answer.question?.question_text || `Metric ${idx + 1}`}
+                    </p>
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <div
+                          key={s}
+                          className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold transition-colors ${s <= answer.score ? "bg-slate-900 text-white" : "bg-slate-50 text-slate-200"}`}
+                        >
+                          {s}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {selectedEval.suggestion && (
+              <div className="p-5 bg-blue-50/30 border border-blue-100 rounded-lg border-l-4 border-l-blue-500">
+                <p className="text-[10px] font-bold text-blue-600/70 uppercase mb-2.5 flex items-center gap-2 tracking-wider">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  Additional Comments
+                </p>
+                <p className="text-slate-700 text-sm italic leading-relaxed font-medium">
+                  "{selectedEval.suggestion}"
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+    </div>
   );
 }

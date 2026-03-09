@@ -1,79 +1,98 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
   GraduationCap,
-  ClipboardList,
-  Star,
+  BookOpen,
   Settings,
   LogOut,
-  ChevronRight
+  School,
+  ClipboardList,
+  ShieldCheck,
+  User as UserIcon,
+  Building2
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { name: 'Students', href: '/admin/students', icon: Users },
-  { name: 'Teachers', href: '/admin/teachers', icon: GraduationCap },
-  { name: 'Assignments', href: '/admin/assignments', icon: ClipboardList },
-  { name: 'Evaluations', href: '/admin/evaluations', icon: Star },
-];
+interface SidebarProps {
+  user: any;
+  logout: () => void;
+}
 
-export function Sidebar() {
+export function Sidebar({ user, logout }: SidebarProps) {
   const pathname = usePathname();
 
+  const menuItems = [
+    { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
+    { name: 'จัดการรายชื่อนักเรียน', icon: Users, href: '/admin/students' },
+    { name: 'จัดการครูผู้สอน', icon: GraduationCap, href: '/admin/teachers' },
+    { name: 'จัดการฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
+    { name: 'จัดการแผนกวิชา', icon: Building2, href: '/admin/departments' },
+    { name: 'จัดการห้องเรียน', icon: School, href: '/admin/classrooms' },
+    { name: 'จัดการการสอน', icon: ClipboardList, href: '/admin/assignments' },
+    ...(user.role === 'admin' ? [{ name: 'จัดการผู้ใช้งาน', icon: UserIcon, href: '/admin/users' }] : []),
+    { name: 'จัดการหัวข้อการประเมิน', icon: Settings, href: '/admin/evaluation-questions' },
+    { name: 'จัดการผลการประเมิน', icon: ShieldCheck, href: '/admin/evaluations' },
+  ];
+
   return (
-    <div className="flex flex-col w-64 bg-slate-900 text-slate-300 h-screen sticky top-0 overflow-y-auto border-r border-slate-800 shadow-xl">
-      <div className="flex items-center gap-3 px-6 py-8 border-b border-slate-800/50">
-        <div className="bg-white p-1.5 rounded-md">
-          <GraduationCap className="h-6 w-6 text-slate-900" />
+    <aside className="fixed inset-y-0 left-0 w-72 bg-slate-900 text-slate-300 border-r border-slate-800 z-50 overflow-hidden flex flex-col">
+      <div className="p-8 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-800 border border-slate-700 text-blue-400">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold tracking-tight text-white leading-none">
+              {user.role === 'admin' ? 'Admin' : 'Teacher'}
+            </h1>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mt-1">Management Portal</p>
+          </div>
         </div>
-        <span className="text-lg font-bold text-white tracking-tight uppercase">Admin Panel</span>
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-1">
-        {navigation.map((item) => {
+      <nav className="flex-1 px-4 space-y-0.5 overflow-y-auto scrollbar-hide py-4">
+        {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center justify-between px-4 py-3 text-sm font-bold uppercase tracking-wider rounded-lg transition-all duration-200 group ${isActive
-                  ? 'bg-white text-slate-900 shadow-lg shadow-white/5'
-                  : 'hover:bg-slate-800 hover:text-white'
+              className={`group flex items-center px-4 py-2.5 rounded-md transition-all duration-200 ${isActive
+                  ? 'bg-blue-600/10 text-blue-400 font-semibold'
+                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                 }`}
             >
-              <div className="flex items-center gap-3">
-                <item.icon className={`h-4.5 w-4.5 transition-colors ${isActive ? 'text-slate-900' : 'text-slate-500 group-hover:text-slate-300'}`} />
-                {item.name}
-              </div>
-              {isActive && <ChevronRight className="h-4 w-4" />}
+              <item.icon className={`h-4.5 w-4.5 mr-3 transition-colors ${isActive ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
+              <span className="text-sm">{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="px-4 py-6 border-t border-slate-800/50 space-y-1">
-        <Link
-          href="/admin/settings"
-          className="flex items-center gap-3 px-4 py-3 text-sm font-bold uppercase tracking-wider rounded-lg hover:bg-slate-800 hover:text-white transition-all group"
-        >
-          <Settings className="h-4.5 w-4.5 text-slate-500 group-hover:text-slate-300" />
-          Settings
-        </Link>
+      <div className="p-4 border-t border-slate-800">
+        <div className="flex items-center gap-3 mb-4 px-2">
+          <div className="h-9 w-9 rounded bg-slate-800 flex items-center justify-center border border-slate-700">
+            <UserIcon className="h-4 w-4 text-slate-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-slate-200 truncate">{user.username || 'User'}</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">
+              {user.role === 'admin' ? 'Administrator' : 'Staff'}
+            </p>
+          </div>
+        </div>
+
         <button
-          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold uppercase tracking-wider rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all group"
+          onClick={logout}
+          className="flex items-center justify-center w-full px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white hover:bg-red-500/10 rounded-md transition-all group"
         >
-          <LogOut className="h-4.5 w-4.5" />
-          Logout
+          <LogOut className="mr-2 h-3.5 w-3.5" />
+          ออกจากระบบ
         </button>
       </div>
-
-      <div className="px-6 py-4 bg-slate-950/50">
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">v1.0.0 Alpha</p>
-      </div>
-    </div>
+    </aside>
   );
 }

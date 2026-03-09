@@ -295,14 +295,14 @@ export default function AdminAssignmentsPage() {
               >
                 <option value="">ทุกห้องเรียน</option>
                 {classrooms
-                  .filter((c) => 
-                    !selectedDept || 
-                    c.dept_id === parseInt(selectedDept) || 
+                  .filter((c) =>
+                    !selectedDept ||
+                    c.dept_id === parseInt(selectedDept) ||
                     c.level?.dept_id === parseInt(selectedDept)
                   )
                   .map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.level?.department?.dept_name || "ไม่ระบุแผนก"} {c.level?.level_name} ห้อง {c.room_name}
+                      {c.level?.department?.dept_name} - {c.level?.level_name} - {c.room_name}
                     </option>
                   ))}
               </select>
@@ -314,7 +314,7 @@ export default function AdminAssignmentsPage() {
           columns={[
             { header: "วิชาที่สอน" },
             { header: "ครูผู้สอน" },
-            { header: "แผนก / ชั้นปี / ห้อง" },
+            { header: "การจัดการห้องเรียน" },
             { header: "ภาคเรียน" },
             { header: "การจัดการ", align: "right" },
           ]}
@@ -323,42 +323,49 @@ export default function AdminAssignmentsPage() {
           {assignments.map((a) => (
             <tr
               key={a.id}
-              className="hover:bg-blue-50/50 transition-colors group"
+              className="hover:bg-slate-50 transition-colors"
             >
-              <td className="px-8 py-5">
-                <div className="font-semibold text-blue-600 text-xs mb-1">
+              <td className="px-6 py-4">
+                <div className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">
                   {a.subject?.subject_code}
                 </div>
-                <div className="font-semibold text-gray-900">
+                <div className="font-bold text-slate-900 text-sm">
                   {a.subject?.subject_name}
                 </div>
               </td>
-              <td className="px-8 py-5 text-gray-700 font-semibold">
+              <td className="px-6 py-4 text-slate-700 font-semibold text-sm">
                 {a.teacher?.first_name} {a.teacher?.last_name}
               </td>
-              <td className="px-8 py-5">
-                <div className="flex flex-col gap-1">
-                  <div className="text-sm font-semibold text-gray-900">
-                    {a.classroom?.level?.department?.dept_name || a.classroom?.department?.dept_name || "ไม่ระบุแผนก"}
+              <td className="px-6 py-4">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-600 border border-slate-200 uppercase tracking-tight">
+                      {a.classroom?.department?.dept_name || a.classroom?.level?.department?.dept_name || "N/A"}
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-400">
+                      {a.classroom?.level?.level_name || ""}
+                    </span>
                   </div>
-                  <div className="text-xs text-blue-600 font-medium">
-                    {a.classroom?.level?.level_name || "ไม่ระบุชั้นปี"} ห้อง {a.classroom?.room_name || "N/A"}
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100">
+                      ห้อง {a.classroom?.room_name || "N/A"}
+                    </span>
                   </div>
                 </div>
               </td>
-              <td className="px-8 py-5 text-gray-600 text-sm font-semibold">
+              <td className="px-6 py-4 text-slate-600 text-sm font-semibold">
                 {a.term}
               </td>
-              <td className="px-8 py-5 text-right space-x-2">
+              <td className="px-6 py-4 text-right space-x-1">
                 <button
                   onClick={() => handleOpenModal(a)}
-                  className="p-2 text-gray-400 hover:text-blue-600 bg-gray-50 rounded-lg"
+                  className="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-md transition-colors"
                 >
                   <Edit2 className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(a.id)}
-                  className="p-2 text-gray-400 hover:text-red-600 bg-gray-50 rounded-lg"
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-slate-100 rounded-md transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -469,8 +476,9 @@ export default function AdminAssignmentsPage() {
               <option value="">เลือกห้องเรียน</option>
               {classrooms.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} -{" "}
-                  {c.level?.level_name || "ทั่วไป"} ห้อง {c.room_name}
+                  ห้อง {c.room_name} -{" "}
+                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} (
+                  {c.level?.level_name || "ทั่วไป"})
                 </option>
               ))}
             </select>

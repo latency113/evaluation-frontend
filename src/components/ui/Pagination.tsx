@@ -22,12 +22,12 @@ export function Pagination({
   if (totalPages <= 1 && !totalItems) return null;
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-5 rounded-md border border-slate-200 shadow-sm mt-4">
-      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-6">
+      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
         {totalItems && limit ? (
-          <>Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} of {totalItems} Records</>
+          <>Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} of {totalItems}</>
         ) : (
-          <>Page {page} / {totalPages}</>
+          <>Page {page} of {totalPages}</>
         )}
       </div>
 
@@ -35,7 +35,7 @@ export function Pagination({
         <button
           disabled={page === 1}
           onClick={() => onPageChange(page - 1)}
-          className="p-2.5 bg-slate-50 text-slate-500 rounded-md hover:bg-slate-100 disabled:opacity-30 transition-all border border-slate-200"
+          className="p-2 text-slate-500 hover:text-slate-900 border border-slate-200 rounded-md hover:bg-slate-50 disabled:opacity-20 transition-all"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -54,9 +54,9 @@ export function Pagination({
                   <button
                     key={p}
                     onClick={() => onPageChange(p)}
-                    className={`w-9 h-9 rounded-md text-xs font-bold transition-all border ${page === p
-                        ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
-                        : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                    className={`min-w-[32px] h-8 px-2 rounded-md text-xs font-bold transition-all border ${page === p
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-800'
                       }`}
                   >
                     {p}
@@ -64,7 +64,7 @@ export function Pagination({
                 );
               } else if (p === page - 2 || p === page + 2) {
                 return (
-                  <span key={p} className="flex items-center px-1 text-slate-300 text-xs">
+                  <span key={p} className="flex items-center justify-center w-8 text-slate-300">
                     &bull;&bull;&bull;
                   </span>
                 );
@@ -77,7 +77,7 @@ export function Pagination({
         <button
           disabled={page === totalPages || totalPages === 0}
           onClick={() => onPageChange(page + 1)}
-          className="p-2.5 bg-slate-50 text-slate-500 rounded-md hover:bg-slate-100 disabled:opacity-30 transition-all border border-slate-200"
+          className="p-2 text-slate-500 hover:text-slate-900 border border-slate-200 rounded-md hover:bg-slate-50 disabled:opacity-20 transition-all"
         >
           <ChevronRight className="h-4 w-4" />
         </button>

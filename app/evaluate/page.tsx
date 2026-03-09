@@ -116,7 +116,7 @@ export default function EvaluatePage() {
               <p className="text-sm text-gray-600">
                 ชื่อนักเรียน นักศึกษา: {user?.first_name} {user?.last_name} ({user?.student_code})
                 <span className="block mt-1 text-xs text-blue-600 font-semibold uppercase tracking-wider">
-                  {user?.classroom?.level?.department?.dept_name || 'ไม่ระบุแผนก'} {user?.classroom?.level?.level_name || 'ทั่วไป'} ห้อง {user?.classroom?.room_name}
+                  ห้อง {user?.classroom?.room_name} - {user?.classroom?.level?.department?.dept_name || 'ไม่ระบุแผนก'} ({user?.classroom?.level?.level_name || 'ทั่วไป'})
                 </span>
               </p>
             </div>

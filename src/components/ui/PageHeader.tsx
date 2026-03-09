@@ -11,25 +11,24 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, icon: Icon, actions }: PageHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
       <div className="flex items-center gap-4">
         {Icon && (
-          <div className="bg-slate-900 p-2.5 rounded-lg shadow-sm">
-            <Icon className="h-5 w-5 text-white" />
+          <div className="bg-slate-100 p-2.5 rounded-md border border-slate-200">
+            <Icon className="h-6 w-6 text-slate-600" />
           </div>
         )}
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight uppercase">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             {title}
           </h1>
           {description && (
-            <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-wider font-bold italic">
+            <p className="text-slate-500 text-sm font-medium mt-0.5">
               {description}
             </p>
           )}
         </div>
       </div>
-
       {actions && (
         <div className="flex items-center gap-3">
           {actions}
