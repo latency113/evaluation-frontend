@@ -6,14 +6,7 @@ import { userService } from "@/src/services/userService";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  Lock,
-  User,
-  ShieldAlert,
-  RefreshCw,
-  ArrowLeft,
-  ShieldCheck,
-} from "lucide-react";
+import { RefreshCw, ArrowLeft, ShieldCheck, User, Lock } from "lucide-react";
 
 const loginSchema = z.object({
   username: z.string().min(1, "กรุณาระบุชื่อผู้ใช้งาน"),
@@ -42,7 +35,7 @@ export default function AdminLoginPage() {
       const admin = await userService.login(data);
       localStorage.setItem("admin", JSON.stringify(admin));
       router.push("/admin");
-    } catch (err) {
+    } catch {
       setError("ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง");
     } finally {
       setIsLoading(false);
@@ -50,133 +43,133 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0f172a]">
-      {/* Decorative background elements */}
-      <div className="absolute -top-24 -left-20 h-96 w-96 bg-indigo-900/20 blur-3xl"></div>
-      <div className="absolute -bottom-24 -right-20 h-96 w-96 bg-blue-900/20 blur-3xl"></div>
-
-      <div className="relative w-full max-w-[440px] px-4">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[2rem] bg-gradient-to-br from-slate-700 to-slate-900 text-red-500 shadow-xl shadow-black/50 border border-slate-700">
-            <User className="h-10 w-10" />
+    <div
+      className="min-h-screen flex justify-center items-center"
+      style={{
+        background:
+          "linear-gradient(135deg, #3b5bdb 0%, #4c6ef5 50%, #748ffc 100%)",
+      }}
+    >
+      <div className="flex justify-center items-center">
+        {/* Left panel */}
+        <div className="hidden lg:flex flex-col justify-center px-20 flex-1 text-white">
+          <div className="max-w-md">
+            <div className="mb-8">
+              <img
+                src="https://nc.ac.th/img/logo.png"
+                className="h-20 w-20"
+              />
+            </div>
+            <h1 className="text-5xl font-black leading-tight mb-5 tracking-tight">
+              ระบบประเมิน
+              <br />
+              ครูผู้สอน
+            </h1>
+            <p className="text-blue-100 text-base leading-relaxed max-w-sm opacity-90">
+              แผงควบคุมสำหรับผู้ดูแลระบบ จัดการข้อมูลนักเรียน ครูผู้สอน
+              และผลการประเมินทั้งหมดในระบบ
+            </p>
+            <div className="mt-16 flex gap-2">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 rounded-full bg-white transition-all ${i === 0 ? "w-8 opacity-90" : "w-2 opacity-30"}`}
+                />
+              ))}
+            </div>
           </div>
-          <h1 className="bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-3xl tracking-tight text-transparent">
-            ระบบจัดการผู้ดูแลระบบ
-          </h1>
-          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-500">
-            Admin Control Panel
-          </p>
         </div>
 
-        <div className="border border-slate-800 bg-slate-900/50 p-8 shadow-2xl backdrop-blur-xl md:p-10">
-          {error && (
-            <div className="mb-6 flex items-start gap-3 rounded-sm bg-red-500/10 p-4 border border-red-500/20">
-              <div className="mt-0.5 bg-red-500 p-1">
-                <XIcon className="h-3 w-3 text-white" />
+        {/* Right panel */}
+        <div className="flex items-center justify-center w-full lg:w-auto lg:min-w-[520px] px-6 py-12">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-blue-900/20 p-8">
+            {/* Header */}
+            <div className="text-center mb-7">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 mb-3">
+                <ShieldCheck className="h-5 w-5 text-blue-600" />
               </div>
-              <p className="text-sm leading-tight text-red-400">
-                {error}
+              <h2 className="text-2xl font-black text-gray-900">ผู้ดูแลระบบ</h2>
+              <p className="text-sm text-gray-400 mt-1">
+                กรอกข้อมูลเพื่อเข้าสู่ระบบ
               </p>
             </div>
-          )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <label className="ml-1 text-[11px] uppercase tracking-widest text-slate-500">
-                ชื่อผู้ใช้งาน
-              </label>
-              <div className="group relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-slate-500 group-focus-within:text-blue-400 transition-colors">
-                  <User className="h-5 w-5" />
-                </div>
+            {/* Error */}
+            {error && (
+              <div className="mb-5 rounded-xl bg-red-50 border border-red-100 px-4 py-3">
+                <p className="text-xs font-semibold text-red-600">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Username */}
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
+                  <User className="h-3.5 w-3.5" />
+                  ชื่อผู้ใช้งาน
+                </label>
                 <input
                   {...register("username")}
                   type="text"
-                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
-                  placeholder="ชื่อผู้ใช้งาน..."
+                  placeholder="username"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
                 />
+                {errors.username && (
+                  <p className="text-xs font-semibold text-red-500">
+                    {errors.username.message}
+                  </p>
+                )}
               </div>
-              {errors.username && (
-                <p className="ml-1 text-[11px] text-red-400">
-                  {errors.username.message}
-                </p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <label className="ml-1 text-[11px] uppercase tracking-widest text-slate-500">
-                รหัสผ่าน
-              </label>
-              <div className="group relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-slate-500 group-focus-within:text-blue-400 transition-colors">
-                  <Lock className="h-5 w-5" />
-                </div>
+              {/* Password */}
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
+                  <Lock className="h-3.5 w-3.5" />
+                  รหัสผ่าน
+                </label>
                 <input
                   {...register("password")}
                   type="password"
-                  className="block w-full rounded-sm border-2 border-slate-800 bg-slate-950/50 py-4 pl-14 pr-4 text-slate-200 outline-none transition-all focus:border-blue-500 focus:bg-slate-950 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="••••••••"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
                 />
-              </div>
-              {errors.password && (
-                <p className="ml-1 text-[11px] text-red-400">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full overflow-hidden rounded-sm bg-slate-100 py-5 text-lg text-slate-900 shadow-xl transition-all hover:bg-white active:scale-[0.98] disabled:bg-slate-700 disabled:text-slate-500"
-            >
-              <div className="relative z-10 flex items-center justify-center">
-                {isLoading ? (
-                  <RefreshCw className="h-6 w-6 animate-spin" />
-                ) : (
-                  <>
-                    <ShieldCheck className="mr-3 h-6 w-6" />
-                    เข้าสู่ระบบแอดมิน
-                  </>
+                {errors.password && (
+                  <p className="text-xs font-semibold text-red-500">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
-            </button>
-          </form>
 
-          <div className="mt-10 border-t border-slate-800 pt-8 text-center">
-            <button
-              onClick={() => router.push("/login")}
-              className="flex items-center justify-center gap-2 mx-auto text-md uppercase tracking-widest text-slate-300 hover:text-slate-100 hover:cursor-pointer transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              กลับหน้าล็อกอินนักเรียน
-            </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-700 active:scale-[0.99] transition-all duration-150 disabled:bg-blue-300 flex items-center justify-center gap-2 mt-2"
+              >
+                {isLoading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  "เข้าสู่ระบบ"
+                )}
+              </button>
+            </form>
+
+            {/* Back link */}
+            <div className="mt-6 pt-5 border-t border-gray-100 text-center">
+              <button
+                onClick={() => router.push("/login")}
+                className="flex items-center justify-center gap-1.5 mx-auto text-xs font-bold text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                กลับหน้าล็อกอินนักเรียน
+              </button>
+            </div>
+
+            <p className="mt-5 text-center text-[10px] font-bold uppercase tracking-widest text-gray-300">
+              &copy; 2026 Teacher Evaluation System
+            </p>
           </div>
         </div>
-
-        <p className="mt-8 text-center text-[10px] uppercase tracking-widest text-slate-600">
-          &copy; 2026 Admin Control System
-        </p>
       </div>
     </div>
-  );
-}
-
-function XIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
   );
 }
