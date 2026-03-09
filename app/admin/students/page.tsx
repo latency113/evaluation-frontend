@@ -269,15 +269,12 @@ export default function AdminStudentsPage() {
               </td>
               <td className="px-8 py-5">
                 <div className="flex flex-col gap-1">
-                  <span className="text-md text-blue-500 uppercase tracking-wider ml-1 leading-none">
-                    {student.classroom?.level?.department?.dept_name ||
-                    student.classroom?.level?.level_name
-                      ? `${student.classroom?.level?.department?.dept_name || ""} (${student.classroom?.level?.level_name || "ไม่ระบุชั้นปี"})`
-                      : "ยังไม่ระบุแผนก/ชั้นปี"}
-                  </span>
-                  <span className="px-3 py-1 rounded-md text-md font-semibold bg-blue-50 text-blue-700 border border-blue-100 w-fit">
-                    ห้อง {student.classroom?.room_name || "ไม่ได้ระบุ"}
-                  </span>
+                  <div className="text-sm font-semibold text-gray-900">
+                    {student.classroom?.level?.department?.dept_name || "ไม่ระบุแผนก"}
+                  </div>
+                  <div className="text-xs text-blue-600 font-medium">
+                    {student.classroom?.level?.level_name || "ไม่ระบุชั้นปี"} ห้อง {student.classroom?.room_name || "N/A"}
+                  </div>
                 </div>
               </td>
               <td className="px-8 py-5 text-right space-x-2">
@@ -372,9 +369,8 @@ export default function AdminStudentsPage() {
               <option value="">เลือกห้องเรียน</option>
               {classrooms.map((c) => (
                 <option key={c.id} value={c.id}>
-                  ห้อง {c.room_name} -{" "}
-                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} (
-                  {c.level?.level_name || "ทั่วไป"})
+                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} -{" "}
+                  {c.level?.level_name || "ทั่วไป"} ห้อง {c.room_name}
                 </option>
               ))}
             </select>

@@ -11,7 +11,6 @@ import {
   Edit2,
   Check,
   BookOpen,
-  Scan,
   MapPin,
   Search
 } from "lucide-react";
@@ -21,7 +20,6 @@ import { SearchFilters } from "@/src/components/ui/SearchFilters";
 import { DataTable } from "@/src/components/ui/DataTable";
 import { Pagination } from "@/src/components/ui/Pagination";
 import { Modal } from "@/src/components/ui/Modal";
-import { AIScanModal } from "@/src/components/ui/AIScanModal";
 
 export default function AdminSubjectsPage() {
   const [subjects, setSubjects] = useState<any[]>([]);
@@ -42,9 +40,6 @@ export default function AdminSubjectsPage() {
   // Searchable Teacher States
   const [teacherSearch, setTeacherSearch] = useState("");
   const [isTeacherDropdownOpen, setIsTeacherDropdownOpen] = useState(false);
-
-  // AI Scan States
-  const [isScanModalOpen, setIsScanModalOpen] = useState(false);
 
   // Pagination States
   const [page, setPage] = useState(1);
@@ -83,40 +78,6 @@ export default function AdminSubjectsPage() {
       console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSaveScanResults = async (scanResult: { code: string; name: string }[]) => {
-    const result = await Swal.fire({
-      title: 'ยืนยันการบันทึก?',
-      text: `ยืนยันการบันทึกรายวิชา ${scanResult.length} รายการ?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#aaa',
-      confirmButtonText: 'ยืนยัน',
-      cancelButtonText: 'ยกเลิก'
-    });
-
-    if (!result.isConfirmed) return;
-
-    try {
-      let count = 0;
-      for (const item of scanResult) {
-        const exists = subjects.find((s) => s.subject_code === item.code);
-        if (!exists) {
-          await subjectService.createSubject({
-            subject_code: item.code,
-            subject_name: item.name,
-          });
-          count++;
-        }
-      }
-      Swal.fire('สำเร็จ!', `บันทึกรายวิชาใหม่สำเร็จ ${count} รายการ!`, 'success');
-      setIsScanModalOpen(false);
-      fetchSubjects();
-    } catch (err) {
-      Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
     }
   };
 
@@ -223,13 +184,6 @@ export default function AdminSubjectsPage() {
           actions={
             <>
               <button
-                onClick={() => setIsScanModalOpen(true)}
-                className="flex items-center px-6 py-3 bg-white text-purple-600 border border-purple-200 rounded-lg hover:bg-purple-50 transition-all font-semibold shadow-sm"
-              >
-                <Scan className="mr-2 h-5 w-5" />
-                AI Scan Subjects
-              </button>
-              <button
                 onClick={() => handleOpenModal()}
                 className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg shadow-blue-100"
               >
@@ -276,12 +230,6 @@ export default function AdminSubjectsPage() {
           onPageChange={setPage}
         />
       </div>
-
-      <AIScanModal 
-        isOpen={isScanModalOpen}
-        onClose={() => setIsScanModalOpen(false)}
-        onSave={handleSaveScanResults}
-      />
 
       {/* Manual Modal */}
       <Modal
@@ -367,7 +315,7 @@ export default function AdminSubjectsPage() {
                       <option value="">เลือกห้องเรียน</option>
                       {classrooms.map((c) => (
                         <option key={c.id} value={c.id}>
-                          ห้อง {c.room_name} - {c.level?.department?.dept_name || 'ไม่ระบุแผนก'} ({c.level?.level_name || 'ทั่วไป'})
+                          {c.level?.department?.dept_name || 'ไม่ระบุแผนก'} {c.level?.level_name || 'ทั่วไป'} ห้อง {c.room_name}
                         </option>
                       ))}
                     </select>

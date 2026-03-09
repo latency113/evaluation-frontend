@@ -24,21 +24,21 @@ export function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-      <div className={`bg-white rounded-lg ${maxWidth} w-full p-10 shadow-2xl relative border border-white/20 overflow-hidden flex flex-col max-h-[95vh]`}>
-        <div className="flex justify-between items-center mb-8 border-b pb-6">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-all">
+      <div className={`bg-white rounded-lg ${maxWidth} w-full shadow-2xl relative border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]`}>
+        <div className="flex justify-between items-center px-8 py-6 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-4">
             {Icon && (
-              <div className="bg-blue-600 p-3 rounded-lg shadow-lg shadow-blue-200">
-                <Icon className="h-6 w-6 text-white" />
+              <div className="bg-slate-100 p-2 rounded-md border border-slate-200">
+                <Icon className="h-4.5 w-4.5 text-slate-500" />
               </div>
             )}
             <div>
-              <h2 className="text-2xl text-gray-900 tracking-tight leading-none">
+              <h2 className="text-lg font-bold text-slate-900 tracking-tight leading-none uppercase">
                 {title}
               </h2>
               {subtitle && (
-                <p className="text-md text-gray-400 mt-2 uppercase tracking-widest">
+                <p className="text-[10px] text-slate-500 mt-2 uppercase tracking-[0.15em] font-bold italic">
                   {subtitle}
                 </p>
               )}
@@ -46,13 +46,13 @@ export function Modal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 bg-gray-100 hover:bg-red-100 hover:text-red-600 rounded-lg transition-all active:scale-95"
+            className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors border border-transparent hover:border-slate-200"
           >
-            <X className="h-6 w-6" />
+            <X className="h-4 w-4" />
           </button>
         </div>
-        
-        <div className="overflow-y-auto flex-1 pr-2">
+
+        <div className="overflow-y-auto flex-1 p-8 scrollbar-hide text-sm text-slate-600 leading-relaxed">
           {children}
         </div>
       </div>

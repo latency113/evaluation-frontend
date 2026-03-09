@@ -24,42 +24,42 @@ export function SearchFilters({
   extraFilters,
 }: SearchFiltersProps) {
   return (
-    <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-4">
-      <div className="relative flex-1 w-full group">
-        <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors ${loading && searchTerm ? 'text-blue-500 animate-pulse' : 'text-gray-400'}`} />
+    <div className="mb-6 bg-white p-2 rounded-lg border border-slate-200 flex flex-col md:flex-row items-center gap-2 shadow-sm">
+      <div className="relative flex-1 w-full">
+        <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors ${loading && searchTerm ? 'text-slate-800 animate-pulse' : 'text-slate-400'}`} />
         <input
           type="text"
-          placeholder={placeholder}
-          className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-medium transition-all outline-none text-gray-900"
+          placeholder={placeholder || "Search entries..."}
+          className="w-full pl-11 pr-11 py-2.5 bg-transparent border-none rounded-md focus:ring-0 text-[13px] transition-all outline-none text-slate-900 placeholder:text-slate-400 font-medium"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
         />
         {searchTerm && (
-          <button 
+          <button
             onClick={() => onSearchChange('')}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-md transition-colors text-slate-400"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+      <div className="flex flex-wrap items-center gap-2 w-full md:w-auto px-2 pb-2 md:pb-0">
         {extraFilters}
-        
+
         {onLimitChange && limit !== undefined && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-gray-400 whitespace-nowrap">แสดงหน้าละ</span>
+          <div className="flex items-center gap-2 ml-auto md:ml-0">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">View</span>
             <select
               value={limit}
               onChange={(e) => onLimitChange(parseInt(e.target.value))}
-              className="bg-gray-50 border-none rounded-lg px-4 py-3 font-bold text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              className="bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-[11px] font-bold text-slate-600 focus:ring-1 focus:ring-slate-800 outline-none cursor-pointer hover:bg-slate-100 transition-colors uppercase tracking-wider"
             >
               <option value={10}>10</option>
               <option value={20}>20</option>
               <option value={50}>50</option>
               <option value={100}>100</option>
-              <option value={9999}>ทั้งหมด</option>
+              <option value={9999}>ALL</option>
             </select>
           </div>
         )}
@@ -67,9 +67,9 @@ export function SearchFilters({
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="p-3 bg-gray-50 text-gray-400 hover:text-blue-600 rounded-lg transition-all shadow-sm"
+            className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-all border border-transparent hover:border-slate-200"
           >
-            <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           </button>
         )}
       </div>

@@ -45,29 +45,22 @@ export default function AdminLoginPage() {
   return (
     <div
       className="min-h-screen flex justify-center items-center"
-      style={{
-        background:
-          "linear-gradient(135deg, #3b5bdb 0%, #4c6ef5 50%, #748ffc 100%)",
-      }}
+      style={{ background: "linear-gradient(135deg, #3b5bdb 0%, #4c6ef5 50%, #748ffc 100%)" }}
     >
       <div className="flex justify-center items-center">
+
         {/* Left panel */}
         <div className="hidden lg:flex flex-col justify-center px-20 flex-1 text-white">
           <div className="max-w-md">
             <div className="mb-8">
-              <img
-                src="https://nc.ac.th/img/logo.png"
-                className="h-20 w-20"
-              />
+              <img src="https://nc.ac.th/img/logo.png" className="h-20 w-20" />
             </div>
             <h1 className="text-5xl font-black leading-tight mb-5 tracking-tight">
-              ระบบประเมิน
-              <br />
-              ครูผู้สอน
+              ระบบประเมิน<br />ครูผู้สอน
             </h1>
             <p className="text-blue-100 text-base leading-relaxed max-w-sm opacity-90">
-              แผงควบคุมสำหรับผู้ดูแลระบบ จัดการข้อมูลนักเรียน ครูผู้สอน
-              และผลการประเมินทั้งหมดในระบบ
+              แผงควบคุมสำหรับผู้ดูแลระบบ จัดการข้อมูลนักเรียน
+              ครูผู้สอน และผลการประเมินทั้งหมดในระบบ
             </p>
             <div className="mt-16 flex gap-2">
               {[...Array(5)].map((_, i) => (
@@ -89,9 +82,7 @@ export default function AdminLoginPage() {
                 <ShieldCheck className="h-5 w-5 text-blue-600" />
               </div>
               <h2 className="text-2xl font-black text-gray-900">ผู้ดูแลระบบ</h2>
-              <p className="text-sm text-gray-400 mt-1">
-                กรอกข้อมูลเพื่อเข้าสู่ระบบ
-              </p>
+              <p className="text-sm text-gray-400 mt-1">กรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
             </div>
 
             {/* Error */}
@@ -115,9 +106,7 @@ export default function AdminLoginPage() {
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
                 />
                 {errors.username && (
-                  <p className="text-xs font-semibold text-red-500">
-                    {errors.username.message}
-                  </p>
+                  <p className="text-xs font-semibold text-red-500">{errors.username.message}</p>
                 )}
               </div>
 
@@ -134,9 +123,7 @@ export default function AdminLoginPage() {
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-100 transition-all"
                 />
                 {errors.password && (
-                  <p className="text-xs font-semibold text-red-500">
-                    {errors.password.message}
-                  </p>
+                  <p className="text-xs font-semibold text-red-500">{errors.password.message}</p>
                 )}
               </div>
 
@@ -145,11 +132,7 @@ export default function AdminLoginPage() {
                 disabled={isLoading}
                 className="w-full rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-700 active:scale-[0.99] transition-all duration-150 disabled:bg-blue-300 flex items-center justify-center gap-2 mt-2"
               >
-                {isLoading ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  "เข้าสู่ระบบ"
-                )}
+                {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "เข้าสู่ระบบ"}
               </button>
             </form>
 
@@ -171,5 +154,6 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
+
   );
 }

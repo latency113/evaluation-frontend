@@ -20,40 +20,39 @@ export function DataTable({
   emptyMessage = "ไม่พบข้อมูล",
 }: DataTableProps) {
   return (
-    <div className="bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden mb-6">
+    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6 shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-blue-500 text-white truncate">
+            <tr className="bg-slate-50 border-b border-slate-200">
               {columns.map((column, idx) => (
                 <th
                   key={idx}
-                  className={`px-8 py-5 text-md font-semibold uppercase tracking-widest ${
-                    column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''
-                  } ${column.className || ''}`}
+                  className={`px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''
+                    } ${column.className || ''}`}
                 >
                   {column.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-slate-100 text-[13px] text-slate-700 font-medium">
             {loading && !children ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-8 py-20 text-center text-gray-400 font-bold"
+                  className="px-6 py-16 text-center text-slate-400 uppercase tracking-widest text-[10px] font-bold italic"
                 >
-                  กำลังโหลดข้อมูล...
+                  Synchronizing Data...
                 </td>
               </tr>
             ) : !children || (Array.isArray(children) && children.length === 0) ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-8 py-20 text-center text-gray-400 italic font-medium"
+                  className="px-6 py-16 text-center text-slate-400 text-xs italic font-medium"
                 >
-                  {emptyMessage}
+                  No records available in this view.
                 </td>
               </tr>
             ) : (

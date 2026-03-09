@@ -22,29 +22,28 @@ export function Pagination({
   if (totalPages <= 1 && !totalItems) return null;
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-lg shadow-lg border border-gray-100">
-      <div className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-5 rounded-md border border-slate-200 shadow-sm mt-4">
+      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
         {totalItems && limit ? (
-          <>แสดง {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} จากทั้งหมด {totalItems}</>
+          <>Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} of {totalItems} Records</>
         ) : (
-          <>หน้า {page} / {totalPages}</>
+          <>Page {page} / {totalPages}</>
         )}
       </div>
-      
-      <div className="flex items-center gap-2">
+
+      <div className="flex items-center gap-1.5">
         <button
           disabled={page === 1}
           onClick={() => onPageChange(page - 1)}
-          className="p-3 bg-gray-50 text-gray-600 rounded-lg hover:bg-blue-600 hover:text-white disabled:opacity-30 transition-all font-bold shadow-sm"
+          className="p-2.5 bg-slate-50 text-slate-500 rounded-md hover:bg-slate-100 disabled:opacity-30 transition-all border border-slate-200"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
 
         {showNumbers && (
           <div className="flex gap-1">
             {[...Array(totalPages)].map((_, i) => {
               const p = i + 1;
-              // Logic to show limited numbers if totalPages is large
               if (
                 totalPages <= 7 ||
                 p === 1 ||
@@ -55,19 +54,18 @@ export function Pagination({
                   <button
                     key={p}
                     onClick={() => onPageChange(p)}
-                    className={`w-11 h-11 rounded-lg font-bold transition-all ${
-                      page === p
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
+                    className={`w-9 h-9 rounded-md text-xs font-bold transition-all border ${page === p
+                        ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
+                        : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                      }`}
                   >
                     {p}
                   </button>
                 );
               } else if (p === page - 2 || p === page + 2) {
                 return (
-                  <span key={p} className="flex items-end px-1 text-gray-300">
-                    ...
+                  <span key={p} className="flex items-center px-1 text-slate-300 text-xs">
+                    &bull;&bull;&bull;
                   </span>
                 );
               }
@@ -79,9 +77,9 @@ export function Pagination({
         <button
           disabled={page === totalPages || totalPages === 0}
           onClick={() => onPageChange(page + 1)}
-          className="p-3 bg-gray-50 text-gray-600 rounded-lg hover:bg-blue-600 hover:text-white disabled:opacity-30 transition-all font-bold shadow-sm"
+          className="p-2.5 bg-slate-50 text-slate-500 rounded-md hover:bg-slate-100 disabled:opacity-30 transition-all border border-slate-200"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
     </div>

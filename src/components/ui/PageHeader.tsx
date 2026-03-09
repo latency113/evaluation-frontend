@@ -6,30 +6,28 @@ interface PageHeaderProps {
   title: string;
   description?: string;
   icon?: LucideIcon;
-  actions?: React.ReactNode;
 }
 
-export function PageHeader({ title, description, icon: Icon, actions }: PageHeaderProps) {
+export function PageHeader({ title, description, icon: Icon }: PageHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-      <div className="flex items-center gap-3">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex items-center gap-4">
         {Icon && (
-          <div className="bg-blue-100 p-2 rounded-lg">
-            <Icon className="h-8 w-8 text-blue-600" />
+          <div className="bg-slate-900 p-2.5 rounded-lg shadow-sm">
+            <Icon className="h-5 w-5 text-white" />
           </div>
         )}
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center uppercase">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight uppercase">
             {title}
           </h1>
           {description && (
-            <p className="text-gray-500 font-medium mt-1">
+            <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-wider font-bold italic">
               {description}
             </p>
           )}
         </div>
       </div>
-      {actions && <div className="flex gap-3 w-full md:w-auto">{actions}</div>}
     </div>
   );
 }

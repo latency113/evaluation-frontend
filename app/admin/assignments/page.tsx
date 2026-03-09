@@ -302,7 +302,7 @@ export default function AdminAssignmentsPage() {
                   )
                   .map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.room_name} ({c.level?.level_name})
+                      {c.level?.department?.dept_name || "ไม่ระบุแผนก"} {c.level?.level_name} ห้อง {c.room_name}
                     </option>
                   ))}
               </select>
@@ -314,8 +314,7 @@ export default function AdminAssignmentsPage() {
           columns={[
             { header: "วิชาที่สอน" },
             { header: "ครูผู้สอน" },
-            { header: "แผนกวิชา" },
-            { header: "ห้องเรียน" },
+            { header: "แผนก / ชั้นปี / ห้อง" },
             { header: "ภาคเรียน" },
             { header: "การจัดการ", align: "right" },
           ]}
@@ -338,20 +337,13 @@ export default function AdminAssignmentsPage() {
                 {a.teacher?.first_name} {a.teacher?.last_name}
               </td>
               <td className="px-8 py-5">
-                <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
-                  {a.classroom?.department?.dept_name ||
-                    a.classroom?.level?.department?.dept_name ||
-                    "ไม่ระบุแผนก"}
-                </span>
-              </td>
-              <td className="px-8 py-5">
                 <div className="flex flex-col gap-1">
-                  <span className="text-md text-blue-500 uppercase tracking-wider ml-1">
-                    {a.classroom?.level?.level_name || ""}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200 w-fit">
-                    {a.classroom?.room_name || "N/A"}{" "}
-                  </span>
+                  <div className="text-sm font-semibold text-gray-900">
+                    {a.classroom?.level?.department?.dept_name || a.classroom?.department?.dept_name || "ไม่ระบุแผนก"}
+                  </div>
+                  <div className="text-xs text-blue-600 font-medium">
+                    {a.classroom?.level?.level_name || "ไม่ระบุชั้นปี"} ห้อง {a.classroom?.room_name || "N/A"}
+                  </div>
                 </div>
               </td>
               <td className="px-8 py-5 text-gray-600 text-sm font-semibold">
@@ -477,9 +469,8 @@ export default function AdminAssignmentsPage() {
               <option value="">เลือกห้องเรียน</option>
               {classrooms.map((c) => (
                 <option key={c.id} value={c.id}>
-                  ห้อง {c.room_name} -{" "}
-                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} (
-                  {c.level?.level_name || "ทั่วไป"})
+                  {c.level?.department?.dept_name || "ไม่ระบุแผนก"} -{" "}
+                  {c.level?.level_name || "ทั่วไป"} ห้อง {c.room_name}
                 </option>
               ))}
             </select>
