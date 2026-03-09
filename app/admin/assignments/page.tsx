@@ -41,6 +41,7 @@ export default function AdminAssignmentsPage() {
   const [termForImport, setTermForImport] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<any>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   // Searchable Teacher States
   const [teacherSearch, setTeacherSearch] = useState("");
@@ -61,6 +62,7 @@ export default function AdminAssignmentsPage() {
 
   useEffect(() => {
     fetchInitialData();
+    setSelectedIds([]); // Reset selection when filters change
   }, [page, limit, selectedDept, selectedClassroom]);
 
   useEffect(() => {
@@ -229,6 +231,51 @@ export default function AdminAssignmentsPage() {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+
+    const result = await Swal.fire({
+      title: "ยืนยันการลบแบบกลุ่ม?",
+      text: `คุณแน่ใจหรือไม่ว่าต้องการลบรายการที่เลือกทั้งหมด ${selectedIds.length} รายการ?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ลบทั้งหมด!",
+      cancelButtonText: "ยกเลิก",
+    });
+
+    if (result.isConfirmed) {
+      setIsProcessing(true);
+      try {
+        await courseAssignmentService.bulkDeleteAssignments(selectedIds);
+        setSelectedIds([]);
+        fetchInitialData();
+        Swal.fire("สำเร็จ!", `ลบข้อมูล ${selectedIds.length} รายการเรียบร้อยแล้ว`, "success");
+      } catch (err) {
+        Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถลบข้อมูลได้", "error");
+      } finally {
+        setIsProcessing(false);
+      }
+    }
+  };
+
+  const handleSelectAll = (selected: boolean) => {
+    if (selected) {
+      setSelectedIds(assignments.map((a) => a.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectItem = (id: number, selected: boolean) => {
+    if (selected) {
+      setSelectedIds((prev) => [...prev, id]);
+    } else {
+      setSelectedIds((prev) => prev.filter((item_id) => item_id !== id));
+    }
+  };
+
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -269,6 +316,15 @@ export default function AdminAssignmentsPage() {
           placeholder="ค้นหาตามรายวิชา ครู หรือห้องเรียน..."
           extraFilters={
             <>
+              {selectedIds.length > 0 && (
+                <button
+                  onClick={handleBulkDelete}
+                  className="flex items-center px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-all font-bold text-xs uppercase tracking-wider"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  ลบที่เลือก ({selectedIds.length})
+                </button>
+              )}
               <select
                 className="bg-gray-50 border-none rounded-lg px-4 py-3 font-semibold text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                 value={selectedDept}
@@ -319,12 +375,25 @@ export default function AdminAssignmentsPage() {
             { header: "การจัดการ", align: "right" },
           ]}
           loading={loading}
+          selectable
+          selectedIds={selectedIds}
+          onSelectAll={handleSelectAll}
+          onSelectItem={handleSelectItem}
+          allSelected={assignments.length > 0 && selectedIds.length === assignments.length}
         >
           {assignments.map((a) => (
             <tr
               key={a.id}
-              className="hover:bg-slate-50 transition-colors"
+              className={`transition-colors ${selectedIds.includes(a.id) ? 'bg-blue-50/30' : 'hover:bg-slate-50'}`}
             >
+              <td className="px-6 py-4 w-10">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.includes(a.id)}
+                  onChange={(e) => handleSelectItem(a.id, e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+              </td>
               <td className="px-6 py-4">
                 <div className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">
                   {a.subject?.subject_code}

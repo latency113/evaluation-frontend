@@ -29,5 +29,9 @@ export const courseAssignmentService = {
   deleteAssignment: async (id: number) => {
     const response = await api.delete(`/course-assignments/${id}`);
     return response.data.data;
+  },
+  bulkDeleteAssignments: async (ids: number[]) => {
+    const response = await api.post('/course-assignments/bulk-delete', { ids });
+    return response.data;
   }
 };
