@@ -2,8 +2,8 @@ import api from '../lib/api';
 
 export const evaluationService = {
   getCourseAssignmentsByClassroom: async (classroomId: number) => {
-    const response = await api.get('/course-assignments?limit=100'); // ดึงมาเยอะหน่อยสำหรับหน้าประเมิน
-    return response.data.data.filter((a: any) => a.classroom_id === classroomId);
+    const response = await api.get(`/course-assignments?limit=100&classroomId=${classroomId}`);
+    return response.data.data;
   },
 
   getEvaluationQuestions: async () => {
@@ -22,10 +22,10 @@ export const evaluationService = {
       student_id: data.student_id,
       suggestion: data.suggestion
     });
-    
+
     const evalId = evalResponse.data.data.id;
 
-    const answerPromises = data.answers.map(answer => 
+    const answerPromises = data.answers.map(answer =>
       api.post('/evaluation-answers', {
         eval_id: evalId,
         question_id: answer.question_id,
@@ -38,28 +38,27 @@ export const evaluationService = {
   },
 
   getEvaluationsByStudent: async (studentId: number) => {
-    const response = await api.get('/evaluations?limit=100');
-    return response.data.data.filter((e: any) => e.student_id === studentId);
+    const response = await api.get(`/evaluations?limit=100&studentId=${studentId}`);
+    return response.data.data;
   },
 
-    getAllEvaluations: async (page: number = 1, limit: number = 10) => {
+  getAllEvaluations: async (page: number = 1, limit: number = 10) => {
 
-      const response = await api.get(`/evaluations?page=${page}&limit=${limit}`);
+    const response = await api.get(`/evaluations?page=${page}&limit=${limit}`);
 
-      return response.data;
+    return response.data;
 
-    },
+  },
 
-  
 
-    getAllEvaluationsWithoutPagination: async () => {
 
-      const response = await api.get('/evaluations/all');
+  getAllEvaluationsWithoutPagination: async () => {
 
-      return response.data.data;
+    const response = await api.get('/evaluations/all');
 
-    }
+    return response.data.data;
 
-  };
+  }
 
-  
+};
+
