@@ -48,7 +48,7 @@ export function DataTable({
               {columns.map((column, idx) => (
                 <th
                   key={idx}
-                  className={`px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''
+                  className={`px-6 py-4 text-[11px] text-slate-500 uppercase tracking-wider ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''
                     } ${column.className || ''}`}
                 >
                   {column.header}

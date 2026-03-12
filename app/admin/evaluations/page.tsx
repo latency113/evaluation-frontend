@@ -264,25 +264,25 @@ export default function AdminEvaluationsPage() {
           title="ผลการประเมิน"
           description="ระบบบันทึกและสรุปผลการประเมินครูผู้สอน"
           actions={
-            <div className="flex items-center gap-3">
-              <div className="bg-white p-1.5 rounded-md border border-slate-200 flex shadow-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <div className="bg-white p-1 rounded-md border border-slate-200 flex shadow-sm">
                 <button
                   onClick={() => setViewMode("individual")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "individual" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex-1 sm:flex-none flex items-center justify-center px-3 md:px-5 py-2 rounded-lg text-[10px] md:text-xs transition-all active:scale-95 ${viewMode === "individual" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
-                  <LayoutList className="mr-2 h-4 w-4" /> รายบุคคล
+                  <LayoutList className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" /> รายบุคคล
                 </button>
                 <button
                   onClick={() => setViewMode("summary")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "summary" ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex-1 sm:flex-none flex items-center justify-center px-3 md:px-5 py-2 rounded-lg text-[10px] md:text-xs transition-all active:scale-95 ${viewMode === "summary" ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" /> สรุปรายห้อง
+                  <BarChart3 className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" /> สรุปรายห้อง
                 </button>
                 <button
                   onClick={() => setViewMode("teacher")}
-                  className={`flex items-center px-5 py-2.5 rounded-lg text-xs transition-all active:scale-95 ${viewMode === "teacher" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+                  className={`flex-1 sm:flex-none flex items-center justify-center px-3 md:px-5 py-2 rounded-lg text-[10px] md:text-xs transition-all active:scale-95 ${viewMode === "teacher" ? "bg-indigo-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
                 >
-                  <TrendingUp className="mr-2 h-4 w-4" /> สรุปรายครู
+                  <TrendingUp className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" /> สรุปรายครู
                 </button>
               </div>
             </div>
@@ -301,10 +301,10 @@ export default function AdminEvaluationsPage() {
           loading={loading}
           placeholder="ค้นหาชื่อนักเรียน, ครู, หรือรายวิชา..."
           extraFilters={
-            <div className="relative group min-w-[240px]">
+            <div className="relative group w-full lg:min-w-[280px]">
               <School className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               <select
-                className="w-full pl-11 pr-4 py-4 bg-slate-50 border-none rounded-md text-md font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
+                className="w-full pl-11 pr-4 py-3 md:py-4 bg-slate-50 border-none rounded-md text-sm focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
                 value={filterClassroom}
                 onChange={(e) => {
                   setFilterClassroom(e.target.value);
@@ -314,7 +314,7 @@ export default function AdminEvaluationsPage() {
                 <option value="">ทุกห้องเรียน / กลุ่มเรียน</option>
                 {classrooms.map((c) => (
                   <option key={c.id} value={c.id}>
-                    ห้อง {c.room_name} - {c.level?.department?.dept_name || 'ไม่ระบุแผนก'} ({c.level?.level_name || 'ทั่วไป'})
+                    ห้อง {c.room_name} - {c.level?.department?.dept_name}
                   </option>
                 ))}
               </select>
@@ -338,23 +338,20 @@ export default function AdminEvaluationsPage() {
                 key={e.id}
                 className="hover:bg-blue-50/30 transition-all group"
               >
-                <td className="px-10 py-6 font-semibold text-slate-400 text-xs uppercase">
+                <td className="px-10 py-6 text-slate-400 text-xs uppercase">
                   {new Date(e.eval_date).toLocaleDateString("th-TH", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
                   })}
                 </td>
-                <td className="px-10 py-6">
-                  <div className="text-slate-900 text-lg leading-tight font-semibold truncate">
+                <td className="px-6 md:px-10 py-4 md:py-6">
+                  <div className="text-slate-900 text-base md:text-lg leading-tight truncate">
                     {e.student?.first_name} {e.student?.last_name}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase">
-                      ห้อง {e.assignment?.classroom?.room_name || "N/A"}{" "}
-                      {e.assignment?.classroom?.level?.level_name || "N/A"}{" "}
-                      {e.assignment?.classroom?.level?.department?.dept_name &&
-                        `(${e.assignment.classroom.level.department.dept_name})`}
+                  <div className="flex items-center gap-2 mt-1 min-w-0">
+                    <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase truncate">
+                      ห้อง {e.assignment?.classroom?.room_name || "N/A"}
                     </span>
                   </div>
                 </td>
@@ -362,14 +359,14 @@ export default function AdminEvaluationsPage() {
                   <div className="text-slate-700 text-md font-medium">
                     {e.assignment?.subject?.subject_name}
                   </div>
-                  <div className="text-sm font-semibold text-slate-400 uppercase mt-1">
+                  <div className="text-sm text-slate-400 uppercase mt-1">
                     {" "}
                     {e.assignment?.teacher?.first_name}{" "}
                     {e.assignment?.teacher?.last_name}
                   </div>
                 </td>
                 <td className="px-10 py-6 text-center">
-                  <div className="inline-flex items-center px-4 py-1.5 rounded-full text-md bg-yellow-100 text-yellow-700 border border-yellow-200 font-semibold">
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full text-md bg-yellow-100 text-yellow-700 border border-yellow-200">
                     <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
                     {calculateAverage(e.answers)}
                   </div>
@@ -406,10 +403,10 @@ export default function AdminEvaluationsPage() {
                   className="hover:bg-blue-50/30 transition-all group"
                 >
                   <td className="px-10 py-7">
-                    <div className="text-slate-900 text-md font-semibold leading-none truncate">
+                    <div className="text-slate-900 text-md leading-none truncate">
                       ห้อง {classroom?.room_name || "N/A"}
                     </div>
-                    <div className="text-xs font-semibold text-slate-400 uppercase mt-2 tracking-widest truncate">
+                    <div className="text-xs text-slate-400 uppercase mt-2 tracking-widest truncate">
                       {classroom?.level?.level_name}{" "}
                       {classroom?.level?.department?.dept_name &&
                         `(${classroom.level.department.dept_name})`}
@@ -419,11 +416,11 @@ export default function AdminEvaluationsPage() {
                     <div className="text-slate-700 text-md font-medium truncate">
                       {item.assignment?.subject?.subject_name}
                     </div>
-                    <div className="text-xs font-semibold text-blue-500 mt-1">
+                    <div className="text-xs text-blue-500 mt-1">
                       {item.assignment?.subject?.subject_code}
                     </div>
                   </td>
-                  <td className="px-10 py-7 font-semibold text-slate-500 text-md uppercase truncate">
+                  <td className="px-10 py-7 text-slate-500 text-md uppercase truncate">
                     {item.assignment?.teacher?.first_name}{" "}
                     {item.assignment?.teacher?.last_name}
                   </td>
@@ -434,7 +431,7 @@ export default function AdminEvaluationsPage() {
                   </td>
                   <td className="px-10 py-7 text-center">
                     <div
-                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-md font-semibold ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-md ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                     >
                       <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
                       {item.finalAvg}
@@ -476,7 +473,7 @@ export default function AdminEvaluationsPage() {
                 <td className="px-10 py-7">
                   <div className="flex items-center gap-4">
                     <div>
-                      <div className=" text-slate-900 text-lg font-semibold leading-none truncate">
+                      <div className=" text-slate-900 text-lg leading-none truncate">
                         {item.teacher?.first_name} {item.teacher?.last_name}
                       </div>
                     </div>
@@ -501,7 +498,7 @@ export default function AdminEvaluationsPage() {
                 </td>
                 <td className="px-10 py-7 text-center">
                   <div
-                    className={`inline-flex items-center px-4 py-1.5 rounded-full text-md font-semibold ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
+                    className={`inline-flex items-center px-4 py-1.5 rounded-full text-md ${parseFloat(item.finalAvg) >= 4.5 ? "bg-green-50 text-green-700 border-green-100" : parseFloat(item.finalAvg) >= 3.5 ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-orange-50 text-orange-700 border-orange-100"}`}
                   >
                     <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />{" "}
                     {item.finalAvg}
@@ -539,31 +536,28 @@ export default function AdminEvaluationsPage() {
         <div className="space-y-10 font-sans p-2">
           {selectedEval && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
-                  <p className="text-[10px] text-blue-600 uppercase tracking-widest mb-2 font-bold">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div className="p-4 md:p-6 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
+                  <p className="text-[10px] text-blue-600 uppercase tracking-widest mb-2">
                     นักเรียน / ผู้ประเมิน
                   </p>
-                  <p className="text-slate-900 text-xl font-bold">
+                  <p className="text-slate-900 text-lg md:text-xl">
                     {selectedEval.student?.first_name}{" "}
                     {selectedEval.student?.last_name}
                   </p>
-                  <p className="text-sm font-semibold text-slate-400 mt-2">
+                  <p className="text-xs text-slate-400 mt-2">
                     {selectedEval.student?.student_code} | ห้อง{" "}
-                    {selectedEval.assignment?.classroom?.room_name || "N/A"}{" "}
-                    {selectedEval.assignment?.classroom?.level?.department
-                      ?.dept_name &&
-                      `(${selectedEval.assignment.classroom.level.department.dept_name})`}
+                    {selectedEval.assignment?.classroom?.room_name || "N/A"}
                   </p>
                 </div>
-                <div className="p-6 bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm">
-                  <p className="text-[10px] text-purple-600 uppercase tracking-widest mb-2 font-bold">
+                <div className="p-4 md:p-6 bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm">
+                  <p className="text-[10px] text-purple-600 uppercase tracking-widest mb-2">
                     รายวิชา / ครูผู้สอน
                   </p>
-                  <p className="text-slate-900 text-xl font-bold truncate">
+                  <p className="text-slate-900 text-lg md:text-xl truncate">
                     {selectedEval.assignment?.subject?.subject_name}
                   </p>
-                  <p className="text-sm font-semibold text-slate-500 mt-2 ">
+                  <p className="text-xs text-slate-500 mt-2 ">
                     {" "}
                     {selectedEval.assignment?.teacher?.first_name}{" "}
                     {selectedEval.assignment?.teacher?.last_name}
@@ -571,7 +565,7 @@ export default function AdminEvaluationsPage() {
                 </div>
               </div>
               <div className="space-y-6">
-                <h3 className="text-slate-900 text-lg font-bold flex items-center px-2 uppercase tracking-tight">
+                <h3 className="text-slate-900 text-lg flex items-center px-2 uppercase tracking-tight">
                   <Star className="h-5 w-5 mr-2 text-yellow-500 fill-current" />{" "}
                   คะแนนรายข้อ
                 </h3>
@@ -579,22 +573,22 @@ export default function AdminEvaluationsPage() {
                   {selectedEval.answers?.map((answer: any, idx: number) => (
                     <div
                       key={idx}
-                      className="flex justify-between items-center p-6 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 md:p-6 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all group gap-4"
                     >
-                      <div className="flex-1 mr-8">
-                        <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-2 font-semibold">
+                      <div className="flex-1">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">
                           หัวข้อที่ {idx + 1}
                         </span>
-                        <p className="text-base font-semibold text-slate-700 leading-relaxed">
+                        <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                           {answer.question?.question_text ||
                             `หัวข้อที่ ${answer.question_id}`}
                         </p>
                       </div>
-                      <div className="flex gap-2.5 shrink-0">
+                      <div className="flex gap-1.5 md:gap-2.5 shrink-0 self-end sm:self-auto">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <div
                             key={s}
-                            className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${s <= answer.score ? "bg-yellow-400 text-white shadow-md scale-105" : "bg-slate-100 text-slate-300"}`}
+                            className={`w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center text-[10px] md:text-xs transition-all ${s <= answer.score ? "bg-slate-900 text-white shadow-md" : "bg-slate-100 text-slate-300"}`}
                           >
                             {s}
                           </div>
@@ -606,7 +600,7 @@ export default function AdminEvaluationsPage() {
               </div>
               {selectedEval.suggestion && (
                 <div className="p-6 bg-slate-50 rounded-xl border border-slate-200">
-                  <h4 className="flex items-center text-slate-900 font-bold mb-3 text-lg">
+                  <h4 className="flex items-center text-slate-900 mb-3 text-lg">
                     <MessageSquare className="mr-2 h-5 w-5 text-blue-500" />{" "}
                     ข้อเสนอแนะเพิ่มเติม
                   </h4>
@@ -644,18 +638,18 @@ export default function AdminEvaluationsPage() {
                     <div className="bg-indigo-600 p-1.5 rounded text-white">
                       <Users className="h-4 w-4" />
                     </div>
-                    <p className="text-[10px] text-indigo-600 uppercase tracking-widest font-bold">
+                    <p className="text-[10px] text-indigo-600 uppercase tracking-widest">
                       ข้อมูลครู / ห้องเรียน
                     </p>
                   </div>
                   {selectedSummary.assignment ? (
                     <>
-                      <p className="text-slate-900 text-xl font-bold">
+                      <p className="text-slate-900 text-xl">
                         ห้อง{" "}
                         {selectedSummary.assignment?.classroom?.room_name ||
                           "N/A"}
                       </p>
-                      <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-wide">
+                      <p className="text-xs text-slate-400 mt-2 uppercase tracking-wide">
                         {
                           selectedSummary.assignment?.classroom?.level
                             ?.level_name
@@ -670,12 +664,12 @@ export default function AdminEvaluationsPage() {
                     </>
                   ) : (
                     <>
-                      <p className="text-slate-900 text-lg font-bold">
+                      <p className="text-slate-900 text-lg">
                         {" "}
                         {selectedSummary.teacher?.first_name}{" "}
                         {selectedSummary.teacher?.last_name}
                       </p>
-                      <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-wide">
+                      <p className="text-xs text-slate-400 mt-2 uppercase tracking-wide">
                         {selectedSummary.assignmentCount} วิชา |{" "}
                         {selectedSummary.classroomCount} ห้องเรียน
                       </p>
@@ -688,20 +682,20 @@ export default function AdminEvaluationsPage() {
                       <div className="bg-blue-500 p-1.5 rounded text-white">
                         <TrendingUp className="h-4 w-4" />
                       </div>
-                      <p className="text-[10px] text-blue-600 uppercase tracking-widest font-bold">
+                      <p className="text-[10px] text-blue-600 uppercase tracking-widest">
                         ผลการประเมินรวม
                       </p>
                     </div>
-                    <div className="text-slate-400 text-xs font-bold">
+                    <div className="text-slate-400 text-xs">
                       ผู้ประเมิน{" "}
                       {selectedSummary.studentCount || selectedSummary.count} คน
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-slate-500 font-bold text-base uppercase">
+                    <p className="text-slate-500 text-base uppercase">
                       Average Score
                     </p>
-                    <div className="flex items-center text-yellow-500 text-lg font-bold">
+                    <div className="flex items-center text-yellow-500 text-lg">
                       <Star className="h-4 w-4 mr-1.5 fill-current" />{" "}
                       {selectedSummary.finalAvg}
                     </div>
@@ -712,7 +706,7 @@ export default function AdminEvaluationsPage() {
               {!selectedSummary.assignment &&
                 selectedSummary.assignmentsList && (
                   <div className="space-y-4">
-                    <h3 className="text-slate-900 text-lg font-bold flex items-center px-1 uppercase tracking-tight">
+                    <h3 className="text-slate-900 text-lg flex items-center px-1 uppercase tracking-tight">
                       <BookOpen className="h-5 w-5 mr-2 text-purple-600" />{" "}
                       รายวิชาที่รับผิดชอบ
                     </h3>
@@ -728,10 +722,10 @@ export default function AdminEvaluationsPage() {
                                 {idx + 1}
                               </div>
                               <div>
-                                <p className="text-lg font-bold text-slate-900">
+                                <p className="text-lg text-slate-900">
                                   {item.assignment?.subject?.subject_name}
                                 </p>
-                                <div className="flex items-center gap-2.5 mt-1 text-[11px] font-bold text-slate-400">
+                                <div className="flex items-center gap-2.5 mt-1 text-[11px] text-slate-400">
                                   <span className="bg-slate-100 px-1.5 py-0.5 rounded text-blue-600">
                                     {item.assignment?.subject?.subject_code}
                                   </span>
@@ -749,10 +743,10 @@ export default function AdminEvaluationsPage() {
                               </div>
                             </div>
                             <div className="bg-yellow-50 px-4 py-2 rounded-xl border border-yellow-100 text-center min-w-[100px]">
-                              <p className="text-[10px] text-yellow-600 uppercase font-bold mb-1">
+                              <p className="text-[10px] text-yellow-600 uppercase mb-1">
                                 เฉลี่ย
                               </p>
-                              <div className="flex items-center justify-center text-yellow-700 text-xl font-bold">
+                              <div className="flex items-center justify-center text-yellow-700 text-xl">
                                 <Star className="h-4 w-4 mr-1 fill-current" />{" "}
                                 {item.avg}
                               </div>
@@ -765,7 +759,7 @@ export default function AdminEvaluationsPage() {
                 )}
 
               <div className="space-y-4">
-                <h3 className="text-slate-900 text-lg font-bold flex items-center px-1 uppercase tracking-tight">
+                <h3 className="text-slate-900 text-lg flex items-center px-1 uppercase tracking-tight">
                   <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />{" "}
                   คะแนนเฉลี่ยรายหัวข้อ
                 </h3>
@@ -778,18 +772,18 @@ export default function AdminEvaluationsPage() {
                       >
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex-1 mr-6">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1 font-bold">
+                            <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">
                               หัวข้อที่ {idx + 1}
                             </span>
-                            <p className="text-sm font-semibold text-slate-700 leading-relaxed">
+                            <p className="text-sm text-slate-700 leading-relaxed">
                               {criteria.text}
                             </p>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl font-bold text-slate-900">
+                            <div className="text-xl text-slate-900">
                               {criteria.avg}
                             </div>
-                            <p className="text-[9px] text-slate-400 uppercase font-bold mt-0.5">
+                            <p className="text-[9px] text-slate-400 uppercase mt-0.5">
                               คะแนนเฉลี่ย
                             </p>
                           </div>
@@ -823,7 +817,7 @@ export default function AdminEvaluationsPage() {
                           className="p-6 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200"
                         >
                           <div className="flex justify-between items-start mb-2">
-                            <p className="text-sm font-semibold text-blue-600">
+                            <p className="text-sm text-blue-600">
                               {e.student?.first_name} {e.student?.last_name}
                             </p>
                             <p className="text-xs text-slate-400">

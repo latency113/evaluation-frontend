@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { departmentService } from "@/src/services/departmentService";
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
+import {
+  Plus,
+  Trash2,
+  Edit2,
   Check,
   Building2,
   Layers
@@ -130,13 +130,15 @@ export default function AdminDepartmentsPage() {
           description={`จัดการข้อมูลแผนกวิชาและสาขาทั้งหมด (${totalItems} แผนก)`}
           icon={Building2}
           actions={
-            <button
-              onClick={() => handleOpenModal()}
-              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 group"
-            >
-              <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
-              เพิ่มแผนกวิชาใหม่
-            </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 md:mt-0">
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center justify-center px-6 py-2.5 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-xs md:text-sm shadow-lg shadow-blue-200 active:scale-95 group"
+              >
+                <Plus className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5 transition-transform group-hover:rotate-90" />
+                เพิ่มแผนกวิชาใหม่
+              </button>
+            </div>
           }
         />
 
@@ -161,30 +163,30 @@ export default function AdminDepartmentsPage() {
           loading={loading}
         >
           {filteredDepartments.map((dept) => (
-            <tr key={dept.id} className="hover:bg-blue-50/30 transition-all group">
-              <td className="px-10 py-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-100 transition-colors">
-                    <Layers className="h-5 w-5 text-slate-500 group-hover:text-blue-600" />
+            <tr key={dept.id} className="hover:bg-blue-50/50 transition-all group">
+              <td className="px-6 md:px-10 py-4 md:py-6">
+                <div className="flex items-center gap-2.5 md:gap-3">
+                  <div className="p-1.5 md:p-2 bg-slate-100 rounded-lg group-hover:bg-blue-100 transition-colors">
+                    <Layers className="h-4 w-4 md:h-5 md:w-5 text-slate-500 group-hover:text-blue-600" />
                   </div>
-                  <div className="text-slate-900 text-md group-hover:text-blue-700 transition-colors">
+                  <div className="text-slate-900 text-sm md:text-base group-hover:text-blue-700 transition-colors">
                     {dept.dept_name}
                   </div>
                 </div>
               </td>
-              <td className="px-10 py-6 text-right">
-                <div className="flex justify-end gap-3">
+              <td className="px-6 md:px-10 py-4 md:py-6 text-right">
+                <div className="flex justify-end gap-1.5 md:gap-3">
                   <button
                     onClick={() => handleOpenModal(dept)}
-                    className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
+                    className="p-2 md:p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
                   >
-                    <Edit2 className="h-5 w-5" />
+                    <Edit2 className="h-4 w-4 md:h-5 md:w-5" />
                   </button>
                   <button
                     onClick={() => handleDelete(dept.id)}
-                    className="p-3 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
+                    className="p-2 md:p-3 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"
                   >
-                    <Trash2 className="h-5 w-5" />
+                    <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
                   </button>
                 </div>
               </td>
@@ -217,7 +219,7 @@ export default function AdminDepartmentsPage() {
               required
               type="text"
               placeholder="ระบุชื่อแผนกวิชา..."
-              className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold outline-none transition-all text-slate-900"
+              className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 outline-none transition-all text-slate-900"
               value={formData.dept_name}
               onChange={(e) => setFormData({ ...formData, dept_name: e.target.value })}
             />

@@ -287,14 +287,14 @@ export default function AdminAssignmentsPage() {
             <>
               <button
                 onClick={() => setIsImportModalOpen(true)}
-                className="flex items-center px-6 py-3 bg-white text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-all font-semibold shadow-sm"
+                className="flex items-center px-6 py-3 bg-white text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-all  shadow-sm"
               >
                 <FileUp className="mr-2 h-5 w-5" />
                 นำเข้าไฟล์ Excel
               </button>
               <button
                 onClick={() => handleOpenModal()}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
+                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all  shadow-lg"
               >
                 <Plus className="mr-2 h-5 w-5" />
                 สร้างการจัดการสอนรายวิชา
@@ -319,14 +319,14 @@ export default function AdminAssignmentsPage() {
               {selectedIds.length > 0 && (
                 <button
                   onClick={handleBulkDelete}
-                  className="flex items-center px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-all font-bold text-xs uppercase tracking-wider"
+                  className="flex items-center px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-all text-xs uppercase tracking-wider"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   ลบที่เลือก ({selectedIds.length})
                 </button>
               )}
               <select
-                className="bg-gray-50 border-none rounded-lg px-4 py-3 font-semibold text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                className="bg-gray-50 border-none rounded-lg px-4 py-3  text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                 value={selectedDept}
                 onChange={(e) => {
                   setSelectedDept(e.target.value);
@@ -342,7 +342,7 @@ export default function AdminAssignmentsPage() {
               </select>
 
               <select
-                className="bg-gray-50 border-none rounded-lg px-4 py-3 font-semibold text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                className="bg-gray-50 border-none rounded-lg px-4 py-3  text-gray-600 focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                 value={selectedClassroom}
                 onChange={(e) => {
                   setSelectedClassroom(e.target.value);
@@ -395,34 +395,34 @@ export default function AdminAssignmentsPage() {
                 />
               </td>
               <td className="px-6 py-4">
-                <div className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">
+                <div className="text-[10px] text-blue-600 uppercase tracking-wider mb-1">
                   {a.subject?.subject_code}
                 </div>
-                <div className="font-bold text-slate-900 text-sm">
+                <div className="text-slate-900 text-sm">
                   {a.subject?.subject_name}
                 </div>
               </td>
-              <td className="px-6 py-4 text-slate-700 font-semibold text-sm">
+              <td className="px-6 py-4 text-slate-700  text-sm">
                 {a.teacher?.first_name} {a.teacher?.last_name}
               </td>
               <td className="px-6 py-4">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-600 border border-slate-200 uppercase tracking-tight">
+                    <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-slate-600 border border-slate-200 uppercase tracking-tight">
                       {a.classroom?.department?.dept_name || a.classroom?.level?.department?.dept_name || "N/A"}
                     </span>
-                    <span className="text-[11px] font-bold text-slate-400">
+                    <span className="text-[11px] text-slate-400">
                       {a.classroom?.level?.level_name || ""}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[11px] border border-blue-100">
                       ห้อง {a.classroom?.room_name || "N/A"}
                     </span>
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 text-slate-600 text-sm font-semibold">
+              <td className="px-6 py-4 text-slate-600 text-sm ">
                 {a.term}
               </td>
               <td className="px-6 py-4 text-right space-x-1">
@@ -463,7 +463,7 @@ export default function AdminAssignmentsPage() {
             </label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 "
               value={formData.subject_id}
               onChange={(e) =>
                 setFormData({ ...formData, subject_id: e.target.value })
@@ -487,7 +487,7 @@ export default function AdminAssignmentsPage() {
               <input
                 type="text"
                 placeholder="พิมพ์ชื่อครูเพื่อค้นหา..."
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500  text-gray-900"
                 value={teacherSearch}
                 onChange={(e) => {
                   setTeacherSearch(e.target.value);
@@ -512,7 +512,7 @@ export default function AdminAssignmentsPage() {
                         setIsTeacherDropdownOpen(false);
                       }}
                     >
-                      <span className="font-semibold text-gray-700">
+                      <span className=" text-gray-700">
                         {t.first_name} {t.last_name}
                       </span>
                       {formData.teacher_id === t.id.toString() && (
@@ -536,7 +536,7 @@ export default function AdminAssignmentsPage() {
             </label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 "
               value={formData.classroom_id}
               onChange={(e) =>
                 setFormData({ ...formData, classroom_id: e.target.value })
@@ -559,7 +559,7 @@ export default function AdminAssignmentsPage() {
             <input
               required
               type="text"
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 "
               value={formData.term}
               onChange={(e) =>
                 setFormData({ ...formData, term: e.target.value })
@@ -604,7 +604,7 @@ export default function AdminAssignmentsPage() {
             required
             type="text"
             placeholder="ระบุภาคเรียนที่จะนำเข้า..."
-            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 "
             value={termForImport}
             onChange={(e) => setTermForImport(e.target.value)}
           />

@@ -184,7 +184,7 @@ export default function ClassroomStudentsPage({
           <div className="flex shrink-0">
             <button
               onClick={() => handleOpenModal()}
-              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-xl shadow-blue-200 active:scale-95 group w-full md:w-auto justify-center"
+              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 group w-full md:w-auto justify-center"
             >
               <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
               เพิ่มนักเรียนในห้อง
@@ -295,7 +295,7 @@ export default function ClassroomStudentsPage({
                 required
                 type="text"
                 placeholder="ระบุรหัสประจำตัว 11 หลัก..."
-                className="w-full pl-14 pr-5 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold transition-all outline-none text-slate-900"
+                className="w-full pl-14 pr-5 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all outline-none text-slate-900"
                 value={formData.student_code}
                 onChange={(e) =>
                   setFormData({ ...formData, student_code: e.target.value })
@@ -313,7 +313,7 @@ export default function ClassroomStudentsPage({
                 required
                 type="text"
                 placeholder="ระบุชื่อจริง..."
-                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold transition-all outline-none text-slate-900"
+                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all outline-none text-slate-900"
                 value={formData.first_name}
                 onChange={(e) =>
                   setFormData({ ...formData, first_name: e.target.value })
@@ -328,7 +328,7 @@ export default function ClassroomStudentsPage({
                 required
                 type="text"
                 placeholder="ระบุนามสกุล..."
-                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold transition-all outline-none text-slate-900"
+                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all outline-none text-slate-900"
                 value={formData.last_name}
                 onChange={(e) =>
                   setFormData({ ...formData, last_name: e.target.value })

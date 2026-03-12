@@ -23,7 +23,7 @@ export function Pagination({
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-center gap-4 py-6">
-      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+      <div className="text-[11px] text-slate-400 uppercase tracking-wider">
         {totalItems && limit ? (
           <>Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, totalItems)} of {totalItems}</>
         ) : (
@@ -54,7 +54,7 @@ export function Pagination({
                   <button
                     key={p}
                     onClick={() => onPageChange(p)}
-                    className={`min-w-[32px] h-8 px-2 rounded-md text-xs font-bold transition-all border ${page === p
+                    className={`min-w-[32px] h-8 px-2 rounded-md text-xs transition-all border ${page === p
                         ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
                         : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-800'
                       }`}

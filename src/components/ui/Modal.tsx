@@ -34,7 +34,7 @@ export function Modal({
               </div>
             )}
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h2 className="text-xl text-slate-900 tracking-tight">
                 {title}
               </h2>
               {subtitle && (

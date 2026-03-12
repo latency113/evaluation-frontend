@@ -14,6 +14,9 @@ import {
   ChevronRight,
   MessageSquare,
   LayoutDashboard,
+  BookOpen,
+  ShieldCheck,
+  User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/src/components/ui/PageHeader";
@@ -26,6 +29,33 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+
+function StatsCard({ title, value, icon: Icon, color }: any) {
+  const colors: any = {
+    blue: "bg-blue-50 text-blue-600 border-blue-100",
+    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100",
+    violet: "bg-violet-50 text-violet-600 border-violet-100",
+    sky: "bg-sky-50 text-sky-600 border-sky-100",
+  };
+
+  return (
+    <div className="bg-white p-4 md:p-6 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest mb-1 truncate">
+            {title}
+          </p>
+          <p className="text-xl md:text-2xl text-slate-900 tabular-nums">
+            {value.toLocaleString()}
+          </p>
+        </div>
+        <div className={`p-2.5 md:p-3 rounded-lg border transition-all group-hover:scale-110 ${colors[color]}`}>
+          <Icon className="h-5 w-5 md:h-6 md:w-6" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -125,95 +155,102 @@ export default function AdminDashboardPage() {
         icon={LayoutDashboard}
       />
 
-      <div className="grid gap-6 mb-10 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((card) => (
-          <div
-            key={card.name}
-            className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm transition-all hover:shadow-md"
-          >
-            <div className="flex items-center gap-4">
-              <div className="bg-slate-50 p-3 rounded-md border border-slate-100">
-                <card.icon className="h-5 w-5 text-slate-400" />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  {card.name}
-                </p>
-                <p className="text-2xl font-bold text-slate-900 leading-tight mt-1">
-                  {card.value}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
+        <StatsCard
+          title="จำนวนนักเรียนทั้งหมด"
+          value={stats.students}
+          icon={Users}
+          color="blue"
+        />
+        <StatsCard
+          title="จำนวนครูผู้สอน"
+          value={stats.teachers}
+          icon={GraduationCap}
+          color="indigo"
+        />
+        <StatsCard
+          title="จำนวนรายวิชา"
+          value={stats.assignments}
+          icon={BookOpen}
+          color="violet"
+        />
+        <StatsCard
+          title="จำนวนชุดข้อเสนอแนะ"
+          value={stats.evaluatedStudents}
+          icon={ShieldCheck}
+          color="sky"
+        />
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* Recent Evaluations */}
+        <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-sm text-slate-900 flex items-center gap-2">
               <Clock className="h-4 w-4 text-slate-400" />
               การประเมินล่าสุด
             </h2>
             <button
               onClick={() => router.push("/admin/evaluations")}
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1"
+              className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
             >
               ดูทั้งหมด
               <ChevronRight className="h-3 w-3" />
             </button>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="flex-1 overflow-x-auto">
             {recentEvaluations.length === 0 ? (
               <div className="p-16 text-center text-slate-400 text-xs font-medium">
                 ไม่พบข้อมูลการประเมินล่าสุด
               </div>
             ) : (
-              recentEvaluations.map((evaluation) => (
-                <div
-                  key={evaluation.id}
-                  onClick={() => setSelectedEval(evaluation)}
-                  className="p-5 hover:bg-slate-50 transition-colors cursor-pointer group"
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded border border-slate-100 bg-slate-50 flex items-center justify-center text-slate-400 transition-colors">
-                        <Users className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-slate-800">
-                          {evaluation.student?.first_name}{" "}
-                          {evaluation.student?.last_name}
-                        </p>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          {evaluation.assignment?.subject?.subject_name}
-                        </p>
-                      </div>
+              <div className="min-w-[600px] lg:min-w-0">
+                {recentEvaluations.map((evaluation) => (
+                  <div
+                    key={evaluation.id}
+                    onClick={() => setSelectedEval(evaluation)}
+                    className="group p-4 md:p-5 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-4"
+                  >
+                    <div className="h-10 w-10 md:h-11 md:w-11 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors shrink-0">
+                      <User className="h-5 w-5 md:h-6 md:w-6" />
                     </div>
-                    <div className="text-right">
-                      <div className="inline-flex items-center px-2 py-1 rounded border border-slate-200 bg-white text-xs font-bold text-slate-700">
-                        <Star className="h-3 w-3 mr-1.5 text-amber-500 fill-amber-500" />
-                        {calculateAverage(evaluation.answers)}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-slate-900 text-sm truncate group-hover:text-blue-600 transition-colors">
+                        {evaluation.student?.first_name}{" "}
+                        {evaluation.student?.last_name}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5 truncate flex items-center gap-2">
+                        <span>{evaluation.assignment?.teacher?.first_name}</span>
+                        <span className="w-1 h-1 rounded-full bg-slate-300" />
+                        <span>{evaluation.assignment?.subject?.subject_name}</span>
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 rounded-full border border-blue-100 group-hover:bg-blue-600 group-hover:border-blue-700 group-hover:text-white transition-all">
+                        <Star className="h-3 w-3 text-blue-500 group-hover:text-blue-200 fill-current" />
+                        <span className="text-sm text-blue-700 group-hover:text-white tracking-tighter">
+                          {calculateAverage(evaluation.answers)}
+                        </span>
                       </div>
-                      <p className="text-[10px] text-slate-400 mt-1.5 font-medium">
-                        {new Date(evaluation.eval_date).toLocaleDateString(
-                          "th-TH",
-                        )}
+                      <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-tighter">
+                        คะแนนเฉลี่ย
                       </p>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>
 
-        <div className="space-y-8">
+        {/* Evaluation Progress & Quick Links */}
+        <div className="space-y-6 md:space-y-8">
           <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h2 className="text-xs font-bold text-slate-900 mb-5 uppercase tracking-wider border-b border-slate-100 pb-4">
+            <h2 className="text-xs text-slate-900 mb-5 uppercase tracking-wider border-b border-slate-100 pb-4">
               ความคืบหน้าการประเมิน
             </h2>
-            <div className="h-[240px] w-full mt-4">
+            <div className="h-[200px] sm:h-[240px] w-full mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -244,7 +281,7 @@ export default function AdminDashboardPage() {
                   <Legend
                     verticalAlign="bottom"
                     height={36}
-                    formatter={(value) => <span className="text-slate-700 font-bold text-xs ml-1">{value}</span>}
+                    formatter={(value) => <span className="text-slate-700 text-xs ml-1">{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -253,14 +290,14 @@ export default function AdminDashboardPage() {
               <p className="text-3xl font-extrabold text-slate-900">
                 {stats.students > 0 ? ((stats.evaluatedStudents / stats.students) * 100).toFixed(1) : 0}%
               </p>
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+              <p className="text-[11px] text-slate-400 uppercase tracking-widest mt-1">
                 อัตราการเข้าประเมิน
               </p>
             </div>
           </div>
 
           <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h2 className="text-xs font-bold text-slate-900 mb-5 uppercase tracking-wider border-b border-slate-100 pb-4">
+            <h2 className="text-xs text-slate-900 mb-5 uppercase tracking-wider border-b border-slate-100 pb-4">
               เมนูทางลัด
             </h2>
             <div className="space-y-1">
@@ -297,10 +334,10 @@ export default function AdminDashboardPage() {
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-6">
               <div className="p-5 bg-slate-50 rounded-lg border border-slate-100">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-2.5">
                   ข้อมูลนักเรียน
                 </p>
-                <p className="text-slate-900 font-bold text-sm">
+                <p className="text-slate-900 text-sm">
                   {selectedEval.student?.first_name}{" "}
                   {selectedEval.student?.last_name}
                 </p>
@@ -309,10 +346,10 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
               <div className="p-5 bg-slate-50 rounded-lg border border-slate-100">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-2.5">
                   ข้อมูลครูผู้สอน
                 </p>
-                <p className="text-slate-900 font-bold text-sm">
+                <p className="text-slate-900 text-sm">
                   {selectedEval.assignment?.teacher?.first_name}{" "}
                   {selectedEval.assignment?.teacher?.last_name}
                 </p>
@@ -323,7 +360,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-[11px] font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
+              <h3 className="text-[11px] text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
                 หัวข้อผลการประเมิน
               </h3>
               <div className="space-y-2">
@@ -332,14 +369,14 @@ export default function AdminDashboardPage() {
                     key={idx}
                     className="flex justify-between items-center p-4 bg-white rounded-lg border border-slate-100"
                   >
-                    <p className="text-xs font-bold text-slate-700 flex-1 pr-6">
+                    <p className="text-xs text-slate-700 flex-1 pr-6">
                       {answer.question?.question_text || `Metric ${idx + 1}`}
                     </p>
                     <div className="flex gap-1.5">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <div
                           key={s}
-                          className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold transition-colors ${s <= answer.score ? "bg-slate-900 text-white" : "bg-slate-50 text-slate-200"}`}
+                          className={`w-6 h-6 rounded flex items-center justify-center text-[10px] transition-colors ${s <= answer.score ? "bg-slate-900 text-white" : "bg-slate-50 text-slate-200"}`}
                         >
                           {s}
                         </div>
@@ -352,7 +389,7 @@ export default function AdminDashboardPage() {
 
             {selectedEval.suggestion && (
               <div className="p-5 bg-blue-50/30 border border-blue-100 rounded-lg border-l-4 border-l-blue-500">
-                <p className="text-[10px] font-bold text-blue-600/70 uppercase mb-2.5 flex items-center gap-2 tracking-wider">
+                <p className="text-[10px] text-blue-600/70 uppercase mb-2.5 flex items-center gap-2 tracking-wider">
                   <MessageSquare className="h-3.5 w-3.5" />
                   ข้อเสนอแนะเพิ่มเติม
                 </p>

@@ -195,7 +195,7 @@ export default function AdminUsersPage() {
           actions={
             <button
               onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg"
             >
               <Plus className="mr-2 h-5 w-5" />
               เพิ่มผู้ใช้งานใหม่
@@ -233,12 +233,12 @@ export default function AdminUsersPage() {
                   <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mr-3">
                     <User className="h-5 w-5 text-slate-500" />
                   </div>
-                  <span className="font-semibold text-gray-900">{user.username}</span>
+                  <span className="text-gray-900">{user.username}</span>
                 </div>
               </td>
               <td className="px-8 py-5">
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs ${
                     user.role === "admin"
                       ? "bg-purple-100 text-purple-700 border border-purple-200"
                       : "bg-blue-100 text-blue-700 border border-blue-200"
@@ -302,7 +302,7 @@ export default function AdminUsersPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               ชื่อผู้ใช้งาน (Username)
             </label>
             <div className="relative">
@@ -311,7 +311,7 @@ export default function AdminUsersPage() {
                 required
                 type="text"
                 placeholder="ระบุชื่อผู้ใช้งาน..."
-                className="w-full pl-11 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+                className="w-full pl-11 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               />
@@ -319,7 +319,7 @@ export default function AdminUsersPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               {editingUser ? "รหัสผ่านใหม่ (ปล่อยว่างถ้าไม่เปลี่ยน)" : "รหัสผ่าน"}
             </label>
             <div className="relative">
@@ -328,7 +328,7 @@ export default function AdminUsersPage() {
                 required={!editingUser}
                 type="password"
                 placeholder="ระบุรหัสผ่าน..."
-                className="w-full pl-11 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-semibold"
+                className="w-full pl-11 pr-4 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
@@ -336,14 +336,14 @@ export default function AdminUsersPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">
               บทบาท (Role)
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, role: "admin", ref_id: "" })}
-                className={`py-3 rounded-xl text-sm font-bold border-2 transition-all ${
+                className={`py-3 rounded-xl text-sm border-2 transition-all ${
                   formData.role === "admin"
                     ? "border-blue-600 bg-blue-50 text-blue-600"
                     : "border-gray-100 bg-gray-50 text-gray-400"
@@ -354,7 +354,7 @@ export default function AdminUsersPage() {
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, role: "teacher" })}
-                className={`py-3 rounded-xl text-sm font-bold border-2 transition-all ${
+                className={`py-3 rounded-xl text-sm border-2 transition-all ${
                   formData.role === "teacher"
                     ? "border-blue-600 bg-blue-50 text-blue-600"
                     : "border-gray-100 bg-gray-50 text-gray-400"
@@ -368,7 +368,7 @@ export default function AdminUsersPage() {
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl font-bold text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
+              className="flex-[2] bg-blue-600 text-white py-5 rounded-xl text-lg hover:bg-blue-700 shadow-xl transition-all active:scale-95 flex justify-center items-center"
             >
               <Check className="mr-2" />
               {editingUser ? "อัปเดต" : "บันทึก"}
@@ -376,7 +376,7 @@ export default function AdminUsersPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl font-bold hover:bg-gray-200"
+              className="flex-1 bg-gray-100 text-gray-500 py-5 rounded-xl hover:bg-gray-200"
             >
               ยกเลิก
             </button>

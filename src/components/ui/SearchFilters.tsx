@@ -49,11 +49,11 @@ export function SearchFilters({
 
         {onLimitChange && limit !== undefined && (
           <div className="flex items-center gap-3 ml-2">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Show</span>
+            <span className="text-[11px] text-slate-400 uppercase tracking-wider whitespace-nowrap">Show</span>
             <select
               value={limit}
               onChange={(e) => onLimitChange(parseInt(e.target.value))}
-              className="bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-xs font-semibold text-slate-600 focus:ring-1 focus:ring-slate-300 cursor-pointer outline-none"
+              className="bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-xs text-slate-600 focus:ring-1 focus:ring-slate-300 cursor-pointer outline-none"
             >
               <option value={10}>10</option>
               <option value={20}>20</option>

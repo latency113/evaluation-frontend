@@ -123,7 +123,7 @@ export default function AdminEvaluationQuestionsPage() {
           actions={
             <button 
               onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg shadow-blue-100"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-100"
             >
               <Plus className="mr-2 h-5 w-5" />
               เพิ่มหัวข้อการประเมิน
@@ -198,7 +198,7 @@ export default function AdminEvaluationQuestionsPage() {
               required 
               rows={4}
               placeholder="ระบุข้อความสำหรับเกณฑ์การประเมิน เช่น 'อาจารย์เข้าสอนตรงเวลา'..." 
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold text-gray-900 transition-all" 
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 transition-all" 
               value={formData.question_text} 
               onChange={(e) => setFormData({ ...formData, question_text: e.target.value })} 
             />

@@ -197,37 +197,36 @@ export default function AdminStudentsPage() {
     }
   };
 
-    return (
+  return (
 
-      <div className="p-8 font-sans bg-gray-50 min-h-screen">
+    <div className="p-8 font-sans bg-gray-50 min-h-screen">
 
-        <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto">
 
-          <PageHeader 
+        <PageHeader
 
-            title="ฐานข้อมูลนักเรียน"
+          title="ฐานข้อมูลนักเรียน"
 
-            description={`ทะเบียนนักเรียนทั้งหมด (${totalStudents} คน)`}
+          description={`ทะเบียนนักเรียนทั้งหมด (${totalStudents} คน)`}
 
-  
-          icon={Users}
+
           actions={
-            <>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 md:mt-0">
               <button
                 onClick={() => setIsImportModalOpen(true)}
-                className="flex items-center px-6 py-3 bg-white text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-all font-semibold shadow-sm"
+                className="flex items-center justify-center px-4 md:px-6 py-2.5 md:py-3 bg-white text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-all text-xs md:text-sm shadow-sm"
               >
-                <FileUp className="mr-2 h-5 w-5" />
+                <FileUp className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 Smart Import
               </button>
               <button
                 onClick={() => handleOpenModal()}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg"
+                className="flex items-center justify-center px-4 md:px-6 py-2.5 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-xs md:text-sm shadow-lg shadow-blue-200"
               >
-                <Plus className="mr-2 h-5 w-5" />
+                <Plus className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
                 เพิ่มนักเรียนใหม่
               </button>
-            </>
+            </div>
           }
         />
 
@@ -261,22 +260,22 @@ export default function AdminStudentsPage() {
               key={student.id}
               className="hover:bg-blue-50/50 transition-colors group"
             >
-              <td className="px-8 py-5 font-mono font-semibold text-gray-600 text-sm">
+              <td className="px-6 md:px-8 py-4 md:py-5 font-mono text-gray-500 text-xs">
                 {student.student_code}
               </td>
-              <td className="px-8 py-5 text-gray-900">
+              <td className="px-6 md:px-8 py-4 md:py-5 text-gray-900 text-sm">
                 {student.first_name} {student.last_name}
               </td>
-              <td className="px-8 py-5">
-                <div className="flex flex-col gap-1">
-                  <span className="text-md text-blue-500 uppercase tracking-wider ml-1 leading-none">
+              <td className="px-6 md:px-8 py-4 md:py-5">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[10px] text-blue-500 uppercase tracking-widest truncate max-w-[150px]">
                     {student.classroom?.level?.department?.dept_name ||
-                    student.classroom?.level?.level_name
-                      ? `${student.classroom?.level?.department?.dept_name || ""} (${student.classroom?.level?.level_name || "ไม่ระบุชั้นปี"})`
+                      student.classroom?.level?.level_name
+                      ? `${student.classroom?.level?.department?.dept_name || ""} (${student.classroom?.level?.level_name || ""})`
                       : "ยังไม่ระบุแผนก/ชั้นปี"}
                   </span>
-                  <span className="px-3 py-1 rounded-md text-md font-semibold bg-blue-50 text-blue-700 border border-blue-100 w-fit">
-                    ห้อง {student.classroom?.room_name || "ไม่ได้ระบุ"}
+                  <span className="px-2.5 py-1 rounded-md text-[10px] bg-blue-50 text-blue-700 border border-blue-100 w-fit uppercase">
+                    ห้อง {student.classroom?.room_name || "-"}
                   </span>
                 </div>
               </td>
@@ -320,22 +319,23 @@ export default function AdminStudentsPage() {
             <input
               required
               type="text"
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
               value={formData.student_code}
               onChange={(e) =>
                 setFormData({ ...formData, student_code: e.target.value })
               }
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="block text-md text-gray-400 uppercase tracking-widest ml-1">
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">
                 ชื่อ
               </label>
               <input
                 required
                 type="text"
-                className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none"
+                placeholder="ชื่อ"
+                className="w-full px-4 md:px-5 py-3 md:py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                 value={formData.first_name}
                 onChange={(e) =>
                   setFormData({ ...formData, first_name: e.target.value })
@@ -343,13 +343,14 @@ export default function AdminStudentsPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-md text-gray-400 uppercase tracking-widest ml-1">
+              <label className="block text-[10px] text-gray-400 uppercase tracking-widest ml-1">
                 นามสกุล
               </label>
               <input
                 required
                 type="text"
-                className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none"
+                placeholder="นามสกุล"
+                className="w-full px-4 md:px-5 py-3 md:py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                 value={formData.last_name}
                 onChange={(e) =>
                   setFormData({ ...formData, last_name: e.target.value })
@@ -363,7 +364,7 @@ export default function AdminStudentsPage() {
             </label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 font-bold outline-none cursor-pointer appearance-none"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer appearance-none"
               value={formData.classroom_id}
               onChange={(e) =>
                 setFormData({ ...formData, classroom_id: e.target.value })

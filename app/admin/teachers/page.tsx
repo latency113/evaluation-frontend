@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { teacherService } from '@/src/services/teacherService';
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
+import {
+  Plus,
+  Trash2,
+  Edit2,
   Check,
   GraduationCap
 } from 'lucide-react';
@@ -115,22 +115,24 @@ export default function AdminTeachersPage() {
   return (
     <div className="p-8 font-sans bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <PageHeader 
+        <PageHeader
           title="จัดการข้อมูลครู"
           description={`จัดการข้อมูลบุคลากรครูทั้งหมด (${totalTeachers} คน)`}
           icon={GraduationCap}
           actions={
-            <button 
-              onClick={() => handleOpenModal()}
-              className="flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all  shadow-xl shadow-blue-200 active:scale-95 group"
-            >
-              <Plus className="mr-2 h-6 w-6 transition-transform group-hover:rotate-90" />
-              เพิ่มครูใหม่
-            </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 md:mt-0">
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center justify-center px-6 py-2.5 md:py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-xs md:text-base shadow-xl shadow-blue-100 active:scale-95 group"
+              >
+                <Plus className="mr-1.5 md:mr-2 h-4 w-4 md:h-6 md:w-6 transition-transform group-hover:rotate-90" />
+                เพิ่มครูใหม่
+              </button>
+            </div>
           }
         />
 
-        <SearchFilters 
+        <SearchFilters
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           limit={limit}
@@ -149,20 +151,20 @@ export default function AdminTeachersPage() {
         >
           {teachers.map((teacher) => (
             <tr key={teacher.id} className="hover:bg-blue-50/30 transition-all group">
-              <td className="px-10 py-6">
-                <div className=" text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors ">{teacher.first_name} {teacher.last_name}</div>
+              <td className="px-6 md:px-10 py-4 md:py-6">
+                <div className="text-slate-900 text-base md:text-lg leading-tight group-hover:text-blue-700 transition-colors ">{teacher.first_name} {teacher.last_name}</div>
               </td>
-              <td className="px-10 py-6 text-right">
-                <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleOpenModal(teacher)} className="p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"><Edit2 className="h-5 w-5" /></button>
-                  <button onClick={() => handleDelete(teacher.id)} className="p-3 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"><Trash2 className="h-5 w-5" /></button>
+              <td className="px-6 md:px-10 py-4 md:py-6 text-right">
+                <div className="flex justify-end gap-2 md:gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleOpenModal(teacher)} className="p-2 md:p-3 text-slate-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"><Edit2 className="h-4 w-4 md:h-5 md:w-5" /></button>
+                  <button onClick={() => handleDelete(teacher.id)} className="p-2 md:p-3 text-slate-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-slate-100 active:scale-90"><Trash2 className="h-4 w-4 md:h-5 md:w-5" /></button>
                 </div>
               </td>
             </tr>
           ))}
         </DataTable>
 
-        <Pagination 
+        <Pagination
           page={page}
           totalPages={totalPages}
           totalItems={totalTeachers}
@@ -180,11 +182,11 @@ export default function AdminTeachersPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
             <label className="block text-[10px]  text-slate-400 uppercase tracking-widest ml-1 leading-none">ชื่อจริง</label>
-            <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold outline-none transition-all text-slate-900" value={formData.first_name} onChange={(e) => setFormData({ ...formData, first_name: e.target.value })} />
+            <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 outline-none transition-all text-slate-900" value={formData.first_name} onChange={(e) => setFormData({ ...formData, first_name: e.target.value })} />
           </div>
           <div className="space-y-2">
             <label className="block text-[10px]  text-slate-400 uppercase tracking-widest ml-1 leading-none">นามสกุล</label>
-            <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 font-bold outline-none transition-all text-slate-900" value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} />
+            <input required type="text" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-lg focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 outline-none transition-all text-slate-900" value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} />
           </div>
           <div className="flex gap-4 pt-6 border-t border-slate-50">
             <button type="submit" className="flex-[2] bg-blue-600 text-white py-5 rounded-lg  text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all active:scale-[0.98] flex justify-center items-center group">

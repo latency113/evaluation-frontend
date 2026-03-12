@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { classroomService } from '@/src/services/classroomService';
 import { levelService } from '@/src/services/levelService';
 import { departmentService } from '@/src/services/departmentService';
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
+import {
+  Plus,
+  Trash2,
+  Edit2,
   Check,
   School,
   Users
@@ -74,7 +74,7 @@ export default function AdminClassroomsPage() {
   const handleOpenModal = (classroom: any = null) => {
     if (classroom) {
       setEditingClassroom(classroom);
-      setFormData({ 
+      setFormData({
         room_name: classroom.room_name,
         level_id: classroom.level_id?.toString() || ''
       });
@@ -142,22 +142,24 @@ export default function AdminClassroomsPage() {
   return (
     <div className="p-8 font-sans bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <PageHeader 
+        <PageHeader
           title="จัดการห้องเรียน"
           description="จัดการห้องเรียนและกลุ่มเรียนทั้งหมดในระบบ"
           icon={School}
           actions={
-            <button 
-              onClick={() => handleOpenModal()}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              เพิ่มห้องเรียน
-            </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 md:mt-0">
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center justify-center px-6 py-2.5 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-xs md:text-sm shadow-lg shadow-blue-200"
+              >
+                <Plus className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
+                เพิ่มห้องเรียน
+              </button>
+            </div>
           }
         />
 
-        <SearchFilters 
+        <SearchFilters
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           limit={limit}
@@ -166,9 +168,9 @@ export default function AdminClassroomsPage() {
           loading={loading}
           placeholder="ค้นหาห้อง, แผนก หรือระดับชั้น..."
           extraFilters={
-            <div className="relative group min-w-[200px]">
+            <div className="relative group w-full lg:min-w-[200px]">
               <select
-                className="w-full px-4 py-4 bg-slate-50 border-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
+                className="w-full px-4 py-3 md:py-4 bg-slate-50 border-none rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer"
                 value={filterDept}
                 onChange={(e) => {
                   setFilterDept(e.target.value);
@@ -197,42 +199,42 @@ export default function AdminClassroomsPage() {
           loading={loading}
         >
           {classrooms.map((classroom) => (
-            <tr key={classroom.id} className="hover:bg-blue-50/30 transition-colors group">
-              <td className="px-8 py-5">
+            <tr key={classroom.id} className="hover:bg-blue-50/50 transition-colors group">
+              <td className="px-6 md:px-8 py-4 md:py-5">
                 <div className="flex items-center">
-                  <span className="font-semibold text-gray-900 text-lg">ห้อง {classroom.room_name}</span>
+                  <span className="text-gray-900 text-base md:text-lg">ห้อง {classroom.room_name}</span>
                 </div>
               </td>
-              <td className="px-8 py-5">
-                <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+              <td className="px-6 md:px-8 py-4 md:py-5">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] md:text-xs bg-blue-50 text-blue-700 border border-blue-100 uppercase truncate max-w-[120px]">
                   {classroom.level?.department?.dept_name || 'ไม่ระบุแผนก'}
                 </span>
               </td>
-              <td className="px-8 py-5">
-                <span className="text-gray-600 font-semibold text-sm">
+              <td className="px-6 md:px-8 py-4 md:py-5">
+                <span className="text-gray-500 text-xs">
                   {classroom.level?.level_name || 'ทั่วไป'}
                 </span>
               </td>
-              <td className="px-8 py-5 text-center">
-                <button 
+              <td className="px-6 md:px-8 py-4 md:py-5 text-center">
+                <button
                   onClick={() => router.push(`/admin/classrooms/${classroom.id}/students`)}
-                  className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold text-xs shadow-md"
+                  className="inline-flex items-center px-3 py-1.5 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all text-[10px] shadow-md uppercase whitespace-nowrap"
                 >
-                  <Users className="h-3.5 w-3.5 mr-2" />
-                  ดูรายชื่อ {classroom._count?.students !== undefined ? `(${classroom._count.students} คน)` : ''}
+                  <Users className="h-3 w-3 mr-1.5" />
+                  รายชื่อ {classroom._count?.students !== undefined ? `(${classroom._count.students})` : ''}
                 </button>
               </td>
-              <td className="px-8 py-5 text-right">
+              <td className="px-6 md:px-8 py-4 md:py-5 text-right">
                 <div className="flex justify-end gap-2">
-                  <button onClick={() => handleOpenModal(classroom)} className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-gray-100"><Edit2 className="h-4 w-4" /></button>
-                  <button onClick={() => handleDelete(classroom.id)} className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-gray-100"><Trash2 className="h-4 w-4" /></button>
+                  <button onClick={() => handleOpenModal(classroom)} className="p-2 md:p-2.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-gray-100"><Edit2 className="h-4 w-4" /></button>
+                  <button onClick={() => handleDelete(classroom.id)} className="p-2 md:p-2.5 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg transition-all shadow-sm border border-transparent hover:border-gray-100"><Trash2 className="h-4 w-4" /></button>
                 </div>
               </td>
             </tr>
           ))}
         </DataTable>
 
-        <Pagination 
+        <Pagination
           page={page}
           totalPages={totalPages}
           totalItems={totalItems}
@@ -250,13 +252,13 @@ export default function AdminClassroomsPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">ชื่อห้องเรียน (เช่น 1/1)</label>
-            <input required type="text" placeholder="ระบุชื่อห้องเรียน..." className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold" value={formData.room_name} onChange={(e) => setFormData({ ...formData, room_name: e.target.value })} />
+            <input required type="text" placeholder="ระบุชื่อห้องเรียน..." className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500" value={formData.room_name} onChange={(e) => setFormData({ ...formData, room_name: e.target.value })} />
           </div>
           <div>
             <label className="block text-xs text-gray-400 uppercase tracking-widest mb-2 ml-1">ระดับชั้น / แผนกวิชา</label>
             <select
               required
-              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500 font-semibold"
+              className="w-full px-5 py-4 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-blue-500"
               value={formData.level_id}
               onChange={(e) => setFormData({ ...formData, level_id: e.target.value })}
             >

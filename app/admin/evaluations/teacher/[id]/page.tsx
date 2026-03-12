@@ -111,7 +111,7 @@ export default function TeacherEvaluationDetailPage({
       <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-          <p className="font-semibold text-gray-500 animate-pulse">กำลังโหลดข้อมูล...</p>
+          <p className="text-gray-500 animate-pulse">กำลังโหลดข้อมูล...</p>
         </div>
       </div>
     );
@@ -136,7 +136,7 @@ export default function TeacherEvaluationDetailPage({
         <div className="grid grid-cols-1 gap-10">
           {assignmentsSummary.length === 0 ? (
             <div className="bg-white p-20 rounded-3xl border border-dashed border-slate-200 text-center">
-              <p className="text-slate-400 font-semibold text-lg">ยังไม่มีข้อมูลการประเมินสำหรับครูท่านนี้</p>
+              <p className="text-slate-400 text-lg">ยังไม่มีข้อมูลการประเมินสำหรับครูท่านนี้</p>
             </div>
           ) : (
             assignmentsSummary.map((item, idx) => (
@@ -152,7 +152,7 @@ export default function TeacherEvaluationDetailPage({
                         <h2 className="text-2xl tracking-tight leading-none mb-2">
                           {item.assignment?.subject?.subject_name}
                         </h2>
-                        <div className="flex items-center gap-3 text-slate-400 text-sm font-semibold uppercase tracking-wider">
+                        <div className="flex items-center gap-3 text-slate-400 text-sm uppercase tracking-wider">
                           <span className="bg-white/10 px-2 py-0.5 rounded text-blue-300">{item.assignment?.subject?.subject_code}</span>
                           <span className="flex items-center gap-1.5">
                             <School className="h-4 w-4" /> 
@@ -163,11 +163,11 @@ export default function TeacherEvaluationDetailPage({
                     </div>
                     <div className="flex items-center gap-8">
                       <div className="text-center">
-                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">คนประเมิน</p>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">คนประเมิน</p>
                         <p className="text-2xl flex items-center justify-center gap-2"><Users className="h-5 w-5 text-blue-400" /> {item.evals.length}</p>
                       </div>
                       <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-lg border border-white/10 text-center min-w-[140px]">
-                        <p className="text-[10px] font-semibold text-blue-300 uppercase tracking-widest mb-1">คะแนนเฉลี่ย</p>
+                        <p className="text-[10px] text-blue-300 uppercase tracking-widest mb-1">คะแนนเฉลี่ย</p>
                         <div className="flex items-center justify-center text-yellow-400 text-3xl ">
                           <Star className="h-6 w-6 mr-2 fill-current" /> {item.avg}
                         </div>
@@ -186,8 +186,8 @@ export default function TeacherEvaluationDetailPage({
                       <div key={cIdx} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white hover:shadow-lg hover:border-blue-100 transition-all group">
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex-1 mr-6">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1.5 font-semibold">หัวข้อที่ {cIdx + 1}</span>
-                            <p className="text-md font-semibold text-slate-700 leading-relaxed">{criteria.text}</p>
+                            <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1.5">หัวข้อที่ {cIdx + 1}</span>
+                            <p className="text-md text-slate-700 leading-relaxed">{criteria.text}</p>
                           </div>
                           <div className="text-right">
                             <div className="text-2xl text-slate-900">{criteria.avg}</div>
