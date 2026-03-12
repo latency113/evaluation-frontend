@@ -299,7 +299,7 @@ export default function AdminEvaluationsPage() {
           }}
           onRefresh={fetchInitialData}
           loading={loading}
-          placeholder="ค้นหาชื่อ student, ครู, หรือรายวิชา..."
+          placeholder="ค้นหาชื่อนักเรียน, ครู, หรือรายวิชา..."
           extraFilters={
             <div className="relative group min-w-[240px]">
               <School className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
@@ -540,15 +540,15 @@ export default function AdminEvaluationsPage() {
           {selectedEval && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-8 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
-                  <p className="text-xs text-blue-600 uppercase tracking-widest mb-3 font-semibold">
+                <div className="p-6 bg-blue-50/50 rounded-xl border border-blue-100 shadow-sm">
+                  <p className="text-[10px] text-blue-600 uppercase tracking-widest mb-2 font-bold">
                     นักเรียน / ผู้ประเมิน
                   </p>
-                  <p className="text-slate-900 text-2xl ">
+                  <p className="text-slate-900 text-xl font-bold">
                     {selectedEval.student?.first_name}{" "}
                     {selectedEval.student?.last_name}
                   </p>
-                  <p className="text-md font-semibold text-slate-400 mt-3">
+                  <p className="text-sm font-semibold text-slate-400 mt-2">
                     {selectedEval.student?.student_code} | ห้อง{" "}
                     {selectedEval.assignment?.classroom?.room_name || "N/A"}{" "}
                     {selectedEval.assignment?.classroom?.level?.department
@@ -556,14 +556,14 @@ export default function AdminEvaluationsPage() {
                       `(${selectedEval.assignment.classroom.level.department.dept_name})`}
                   </p>
                 </div>
-                <div className="p-8 bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm">
-                  <p className="text-xs text-purple-600 uppercase tracking-widest mb-3 font-semibold">
+                <div className="p-6 bg-purple-50/50 rounded-xl border border-purple-100 shadow-sm">
+                  <p className="text-[10px] text-purple-600 uppercase tracking-widest mb-2 font-bold">
                     รายวิชา / ครูผู้สอน
                   </p>
-                  <p className="text-slate-900 text-2xl  truncate">
+                  <p className="text-slate-900 text-xl font-bold truncate">
                     {selectedEval.assignment?.subject?.subject_name}
                   </p>
-                  <p className="text-md font-semibold text-slate-500 mt-3 ">
+                  <p className="text-sm font-semibold text-slate-500 mt-2 ">
                     {" "}
                     {selectedEval.assignment?.teacher?.first_name}{" "}
                     {selectedEval.assignment?.teacher?.last_name}
@@ -571,8 +571,8 @@ export default function AdminEvaluationsPage() {
                 </div>
               </div>
               <div className="space-y-6">
-                <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
-                  <Star className="h-7 w-7 mr-3 text-yellow-500 fill-current" />{" "}
+                <h3 className="text-slate-900 text-lg font-bold flex items-center px-2 uppercase tracking-tight">
+                  <Star className="h-5 w-5 mr-2 text-yellow-500 fill-current" />{" "}
                   คะแนนรายข้อ
                 </h3>
                 <div className="grid grid-cols-1 gap-4">
@@ -585,7 +585,7 @@ export default function AdminEvaluationsPage() {
                         <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-2 font-semibold">
                           หัวข้อที่ {idx + 1}
                         </span>
-                        <p className="text-lg font-semibold text-slate-700 leading-relaxed">
+                        <p className="text-base font-semibold text-slate-700 leading-relaxed">
                           {answer.question?.question_text ||
                             `หัวข้อที่ ${answer.question_id}`}
                         </p>
@@ -594,7 +594,7 @@ export default function AdminEvaluationsPage() {
                         {[1, 2, 3, 4, 5].map((s) => (
                           <div
                             key={s}
-                            className={`w-11 h-11 rounded-full flex items-center justify-center text-sm  transition-all ${s <= answer.score ? "bg-yellow-400 text-white shadow-lg scale-110" : "bg-slate-100 text-slate-300"}`}
+                            className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${s <= answer.score ? "bg-yellow-400 text-white shadow-md scale-105" : "bg-slate-100 text-slate-300"}`}
                           >
                             {s}
                           </div>
@@ -605,12 +605,12 @@ export default function AdminEvaluationsPage() {
                 </div>
               </div>
               {selectedEval.suggestion && (
-                <div className="p-8 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
-                  <h4 className="flex items-center text-slate-900 font-semibold mb-4 text-xl">
-                    <MessageSquare className="mr-2 text-blue-500" />{" "}
+                <div className="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                  <h4 className="flex items-center text-slate-900 font-bold mb-3 text-lg">
+                    <MessageSquare className="mr-2 h-5 w-5 text-blue-500" />{" "}
                     ข้อเสนอแนะเพิ่มเติม
                   </h4>
-                  <p className="text-slate-600  text-lg leading-relaxed font-medium">
+                  <p className="text-slate-600 text-base leading-relaxed font-medium">
                     "{selectedEval.suggestion}"
                   </p>
                 </div>
@@ -639,23 +639,23 @@ export default function AdminEvaluationsPage() {
           {selectedSummary && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-indigo-600 p-2 rounded-lg text-white">
-                      <Users className="h-6 w-6" />
+                <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="bg-indigo-600 p-1.5 rounded text-white">
+                      <Users className="h-4 w-4" />
                     </div>
-                    <p className="text-xs text-indigo-600 uppercase tracking-widest font-semibold">
+                    <p className="text-[10px] text-indigo-600 uppercase tracking-widest font-bold">
                       ข้อมูลครู / ห้องเรียน
                     </p>
                   </div>
                   {selectedSummary.assignment ? (
                     <>
-                      <p className="text-slate-900 text-3xl ">
+                      <p className="text-slate-900 text-xl font-bold">
                         ห้อง{" "}
                         {selectedSummary.assignment?.classroom?.room_name ||
                           "N/A"}
                       </p>
-                      <p className="text-md font-semibold text-slate-400 mt-3 uppercase">
+                      <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-wide">
                         {
                           selectedSummary.assignment?.classroom?.level
                             ?.level_name
@@ -670,39 +670,39 @@ export default function AdminEvaluationsPage() {
                     </>
                   ) : (
                     <>
-                      <p className="text-slate-900 text-xl ">
+                      <p className="text-slate-900 text-lg font-bold">
                         {" "}
                         {selectedSummary.teacher?.first_name}{" "}
                         {selectedSummary.teacher?.last_name}
                       </p>
-                      <p className="text-md font-semibold text-slate-400 mt-3 uppercase">
+                      <p className="text-xs font-bold text-slate-400 mt-2 uppercase tracking-wide">
                         {selectedSummary.assignmentCount} วิชา |{" "}
                         {selectedSummary.classroomCount} ห้องเรียน
                       </p>
                     </>
                   )}
                 </div>
-                <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-blue-500 p-2 rounded-lg text-white">
-                        <TrendingUp className="h-6 w-6" />
+                <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="bg-blue-500 p-1.5 rounded text-white">
+                        <TrendingUp className="h-4 w-4" />
                       </div>
-                      <p className="text-xs text-blue-600 uppercase tracking-widest font-semibold">
+                      <p className="text-[10px] text-blue-600 uppercase tracking-widest font-bold">
                         ผลการประเมินรวม
                       </p>
                     </div>
-                    <div className="text-slate-400 text-sm font-semibold">
+                    <div className="text-slate-400 text-xs font-bold">
                       ผู้ประเมิน{" "}
                       {selectedSummary.studentCount || selectedSummary.count} คน
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-slate-500 font-semibold text-xl uppercase">
+                    <p className="text-slate-500 font-bold text-base uppercase">
                       Average Score
                     </p>
-                    <div className="flex items-center text-yellow-400 text-xl ">
-                      <Star className="h-5 w-5 mr-2 fill-current" />{" "}
+                    <div className="flex items-center text-yellow-500 text-lg font-bold">
+                      <Star className="h-4 w-4 mr-1.5 fill-current" />{" "}
                       {selectedSummary.finalAvg}
                     </div>
                   </div>
@@ -711,9 +711,9 @@ export default function AdminEvaluationsPage() {
 
               {!selectedSummary.assignment &&
                 selectedSummary.assignmentsList && (
-                  <div className="space-y-6">
-                    <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
-                      <BookOpen className="h-7 w-7 mr-3 text-purple-600" />{" "}
+                  <div className="space-y-4">
+                    <h3 className="text-slate-900 text-lg font-bold flex items-center px-1 uppercase tracking-tight">
+                      <BookOpen className="h-5 w-5 mr-2 text-purple-600" />{" "}
                       รายวิชาที่รับผิดชอบ
                     </h3>
                     <div className="grid grid-cols-1 gap-4">
@@ -728,14 +728,14 @@ export default function AdminEvaluationsPage() {
                                 {idx + 1}
                               </div>
                               <div>
-                                <p className="text-xl font-semibold text-slate-900">
+                                <p className="text-lg font-bold text-slate-900">
                                   {item.assignment?.subject?.subject_name}
                                 </p>
-                                <div className="flex items-center gap-3 mt-1.5 text-sm font-semibold text-slate-400">
-                                  <span className="bg-slate-100 px-2 py-0.5 rounded text-blue-600">
+                                <div className="flex items-center gap-2.5 mt-1 text-[11px] font-bold text-slate-400">
+                                  <span className="bg-slate-100 px-1.5 py-0.5 rounded text-blue-600">
                                     {item.assignment?.subject?.subject_code}
                                   </span>
-                                  <span>
+                                  <span className="truncate">
                                     ห้อง {item.assignment?.classroom?.room_name}{" "}
                                     {
                                       item.assignment?.classroom?.level
@@ -748,12 +748,12 @@ export default function AdminEvaluationsPage() {
                                 </div>
                               </div>
                             </div>
-                            <div className="bg-yellow-50 px-6 py-3 rounded-xl border border-yellow-100 text-center min-w-[120px]">
-                              <p className="text-[10px] text-yellow-600 uppercase  mb-1">
+                            <div className="bg-yellow-50 px-4 py-2 rounded-xl border border-yellow-100 text-center min-w-[100px]">
+                              <p className="text-[10px] text-yellow-600 uppercase font-bold mb-1">
                                 เฉลี่ย
                               </p>
-                              <div className="flex items-center justify-center text-yellow-700 text-2xl ">
-                                <Star className="h-5 w-5 mr-1 fill-current" />{" "}
+                              <div className="flex items-center justify-center text-yellow-700 text-xl font-bold">
+                                <Star className="h-4 w-4 mr-1 fill-current" />{" "}
                                 {item.avg}
                               </div>
                             </div>
@@ -764,9 +764,9 @@ export default function AdminEvaluationsPage() {
                   </div>
                 )}
 
-              <div className="space-y-6">
-                <h3 className="text-slate-900 text-2xl  flex items-center px-2 uppercase tracking-tight">
-                  <TrendingUp className="h-7 w-7 mr-3 text-blue-600" />{" "}
+              <div className="space-y-4">
+                <h3 className="text-slate-900 text-lg font-bold flex items-center px-1 uppercase tracking-tight">
+                  <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />{" "}
                   คะแนนเฉลี่ยรายหัวข้อ
                 </h3>
                 <div className="grid grid-cols-1 gap-5">
@@ -774,27 +774,27 @@ export default function AdminEvaluationsPage() {
                     (criteria, idx) => (
                       <div
                         key={idx}
-                        className="p-8 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all"
+                        className="p-5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all"
                       >
-                        <div className="flex justify-between items-start mb-5">
-                          <div className="flex-1 mr-8">
-                            <span className="text-xs text-slate-400 uppercase tracking-widest block mb-2 font-semibold">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex-1 mr-6">
+                            <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-1 font-bold">
                               หัวข้อที่ {idx + 1}
                             </span>
-                            <p className="text-xl font-semibold text-slate-700 leading-relaxed">
+                            <p className="text-sm font-semibold text-slate-700 leading-relaxed">
                               {criteria.text}
                             </p>
                           </div>
                           <div className="text-right">
-                            <div className="text-3xl  text-slate-900">
+                            <div className="text-xl font-bold text-slate-900">
                               {criteria.avg}
                             </div>
-                            <p className="text-[10px] text-slate-400 uppercase font-semibold mt-1">
+                            <p className="text-[9px] text-slate-400 uppercase font-bold mt-0.5">
                               คะแนนเฉลี่ย
                             </p>
                           </div>
                         </div>
-                        <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-1000 ${parseFloat(criteria.avg) >= 4.5 ? "bg-green-500" : parseFloat(criteria.avg) >= 3.5 ? "bg-blue-500" : "bg-orange-500"}`}
                             style={{

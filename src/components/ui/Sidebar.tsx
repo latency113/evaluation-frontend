@@ -25,7 +25,7 @@ export function Sidebar({ user, logout }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
+    { name: 'หน้าแรก', icon: LayoutDashboard, href: '/admin' },
     { name: 'จัดการรายชื่อนักเรียน', icon: Users, href: '/admin/students' },
     { name: 'จัดการครูผู้สอน', icon: GraduationCap, href: '/admin/teachers' },
     { name: 'จัดการฐานข้อมูลรายวิชา', icon: BookOpen, href: '/admin/subjects' },
@@ -46,9 +46,9 @@ export function Sidebar({ user, logout }: SidebarProps) {
           </div>
           <div>
             <h1 className="text-lg font-bold tracking-tight text-white leading-none">
-              {user.role === 'admin' ? 'Admin' : 'Teacher'}
+              แอดมิน
             </h1>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mt-1">Management Portal</p>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mt-1">จัดการข้อมูลผลการประเมินครูผู้สอน</p>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ export function Sidebar({ user, logout }: SidebarProps) {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-slate-200 truncate">{user.username || 'User'}</p>
             <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">
-              {user.role === 'admin' ? 'Administrator' : 'Staff'}
+              {user.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ครูผู้สอน'}
             </p>
           </div>
         </div>

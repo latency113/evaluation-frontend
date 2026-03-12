@@ -167,7 +167,7 @@ export default function AdminDepartmentsPage() {
                   <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-100 transition-colors">
                     <Layers className="h-5 w-5 text-slate-500 group-hover:text-blue-600" />
                   </div>
-                  <div className="text-slate-900 text-lg leading-tight group-hover:text-blue-700 transition-colors font-semibold">
+                  <div className="text-slate-900 text-md group-hover:text-blue-700 transition-colors">
                     {dept.dept_name}
                   </div>
                 </div>

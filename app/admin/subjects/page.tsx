@@ -223,13 +223,6 @@ export default function AdminSubjectsPage() {
           actions={
             <>
               <button
-                onClick={() => setIsScanModalOpen(true)}
-                className="flex items-center px-6 py-3 bg-white text-purple-600 border border-purple-200 rounded-lg hover:bg-purple-50 transition-all font-semibold shadow-sm"
-              >
-                <Scan className="mr-2 h-5 w-5" />
-                AI Scan Subjects
-              </button>
-              <button
                 onClick={() => handleOpenModal()}
                 className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-lg shadow-blue-100"
               >
