@@ -52,6 +52,7 @@ export default function AdminEvaluationsPage() {
   }, [page, limit]);
 
   useEffect(() => {
+    setPage(1);
     if (viewMode !== "individual") {
       fetchAllEvaluations();
     }
@@ -90,28 +91,33 @@ export default function AdminEvaluationsPage() {
     return (sum / answers.length).toFixed(2);
   };
 
-  const filteredEvaluations = (evaluations || []).filter((e) => {
-    const sName =
-      `${e.student?.first_name} ${e.student?.last_name}`.toLowerCase();
-    const subName = e.assignment?.subject?.subject_name?.toLowerCase() || "";
-    const tName = e.assignment?.teacher?.first_name?.toLowerCase() || "";
-    const cId = e.assignment?.classroom_id?.toString() || "";
-    const search = searchTerm.toLowerCase();
+  const getFilteredData = (data: any[]) => {
+    return (data || []).filter((e) => {
+      const sName =
+        `${e.student?.first_name} ${e.student?.last_name}`.toLowerCase();
+      const subName = e.assignment?.subject?.subject_name?.toLowerCase() || "";
+      const tName = e.assignment?.teacher?.first_name?.toLowerCase() || "";
+      const cId = e.assignment?.classroom_id?.toString() || "";
+      const search = searchTerm.toLowerCase();
 
-    const matchesSearch =
-      sName.includes(search) ||
-      subName.includes(search) ||
-      tName.includes(search);
-    const matchesClassroom = !filterClassroom || cId === filterClassroom;
+      const matchesSearch =
+        sName.includes(search) ||
+        subName.includes(search) ||
+        tName.includes(search);
+      const matchesClassroom = !filterClassroom || cId === filterClassroom;
 
-    return matchesSearch && matchesClassroom;
-  });
+      return matchesSearch && matchesClassroom;
+    });
+  };
+
+  const filteredEvaluations = getFilteredData(evaluations);
 
   const getSummaryData = () => {
     const summaryMap = new Map();
-    const sourceData = allEvaluations.length > 0 ? allEvaluations : evaluations;
+    const sourceData = viewMode === "individual" ? evaluations : allEvaluations;
+    const filteredSource = getFilteredData(sourceData);
 
-    sourceData.forEach((e) => {
+    filteredSource.forEach((e) => {
       const key = `${e.assignment_id}`;
       if (!summaryMap.has(key)) {
         summaryMap.set(key, {
@@ -137,9 +143,10 @@ export default function AdminEvaluationsPage() {
 
   const getTeacherSummaryData = () => {
     const teacherMap = new Map();
-    const sourceData = allEvaluations.length > 0 ? allEvaluations : evaluations;
+    const sourceData = viewMode === "individual" ? evaluations : allEvaluations;
+    const filteredSource = getFilteredData(sourceData);
 
-    sourceData.forEach((e) => {
+    filteredSource.forEach((e) => {
       const teacherId = e.assignment?.teacher_id;
       if (!teacherId) return;
 
@@ -193,6 +200,18 @@ export default function AdminEvaluationsPage() {
 
   const summaryData = getSummaryData();
   const teacherSummaryData = getTeacherSummaryData();
+
+  // Paginate summaries
+  const paginatedSummaryData = summaryData.slice((page - 1) * limit, page * limit);
+  const paginatedTeacherSummaryData = teacherSummaryData.slice((page - 1) * limit, page * limit);
+
+  const currentTotalPages = viewMode === "individual"
+    ? totalPages
+    : Math.ceil((viewMode === "summary" ? summaryData.length : teacherSummaryData.length) / limit);
+
+  const currentTotalItems = viewMode === "individual"
+    ? totalEvaluations
+    : (viewMode === "summary" ? summaryData.length : teacherSummaryData.length);
 
   const getCriteriaAverages = (evals: any[]) => {
     const criteriaMap = new Map();
@@ -378,7 +397,7 @@ export default function AdminEvaluationsPage() {
             ]}
             loading={loading}
           >
-            {summaryData.map((item, idx) => {
+            {paginatedSummaryData.map((item, idx) => {
               const classroom =
                 item.assignment?.classroom || item.evals[0]?.student?.classroom;
               return (
@@ -387,10 +406,10 @@ export default function AdminEvaluationsPage() {
                   className="hover:bg-blue-50/30 transition-all group"
                 >
                   <td className="px-10 py-7">
-                    <div className="text-slate-900 text-md font-semibold leading-none">
+                    <div className="text-slate-900 text-md font-semibold leading-none truncate">
                       ห้อง {classroom?.room_name || "N/A"}
                     </div>
-                    <div className="text-xs font-semibold text-slate-400 uppercase mt-2 tracking-widest">
+                    <div className="text-xs font-semibold text-slate-400 uppercase mt-2 tracking-widest truncate">
                       {classroom?.level?.level_name}{" "}
                       {classroom?.level?.department?.dept_name &&
                         `(${classroom.level.department.dept_name})`}
@@ -449,7 +468,7 @@ export default function AdminEvaluationsPage() {
             ]}
             loading={loading}
           >
-            {teacherSummaryData.map((item, idx) => (
+            {paginatedTeacherSummaryData.map((item, idx) => (
               <tr
                 key={idx}
                 className="hover:bg-blue-50/30 transition-all group"
@@ -503,8 +522,8 @@ export default function AdminEvaluationsPage() {
 
         <Pagination
           page={page}
-          totalPages={totalPages}
-          totalItems={totalEvaluations}
+          totalPages={currentTotalPages}
+          totalItems={currentTotalItems}
           limit={limit}
           onPageChange={setPage}
         />
@@ -788,6 +807,37 @@ export default function AdminEvaluationsPage() {
                   )}
                 </div>
               </div>
+
+              {selectedSummary.evals.some((e: any) => e.suggestion) && (
+                <div className="space-y-6">
+                  <h3 className="text-slate-900 text-2xl flex items-center px-2 uppercase tracking-tight">
+                    <MessageSquare className="h-7 w-7 mr-3 text-blue-500" />{" "}
+                    ข้อเสนอแนะจากผู้ประเมิน
+                  </h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    {selectedSummary.evals
+                      .filter((e: any) => e.suggestion)
+                      .map((e: any, idx: number) => (
+                        <div
+                          key={idx}
+                          className="p-6 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <p className="text-sm font-semibold text-blue-600">
+                              {e.student?.first_name} {e.student?.last_name}
+                            </p>
+                            <p className="text-xs text-slate-400">
+                              {new Date(e.eval_date).toLocaleDateString("th-TH")}
+                            </p>
+                          </div>
+                          <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                            "{e.suggestion}"
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
