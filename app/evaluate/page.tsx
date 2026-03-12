@@ -27,6 +27,7 @@ export default function EvaluatePage() {
 
   useEffect(() => {
     if (user) {
+      window.scrollTo(0, 0);
       const fetchData = async () => {
         try {
           const [assignmentData, questionData, evalData] = await Promise.all([
@@ -46,6 +47,10 @@ export default function EvaluatePage() {
       fetchData();
     }
   }, [user]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selectedAssignment]);
 
   const handleScoreChange = (questionId: number, score: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: score }));
@@ -147,11 +152,10 @@ export default function EvaluatePage() {
                 return (
                   <div
                     key={assignment.id}
-                    className={`relative bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 flex flex-col ${
-                      isCompleted
+                    className={`relative bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden transition-all duration-300 flex flex-col ${isCompleted
                         ? "opacity-60"
                         : "hover:shadow-xl hover:-translate-y-1 cursor-pointer hover:border-blue-200"
-                    }`}
+                      }`}
                     onClick={() =>
                       !isCompleted && setSelectedAssignment(assignment)
                     }
@@ -213,11 +217,10 @@ export default function EvaluatePage() {
 
                       {/* Button - mt-auto pushes this to the bottom */}
                       <button
-                        className={`w-full py-4 px-4 rounded-md text-sm tracking-wide transition-all duration-200 flex items-center justify-center gap-2 mt-auto shadow-lg ${
-                          isCompleted
+                        className={`w-full py-4 px-4 rounded-md text-sm tracking-wide transition-all duration-200 flex items-center justify-center gap-2 mt-auto shadow-lg ${isCompleted
                             ? "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
                             : "bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.98] shadow-blue-200"
-                        }`}
+                          }`}
                         disabled={isCompleted}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -285,11 +288,10 @@ export default function EvaluatePage() {
                           key={score}
                           type="button"
                           onClick={() => handleScoreChange(question.id, score)}
-                          className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all ${
-                            answers[question.id] === score
+                          className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all ${answers[question.id] === score
                               ? "border-blue-600 bg-blue-600 text-white"
                               : "border-gray-200 hover:border-blue-300"
-                          }`}
+                            }`}
                         >
                           {score}
                         </button>
